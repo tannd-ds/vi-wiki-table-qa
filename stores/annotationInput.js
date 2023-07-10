@@ -6,8 +6,21 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
         return {
             question: "",
             answer: "",
-            table_id: "",
-            table: null,
+            chosen_table: null,
+            tables: [
+              {
+                'id': '001',
+                'content': [[0, 1, 2], [3, 4, 5]],
+              },
+              {
+                'id': '002',
+                'content': [[0, 1, 2], [3, 4, 5]],
+              },
+              {
+                'id': '003',
+                'content': [[1, 2, 3], [4, 5, 6]],
+              }
+            ],
             tableInput: "",
             confirmed: [],
             confirmedData: useCookie('confirmed_data')

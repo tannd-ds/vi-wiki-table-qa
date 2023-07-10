@@ -8,7 +8,7 @@
           backdrop-blur-sm
         "
       >
-        <BaseBox>
+        <BaseBox ref="modal">
           <div class="w-full">
             <slot> </slot>
           </div>
@@ -18,13 +18,17 @@
 </template>
 
 <script setup>
+  import { useGeneralStore } from '~/stores/generalStore'
+  import { onClickOutside } from '@vueuse/core'
 
-import { useGeneralStore } from '~/stores/generalStore'
-const general_store = useGeneralStore()
+  const props = defineProps({
+      show: Boolean,
+  })
 
-const props = defineProps({
-    show: Boolean,
-})
+  const modal = ref(null)
+  onClickOutside(modal, () => general_store.overlay.is_show = false)
+
+  const general_store = useGeneralStore()
 </script>
 
 
