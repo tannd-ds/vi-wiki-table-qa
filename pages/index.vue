@@ -1,62 +1,70 @@
 <template>
-  <div>
-    <div id="sec-hero">
-      <div class="relative isolate px-6 pt-14 lg:px-8">
-        <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
-          <div class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-50 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" />
-        </div>
-        <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56 mt-20">
-          <div class="hidden sm:mb-8 sm:flex sm:justify-center">
-            <div class="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
-              Look interesting? 
-              <a href="#" class="font-semibold text-emerald-500">
-                <span class="absolute inset-0" aria-hidden="true"></span>
-                Join My Team 
-                <span aria-hidden="true">
-                  &rarr;
-                </span>
-              </a>
-            </div>
+    <Teleport to="body"> <OverlayTableList /> </Teleport>
+    <BaseToastList />
+    <div class="w-full mx-8 flex flex-col gap-8 justify-center items-center lg:flex-row">
+      <BaseBox class=" max-w-lg">
+        <form class="w-full">
+          <InputField 
+            type="text" 
+            id="question" 
+            v-model:model-value="aInput.question"
+            placeholder="Give me a Question!" 
+            label_name="Question"
+          />
+          <InputField 
+            type="text" 
+            id="answer" 
+            v-model:model-value="aInput.answer"
+            placeholder="Answer, please" 
+            label_name="Answer"
+          />
+          <div class="flex items-center justify-between">
+            <BaseButton @click="aInput.confirmData">Confirm</BaseButton> 
           </div>
-          <div class="text-center">
-            <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Hi! I'm Tann!</h1>
-            <p class="mt-6 text-lg leading-8 text-gray-600">I'm a Data Science Student at UIT, VNU-HCM! Welcome to my Portfolio Website, scroll for more!</p>
-            <div class="mt-10 flex items-center justify-center gap-x-6">
-              <a 
-                href="" 
-                class="
-                  bg-transparent 
-                  px-3.5 py-2.5 
-                  text-sm font-semibold text-black 
-                  border-none
-                  rounded-md 
-                  shadow 
-                  hover:text-white 
-                  hover:bg-emerald-500
-                  active:translate-y-1
-                  ring-2 ring-offset-2 ring-emerald-500
-                  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600
-                  transition-all ease-in-out duration-200 ">
-                Get started
-              </a>
-              <a href="#" class="text-sm font-semibold leading-6 text-gray-900">Learn more <span aria-hidden="true">→</span></a>
-            </div>
+        </form>
+      </BaseBox>
+      <div class="flex flex-col">
+        <div class="flex flex-col gap-2 items-center" v-if="aInput.chosen_table != null">
+          <div 
+              class="
+                inline-flex items-center justify-center
+                mr-2 px-2.5 py-0.5 
+                bg-blue-100 
+                text-blue-800 text-xs font-semibold 
+                border border-blue-400 rounded 
+                dark:bg-gray-700 dark:text-blue-400 
+              "
+            >ID: {{ aInput.chosen_table.id }}
           </div>
+          <BaseTable :table="aInput.chosen_table.content"/>
+          <BaseButton 
+            @click="generalStore.overlay.is_show = true"
+          >
+            <Icon name="carbon:renew" size="1.5em" color="currentColor"/>
+            <div>Change Table</div>
+          </BaseButton>
         </div>
-        <div class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]" aria-hidden="true">
-          <div class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-50 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" />
-        </div>
+        <BaseButton
+          v-else
+          @click='generalStore.overlay.is_show = true'
+        >
+          <Icon name="carbon:add-filled" size="1.5em" color="currentColor"/>
+          <span>Load Table</span>
+        </BaseButton>
       </div>
     </div>
-
-    <IndexTeamList />
-  </div>
-
 </template>
 
 <script setup>
-definePageMeta({
-    layout: "default",
-    colorMode: "dark"
-})
+  definePageMeta({
+    layout: "custom"
+  })
+
+  import { useAnnotationInputStore } from "~/stores/annotationInput"
+  import { useGeneralStore } from "~/stores/generalStore"
+
+  const aInput = useAnnotationInputStore()
+  const generalStore = useGeneralStore()
+  aInput.loadConfirmedData()
+
 </script>
