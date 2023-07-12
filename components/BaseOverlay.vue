@@ -6,6 +6,7 @@
           absolute w-screen h-screen 
           flex items-center justify-center 
           backdrop-blur-sm
+          z-10
         "
       >
         <BaseBox ref="modal">
