@@ -57,6 +57,12 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
         this.confirmedData.push(dataPoint)
         window.localStorage.setItem('confirmed_qa', JSON.stringify(this.confirmedData))
         useGeneralStore().show_toast('success', 'Save Your Data Successfully.')
+      },
+      removeConfirmed(confirmed) {
+        if (!confirm('Are you sure want to remove this?'))
+          return
+        this.confirmedData.splice(this.confirmedData.indexOf(confirmed), 1)
+        window.localStorage.setItem('confirmed_qa', JSON.stringify(this.confirmedData))
       }
     },
     getters: {
