@@ -1,6 +1,6 @@
 <template>
     <BaseOverlay>
-      <div class=" max-h-[75vh] overflow-auto mb-4 flex flex-col gap-4">
+      <div class="min-w-[50vw] max-h-[75vh] overflow-auto mb-4 flex flex-col gap-4 items-center">
         <div 
             v-for="table in aInput.tables" :key="table"
             class="p-4 flex flex-col gap-2 border-blue-400 border rounded-lg hover:bg-blue-50 transition-all duration-200 cursor-pointer"
@@ -17,12 +17,12 @@
               "
             >ID: {{ table.id }}
           </div>
-          <BaseTable class="overflow-hidden" :table="table.content"/>
+          <BaseTable class="overflow-hidden w-fit min-w-[30vw]" :table="table.content"/>
         </div>
       </div>
       <div class="flex gap-4 justify-end">
       </div>
-      <div class="p-4 mt-2 flex gap-4 items-center bg-yellow-50 border-2 border-yellow-200 rounded-lg italic">
+      <div class="p-4 mt-2 lg:absolute lg:top-4 lg:right-4 flex gap-4 items-center bg-yellow-50 border-2 border-yellow-200 rounded-lg italic">
         <Icon name="carbon:idea" color="currentColor" size="1.5em" />
         <div class=" space-y-2">
           <div>Click on a <span class="text-blue-500" >Table</span> to Load it!</div>

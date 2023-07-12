@@ -55,6 +55,6 @@
       if (generalStore.toast_list.indexOf(props.toast) < 0) return
       generalStore.toast_list.splice(generalStore.toast_list.indexOf(props.toast), 1) 
     }
-    , 30000);
+    , 3000);
 
 </script>

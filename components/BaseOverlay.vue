@@ -9,9 +9,7 @@
         "
       >
         <BaseBox ref="modal">
-          <div class="w-full">
             <slot> </slot>
-          </div>
         </BaseBox>
       </div>
     </Transition>
