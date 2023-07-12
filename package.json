@@ -11,6 +11,7 @@
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@nuxtjs/color-mode": "^3.3.0",
+    "@nuxtjs/supabase": "^0.3.8",
     "@pinia-plugin-persistedstate/nuxt": "^1.1.1",
     "@pinia/nuxt": "^0.4.11",
     "@types/node": "^18",
@@ -24,6 +25,7 @@
     "@headlessui/vue": "^1.7.14",
     "@heroicons/vue": "^2.0.18",
     "@vueuse/core": "^10.2.1",
+    "nuxt-storage": "^1.2.2",
     "pinia": "^2.1.4"
   }
 }

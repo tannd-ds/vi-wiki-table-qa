@@ -1,8 +1,8 @@
 <template>
-    <Teleport to="body"> <OverlayTableList /> </Teleport>
+    <OverlayTableList />
     <BaseToastList />
     <div class="w-full mx-8 flex flex-col gap-8 justify-center items-center lg:flex-row">
-      <BaseBox class=" max-w-lg">
+      <BaseBox class=" w-full max-w-lg">
         <form class="w-full">
           <InputField 
             type="text" 
@@ -34,7 +34,7 @@
                 border border-blue-400 rounded 
                 dark:bg-gray-700 dark:text-blue-400 
               "
-            >ID: {{ aInput.chosen_table.id }}
+            >Table ID: {{ aInput.chosen_table.id }}
           </div>
           <BaseTable :table="aInput.chosen_table.content"/>
           <BaseButton 
@@ -65,6 +65,27 @@
 
   const aInput = useAnnotationInputStore()
   const generalStore = useGeneralStore()
-  aInput.loadConfirmedData()
+
+  onMounted(async () => {
+    aInput.loadConfirmedData()
+
+    // Load tables saved on Github :)
+    let github_data = await $fetch('https://raw.githubusercontent.com/tannd-ds/vi-wiki-table-qa/main/test.json')
+    github_data = JSON.parse(github_data)
+    let new_table = []
+    for (let row_id in github_data) {
+      let new_row = []
+      for (let cell_id in github_data[row_id]) {
+        new_row.push(github_data[row_id][cell_id])
+      }
+      new_table.push(new_row)
+    }
+    // console.log(new_table)
+    // console.log(aInput.tables)
+    aInput.tables.push({
+      'id': '0003',
+      'content': new_table
+    })
+  })
 
 </script>

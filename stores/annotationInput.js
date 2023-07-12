@@ -23,20 +23,24 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
             ],
             tableInput: "",
             confirmed: [],
-            confirmedData: useCookie('confirmed_data')
+            confirmedData: []
         }
     },
-    // persist: true,
     actions: { 
       loadConfirmedData() {
-        if (!this.confirmedData) {
-          this.confirmedData = { 
-            'qa': [],
-            'table': []
-          }
+        let confirmed_qa = localStorage.getItem('confirmed_qa')
+        if (confirmed_qa) {
+          this.confirmedData = JSON.parse(confirmed_qa)
+          console.log('Successfully loaded Confirmed QA Pairs from Local Storage')
+        } else {
+          console.log('Nothing in Local Storage')
         }
       },
       confirmData() {
+        if (!this.chosen_table) {
+          useGeneralStore().show_toast('error', 'Please choose (or input) a Table')
+          return
+        }
         if (!this.question) {
           useGeneralStore().show_toast('error', 'Please Enter a Question!')
           return
@@ -48,9 +52,10 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
         let dataPoint = {
           "question": this.question,
           "answer": this.answer,
-          "table_id": this.table,
+          "table_id": this.chosen_table.id,
         }
-        this.confirmedData['qa'].push(dataPoint)
+        this.confirmedData.push(dataPoint)
+        window.localStorage.setItem('confirmed_qa', JSON.stringify(this.confirmedData))
         useGeneralStore().show_toast('success', 'Save Your Data Successfully.')
       }
     },
