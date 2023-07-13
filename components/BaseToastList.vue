@@ -1,10 +1,10 @@
 <template>
-  <div class="absolute bottom-0 right-0 mr-4 md-4 overflow-hidden">
+  <div class="absolute bottom-2 right-4 overflow-hidden">
     <TransitionGroup name="fade">
       <BaseToast v-for="t in toast_list" :toast="t" :key="t">
       </BaseToast>
     </TransitionGroup>
-    </div>
+  </div>
 </template>
 
 <script setup>
@@ -19,7 +19,6 @@
   transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
 }
 
-/* 2. declare enter from and leave to state */
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;

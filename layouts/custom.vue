@@ -2,7 +2,7 @@
     <div class="h-screen flex items-center justify-start">
       <div class="p-4 flex flex-col gap-4">
         <NuxtLink to="/" class="relative group">
-          <button class="p-1 relative rounded-lg hover:bg-blue-200" >
+          <button class="p-1 relative rounded-lg hover:bg-green-200" >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
               <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
             </svg>
@@ -12,7 +12,7 @@
         <NuxtLink to="/all_confirmed" class="relative group">
           <button 
               :disabled="aInput.confirmedData.length <= 0"
-              class="p-1 relative rounded-lg hover:bg-blue-200"
+              class="p-1 relative rounded-lg hover:bg-green-200"
             >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
               <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3" />
