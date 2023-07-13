@@ -3,7 +3,7 @@
       <div 
         v-if="general_store.overlay.is_show" 
         class="
-          absolute w-screen h-screen 
+          absolute top-0 left-0 w-screen h-screen 
           flex items-center justify-center 
           backdrop-blur-sm
           z-10

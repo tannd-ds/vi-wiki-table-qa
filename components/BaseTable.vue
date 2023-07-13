@@ -1,5 +1,5 @@
 <template>
-  <div class="max-h-[85vh] max-w-[70vw] rounded-lg shadow-md overflow-auto">
+  <div class="max-h-[85vh] max-w-[60vw] rounded-lg shadow-md overflow-auto">
     <table class="w-full text-sm text-left rounded">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>

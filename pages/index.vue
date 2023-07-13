@@ -1,12 +1,11 @@
 <template>
+  <div>
     <Transition name="fade">
-      <OverlayTableList v-if="general_store.overlay.type=='table_list'"/>
-      <OverlayConfirmedList v-else />
+      <OverlayTableList v-if="general_store.overlay.is_show"/>
     </Transition>
     <BaseToastList />
-    <div class="w-full mx-8 flex flex-col gap-8 justify-center items-center lg:flex-row">
+    <div class="w-full flex flex-col gap-8 justify-center items-center lg:flex-row">
       <div class="w-full max-w-lg">
-        <div class="flex gap-2 justify-between">
           <BaseBox class="w-full flex-col items-center gap-8">
             <div class="flex items-center space-x-4">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-gray-700">
@@ -18,24 +17,7 @@
               </div>
             </div>
           </BaseBox>
-          <BaseBox class="flex justify-center items-center gap-4">
-            <button 
-                title="All created QA Pairs" 
-                :disabled="aInput.confirmedData.length <= 0"
-                class="p-1 relative rounded-lg hover:bg-blue-200 group"
-                @click="general_store.show_overlay('confirmed_list')"
-              >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3" />
-              </svg>  
-              <div 
-                  class="absolute inline-flex items-center justify-center w-7 h-7 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-gray-900"
-              >
-                {{ aInput.confirmedData.length }}
-              </div>
-
-            </button>
-          </BaseBox>
+        <div>
         </div>
         <BaseBox class="flex-col gap-4">
           <div v-if="aInput.chosen_table != null" class="p-4 rounded-lg border-green-500 border-2 text-green-700">
@@ -88,16 +70,23 @@
           v-else
           @click="general_store.show_overlay(type='table_list')"
         >
-          <Icon name="carbon:add-filled" size="1.5em" color="currentColor"/>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
           <span>Load Table</span>
         </BaseButton>
       </div>
     </div>
+  </div>
 </template>
 
 <script setup>
   definePageMeta({
-    layout: "custom"
+    layout: "custom",
+    pageTransition: {
+      name: "page",
+      mode: "out-in"
+    },
   })
 
   import { useAnnotationInputStore } from "~/stores/annotationInput"
@@ -106,24 +95,5 @@
   const aInput = useAnnotationInputStore()
   const general_store = useGeneralStore()
 
-  onMounted(async () => {
-    aInput.loadConfirmedData()
-
-    // Load tables saved on Github :)
-    let github_data = await $fetch('https://raw.githubusercontent.com/tannd-ds/vi-wiki-table-qa/main/test.json')
-    github_data = JSON.parse(github_data)
-    let new_table = []
-    for (let row_id in github_data) {
-      let new_row = []
-      for (let cell_id in github_data[row_id]) {
-        new_row.push(github_data[row_id][cell_id])
-      }
-      new_table.push(new_row)
-    }
-    aInput.tables.push({
-      'id': '0003',
-      'content': new_table
-    })
-  })
 
 </script>
