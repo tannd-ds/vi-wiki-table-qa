@@ -1,5 +1,8 @@
 <template>
     <div class="h-screen flex items-center justify-start">
+      <Head>
+        <Title>ViWiki Table - Confirmed Data</Title>
+      </Head>
       <div class="p-4 flex flex-col gap-4">
         <NuxtLink to="/" class="relative group">
           <button class="p-1 relative rounded-lg hover:bg-green-200" >

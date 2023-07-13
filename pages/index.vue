@@ -1,5 +1,8 @@
 <template>
   <div>
+    <Head>
+      <Title>ViWiki Table</Title>
+    </Head>
     <Transition name="fade">
       <OverlayTableList v-if="general_store.overlay.is_show"/>
     </Transition>
