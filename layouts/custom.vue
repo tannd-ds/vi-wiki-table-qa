@@ -6,7 +6,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
               <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
             </svg>
-            <div class="w-auto min-w-max py-2 px-4 absolute top-0 left-16 text-white bg-gray-900 rounded font-bold scale-0 group-hover:scale-100 transition-all duration-200">Back to Home</div>
+            <div class="w-auto min-w-max py-2 px-4 absolute top-0 left-14 text-white bg-gray-900 rounded font-bold scale-0 group-hover:scale-100 transition-all duration-200">Back to Home</div>
           </button>
         </NuxtLink>
         <NuxtLink to="/all_confirmed" class="relative group">
@@ -17,17 +17,31 @@
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
               <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3" />
             </svg>  
-            <div class="absolute inline-flex items-center justify-center w-7 h-7 text-xs font-bold text-white bg-green-500 border-2 border-white rounded-full -top-2 -right-2 dark:border-gray-900" >
+            <div class="absolute inline-flex items-center justify-center w-7 h-7 text-xs font-bold text-white bg-green-500 border-2 border-white rounded-full -top-1 -right-2 dark:border-gray-900" >
               {{ aInput.confirmedData.length }}
             </div>
           </button>
-          <div class="w-auto min-w-max py-2 px-4 absolute top-0 left-16 text-white bg-gray-900 rounded font-bold scale-0 group-hover:scale-100 transition-all duration-200">All Comfirmed QA Pairs</div>
+          <div class="w-auto min-w-max py-2 px-4 absolute top-0 left-14 text-white bg-gray-900 rounded font-bold scale-0 group-hover:scale-100 transition-all duration-200">All Comfirmed QA Pairs</div>
+        </NuxtLink>
+        <NuxtLink class="relative group">
+          <button disabled class="p-1 relative rounded-lg" >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+          <div class="w-auto min-w-max py-2 px-4 absolute top-0 left-14 text-white bg-gray-900 rounded font-bold scale-0 group-hover:scale-100 transition-all duration-200">
+            <div class="font-medium dark:text-white">
+              <div class="text-sm text-gray-500 dark:text-gray-400">Welcome,</div>
+              <div>Annotator 01!</div>
+            </div>
+          </div>
         </NuxtLink>
       </div>
       
       <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
         <div class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-50 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" />
       </div>
+
       <div class="flex-grow">
         <slot></slot>
       </div>
