@@ -1,12 +1,14 @@
 <template>
-  <div :class="{'dark': general_store.use_darkmode,}">
+  <div 
+    class="h-full flex"
+    :class="{'dark': general_store.use_darkmode,}"
+  >
     <Head>
       <Title>ViWiki Table</Title>
     </Head>
     <Transition name="fade">
       <OverlayTableList v-if="general_store.overlay.is_show"/>
     </Transition>
-    <BaseToastList />
     <div class="w-full flex flex-col gap-8 justify-center items-center lg:flex-row">
       <div class="w-full max-w-lg">
         <div>
