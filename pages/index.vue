@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="{'dark': general_store.use_darkmode,}">
     <Head>
       <Title>ViWiki Table</Title>
     </Head>
@@ -12,8 +12,8 @@
         <div>
         </div>
         <BaseBox class="flex-col gap-4">
-          <div v-if="aInput.chosen_table != null" class="p-4 rounded-lg border-green-500 border-2 text-green-700">
-            <span class=" text-black font-bold">Hint: </span> 
+          <div v-if="aInput.chosen_table != null" class="p-4 rounded-lg border-green-500 border-2 text-green-700 dark:text-gray-100">
+            <span class=" text-black font-bold dark:text-green-500">Hint: </span> 
             <span class=" italic">The "Generic Prompt" will go here!</span>
           </div>
           <form class="w-full">

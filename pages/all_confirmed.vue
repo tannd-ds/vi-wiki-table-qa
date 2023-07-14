@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center gap-2">
-      <button class="h-fit w-fit p-2 relative rounded bg-white group">
+      <button class="h-fit w-fit p-2 relative rounded bg-white group dark:bg-green-600 dark:text-gray-300 dark:hover:bg-green-700">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
@@ -14,7 +14,7 @@
 
         <TransitionGroup name="fade">
           <div 
-              class="w-full relative p-4 flex justify-between items-center border-green-400 border rounded-lg hover:bg-green-50 transition-all duration-200 cursor-pointer"
+              class="w-full relative p-4 flex justify-between items-center border-green-400 border rounded-lg hover:bg-green-50 dark:text-gray-100 dark:hover:bg-midnight-400 transition-all duration-200 cursor-pointer"
               v-for="confirmed in aInput.confirmedData" 
               :key="confirmed"
           >
@@ -35,7 +35,7 @@
               <div><span class="font-mono font-bold">Question</span>: {{ confirmed.question }} </div>
               <div><span class="font-mono font-bold">Answer</span>: {{ confirmed.answer }} </div>
             </div>
-            <button class="w-fit h-fit p-1 rounded-full hover:bg-slate-300" @click="aInput.removeConfirmed(confirmed)">
+            <button class="w-fit h-fit p-1 rounded-full hover:bg-slate-300 dark:hover:bg-midnight-100" @click="aInput.removeConfirmed(confirmed)">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>

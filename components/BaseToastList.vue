@@ -22,7 +22,7 @@
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-  transform: translate(-30px, 0);
+  scale: 0;
 }
 
 .fade-leave-active {

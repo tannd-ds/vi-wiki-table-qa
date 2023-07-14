@@ -3,7 +3,7 @@
       <div class="min-w-[50vw] max-h-[75vh] overflow-auto mb-4 flex flex-col gap-4 items-center">
         <div 
             v-for="table in aInput.tables" :key="table"
-            class="p-4 flex flex-col gap-2 border-blue-400 border rounded-lg hover:bg-blue-50 transition-all duration-200 cursor-pointer"
+            class="p-4 flex flex-col gap-2 border-blue-400 border rounded-lg hover:bg-blue-50 dark:hover:bg-midnight-300 transition-all duration-200 cursor-pointer"
             @click="loadTable(table)"
           >
           <div 
