@@ -95,43 +95,43 @@
   }
 
   const read_dropped_file = (event) => {
+    const uploaded_file = event.dataTransfer.files[0]
     toggle_dropzone()
     const reader = new FileReader(); 
     reader.onload = (event) => {
       const contents = event.target.result; // Get the file contents
       try {
         const jsonData = JSON.parse(contents); // Parse the JSON data
-        console.log(jsonData)
         return jsonData
       } catch (error) {
         console.log(error.message)
         useGeneralStore().show_toast('error', error.message)
+        upload_success.value = false
         return
       }
     }
-    const uploaded_file = event.dataTransfer.files[0]
-    reader.readAsText(uploaded_file)
     upload_success.value = true
+    reader.readAsText(uploaded_file)
   }
 
   const read_selected_file = (event) => {
+    const uploaded_file = event.target.files[0]
     toggle_dropzone()
     const reader = new FileReader(); 
     reader.onload = (event) => {
       const contents = event.target.result; // Get the file contents
       try {
         const jsonData = JSON.parse(contents); // Parse the JSON data
-        console.log(jsonData)
         return jsonData
       } catch (error) {
         console.log(error.message)
         useGeneralStore().show_toast('error', error.message)
+        upload_success.value = false
         return
       }
     }
-    const uploaded_file = event.target.files[0]
-    reader.readAsText(uploaded_file)
     upload_success.value = true
+    reader.readAsText(uploaded_file)
   }
 
 </script>
