@@ -1,5 +1,8 @@
 <template>
     <div class="flex flex-row justify-center h-full">
+      <Head>
+        <Title>ViWiki Table - Input Assigned File</Title>
+      </Head>
       <div 
         class="flex items-center justify-center w-1/2"
       >
@@ -116,7 +119,7 @@
 
   const read_selected_file = (event) => {
     const uploaded_file = event.target.files[0]
-    toggle_dropzone()
+        toggle_dropzone()
     const reader = new FileReader(); 
     reader.onload = (event) => {
       const contents = event.target.result; // Get the file contents

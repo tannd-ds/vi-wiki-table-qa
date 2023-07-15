@@ -21,8 +21,6 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
                 'content': [[1, 2, 3], [4, 5, 6]],
               }
             ],
-            tableInput: "",
-            confirmed: [],
             confirmedData: []
         }
     },
