@@ -73,10 +73,18 @@
   import { useGeneralStore } from '~/stores/generalStore';
   import { useAnnotationInputStore } from '~/stores/annotationInput';
 
-  const aInput = useAnnotationInputStore()
-
   definePageMeta({
     layout: 'custom',
+  })
+
+  const aInput = useAnnotationInputStore()
+  const general_store = useGeneralStore()
+
+  const route  = useRoute()
+  const router = useRouter()
+  watchEffect(() => {
+    const redirect_to = general_store.check_step(route.name)
+    if (redirect_to != route.name) router.push(redirect_to)
   })
 
   const dropzone_active = ref(false)
