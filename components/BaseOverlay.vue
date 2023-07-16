@@ -9,9 +9,9 @@
           z-10
         "
       >
-        <BaseBox ref="modal">
+        <div ref="modal">
             <slot> </slot>
-        </BaseBox>
+        </div>
       </div>
     </Transition>
 </template>

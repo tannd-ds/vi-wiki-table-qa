@@ -6,9 +6,6 @@
     <Head>
       <Title>ViWiki Table</Title>
     </Head>
-    <Transition name="fade">
-      <OverlayTableList v-if="general_store.overlay.is_show"/>
-    </Transition>
     <div class="w-full flex flex-col gap-8 justify-center items-center lg:flex-row">
       <div class="w-full max-w-lg">
         <BaseBox :override_bg="true">

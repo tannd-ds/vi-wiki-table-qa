@@ -1,5 +1,6 @@
 <template>
   <div :class="{'dark': general_store.use_darkmode,}">
+    <OverlayConfirmedData />
     <BaseToastList />
     <div class="h-screen flex items-center justify-start gap-4 mr-8">
       <BaseBox class="ml-4 px-[1em] py-4 flex-col gap-8">
@@ -13,10 +14,11 @@
             <div class="w-auto min-w-max py-2 px-4 absolute top-0 left-14 text-white bg-gray-900 rounded font-bold scale-0 group-hover:scale-100 transition-all duration-200">Back to Home</div>
           </button>
         </NuxtLink>
-        <NuxtLink to="/all_confirmed" class="relative group">
+        <div class="relative group">
           <button 
               :disabled="aInput.confirmedData.length <= 0"
               class="p-1 relative rounded-lg hover:bg-green-200 text-black dark:text-white dark:hover:bg-green-500"
+              @click="general_store.show_overlay('confirmed_list')"
             >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
               <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3" />
@@ -26,7 +28,7 @@
             </div>
           </button>
           <div class="w-auto min-w-max py-2 px-4 absolute top-0 left-14 text-white bg-gray-900 rounded font-bold scale-0 group-hover:scale-100 transition-all duration-200">All Comfirmed QA Pairs</div>
-        </NuxtLink>
+        </div>
         <NuxtLink class="relative group">
           <button disabled class="p-1 relative rounded-lg text-black dark:text-white" >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
@@ -69,7 +71,6 @@
 </template>
 
 <script setup>
-
   import { useAnnotationInputStore } from "~/stores/annotationInput"
   import { useGeneralStore } from "~/stores/generalStore"
 
