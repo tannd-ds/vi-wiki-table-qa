@@ -6,7 +6,12 @@
         </label>
         <component
           :is="is" 
-          class="appearance-none border-b-2 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-midnight-100 dark:rounded-lg dark:border-gray-500 dark:text-gray-100" 
+          class="
+            appearance-none rounded-lg
+            w-full p-3
+            text-gray-700 leading-tight focus:outline-green-400 
+            dark:bg-midnight-200 dark:border-gray-500 dark:text-gray-100
+          " 
           :id="id" 
           :type="type" 
           :value="modelValue"
