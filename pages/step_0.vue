@@ -55,13 +55,23 @@
             <span>
               Your file is read successfully!
             </span>
-            <BaseButton>
+            <BaseButton @click="router.push('/step_1')">
               <div class="group flex flex-row gap-2 justify-center items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
                 </svg>
                 <span>
                   To Next Step!
+                </span>
+              </div>
+            </BaseButton>
+            <BaseButton @click="restart">
+              <div class="group flex flex-row gap-2 justify-center items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                </svg>
+                <span>
+                  Reload
                 </span>
               </div>
             </BaseButton>
@@ -78,20 +88,33 @@
 
   definePageMeta({
     layout: 'custom',
+    pageTransition: {
+      'name': 'fade',
+      'mode': 'in-out'
+    }
   })
 
   const aInput = useAnnotationInputStore()
   const general_store = useGeneralStore()
+
+  const dropzone_active = ref(false)
+  const upload_success  = ref(false)
 
   const route  = useRoute()
   const router = useRouter()
   watchEffect(() => {
     const redirect_to = general_store.check_step(route.name)
     if (redirect_to != route.name) router.push(redirect_to)
+
+    upload_success.value = (aInput.anno_file_data != null)
+
+    if (upload_success.value == true) {
+
+      console.log('Update step')
+      general_store.update_step(1)
+    }
   })
 
-  const dropzone_active = ref(false)
-  const upload_success  = ref(false)
 
   function toggle_dropzone() {
     dropzone_active.value = !dropzone_active.value
@@ -104,7 +127,8 @@
     reader.onload = (event) => {
       const contents = event.target.result; // Get the file contents
       try {
-        const jsonData = JSON.parse(contents); // Parse the JSON data
+        const jsonData = JSON.parse(contents) // Parse the JSON data
+        aInput.update_anno_file_data(jsonData)
         return jsonData
       } catch (error) {
         console.log(error.message)
@@ -119,12 +143,13 @@
 
   const read_selected_file = (event) => {
     const uploaded_file = event.target.files[0]
-        toggle_dropzone()
+    toggle_dropzone()
     const reader = new FileReader(); 
     reader.onload = (event) => {
       const contents = event.target.result; // Get the file contents
       try {
-        const jsonData = JSON.parse(contents); // Parse the JSON data
+        const jsonData = JSON.parse(contents) // Parse the JSON data
+        aInput.update_anno_file_data(jsonData)
         return jsonData
       } catch (error) {
         console.log(error.message)
@@ -135,6 +160,11 @@
     }
     upload_success.value = true
     reader.readAsText(uploaded_file)
+  }
+
+  const restart = () => {
+    aInput.update_anno_file_data(null)
+    upload_success.value = false
   }
 
 </script>
