@@ -38,10 +38,6 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
         if (current_table_index) this.current_table_index = Number(current_table_index)
       },
       confirmData() {
-        if (!this.chosen_table) {
-          useGeneralStore().show_toast('error', 'Please choose (or input) a Table')
-          return
-        }
         if (!this.question) {
           useGeneralStore().show_toast('error', 'Please Enter a Question!')
           return
@@ -53,7 +49,7 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
         let dataPoint = {
           "question": this.question,
           "answer": this.answer,
-          "table_id": this.chosen_table.id,
+          "table_id": this.getCurrentTableID,
         }
         this.confirmedData.push(dataPoint)
         window.localStorage.setItem('confirmed_qa', JSON.stringify(this.confirmedData))
@@ -61,6 +57,25 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
         // Reset Input QA Values
         this.question = ""
         this.answer = "" 
+      },
+      download_confirmed() {
+        console.log(this.confirmedData)
+        if (this.confirmedData.length == 0) {
+          useGeneralStore().show_toast('error', "There is no confirmed data to be downloaded")
+          return
+        }
+        const jsonString = JSON.stringify(this.confirmedData);
+        const blob = new Blob([jsonString], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+
+        link.download = "data.json";
+        link.click();
+
+        URL.revokeObjectURL(url);
+        useGeneralStore().show_toast('success', "Successfully Download data.json");
       },
       removeConfirmed(confirmed) {
         if (!confirm('Are you sure want to remove this?'))
@@ -90,6 +105,9 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
 
       getCurrentTableHTML() {
         return this.anno_file_data[this.current_table_index]['table_html']
-      }
+      },
+      getCurrentTableID() {
+        return this.anno_file_data[this.current_table_index]['id']
+      },
     }
 })
