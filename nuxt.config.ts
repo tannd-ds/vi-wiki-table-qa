@@ -2,6 +2,9 @@
 export default defineNuxtConfig({
   ssr: false,
   devtools: { enabled: true },
+  app: {
+    pageTransition: { name: 'page', mode: 'out-in' }
+  },
   modules: [
     "@pinia/nuxt",
     "nuxt-icon",
