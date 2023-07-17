@@ -63,7 +63,7 @@
         </BaseBox>
       </div>
       <div class="flex flex-col">
-        <HTMLTable :table_data="aInput.getCurrentTableHTML"/>
+        <TableDisplay />
       </div>
     </div>
   </div>
