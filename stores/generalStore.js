@@ -52,6 +52,11 @@ export const useGeneralStore = defineStore('general_store', {
         }
     },
     getters: {
+        getPreviousStep() {
+            if (this.current_step == 0)
+                return this.current_step
+            return this.current_step - 1
+        }
     }
   
 })
