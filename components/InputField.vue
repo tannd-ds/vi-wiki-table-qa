@@ -21,7 +21,9 @@
           spellcheck="false" 
           autocomplete="off" 
           aria-autocomplete="none"
-        />
+        >
+          <slot></slot>
+        </component>
       </div>
     </div>
 </template>
