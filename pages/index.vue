@@ -89,6 +89,7 @@
   const route = useRoute()
   const router = useRouter()
   watchEffect(() => {
+    router.push('/step_' + general_store.current_step)
     const redirect_to = general_store.check_step(route.name)
     if (redirect_to != route.name) router.push(redirect_to)
   })

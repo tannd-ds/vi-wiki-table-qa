@@ -6,21 +6,6 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
         return {
             question: "",
             answer: "",
-            chosen_table: null,
-            tables: [
-              {
-                'id': '001',
-                'content': [[0, 1, 2], [3, 4, 5]],
-              },
-              {
-                'id': '002',
-                'content': [[0, 1, 2], [3, 4, 5]],
-              },
-              {
-                'id': '003',
-                'content': [[1, 2, 3], [4, 5, 6]],
-              }
-            ],
             confirmedData: [],
             anno_file_data: null,
             current_table_index: 0,
@@ -59,7 +44,6 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
         this.answer = "" 
       },
       download_confirmed() {
-        console.log(this.confirmedData)
         if (this.confirmedData.length == 0) {
           useGeneralStore().show_toast('error', "There is no confirmed data to be downloaded")
           return
@@ -93,12 +77,11 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
         else 
           window.localStorage.setItem('anno_file_data', JSON.stringify(new_data))
       },
+      setCurrentTableID(new_id) {
+        this.current_table_index = new_id
+      }
     },
     getters: {
-      hasTable() {
-          return this.table != null
-      },
-
       getConfirmedData() {
         return this.confirmedData['qa']
       },
