@@ -108,9 +108,7 @@
 
     upload_success.value = (aInput.anno_file_data != null)
 
-    if (upload_success.value == true) {
-
-      console.log('Update step')
+    if (general_store.current_step < 1 & upload_success.value == true) {
       general_store.update_step(1)
     }
   })
