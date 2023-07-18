@@ -37,7 +37,7 @@ export const useGeneralStore = defineStore('general_store', {
             this.overlay.is_show = true
         },
         update_step(to_step) {
-            this.current_step = Math.max(this.current_step, to_step)
+            this.current_step = to_step
             window.localStorage.setItem('current_step', this.current_step)
         },
         check_step(to_page) {

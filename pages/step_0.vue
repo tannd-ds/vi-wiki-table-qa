@@ -165,6 +165,7 @@
   const restart = () => {
     aInput.update_anno_file_data(null)
     upload_success.value = false
+    general_store.update_step(0)
   }
 
 </script>
