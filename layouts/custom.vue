@@ -17,26 +17,26 @@
               >
                 <div 
                   v-if="step_index > 0" 
-                  class="leading-3 font-bold text-gray-300 dark:text-gray-700" 
+                  class="my-1 leading-3 font-bold text-gray-300 dark:text-gray-700" 
                 >
                   <svg 
-                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="4" stroke="currentColor" 
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" 
                     class="w-6 h-6"
                   >
-                    <line stroke-width="4" stroke-linecap="square" stroke-linejoin="undefined" y2="24" x2="12" y1="0" x1="12" fill="none"/>
+                    <line stroke-width="2" stroke-linecap="square" stroke-linejoin="undefined" y2="24" x2="12" y1="0" x1="12" fill="none"/>
                   </svg>
                 </div>
                 <button 
                   :disabled="step_index > general_store.current_step"
                   @click="direct_step(step_index)"
                   class="
-                    px-3 h-8
+                    w-8 h-8
                     flex items-center justify-center
                     rounded-full
                     leading-tight 
                     border border-gray-300 dark:border-gray-700
                     transition-all duration-200
-                    font-bold
+                    font-bold font-mono text-lg
                   "
                   :class="{
                     'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white \
