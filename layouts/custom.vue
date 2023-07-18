@@ -5,31 +5,51 @@
     <div class="h-screen flex items-center justify-start gap-4 mr-8">
       <div>
         <BaseBox class="ml-4 px-[1em] py-4 flex-col gap-8">
-          
-          <NuxtLink :to="`/step_` + general_store.getPreviousStep" class="relative group">
-            <button 
-                class="p-1 relative rounded-lg hover:bg-green-200 text-black dark:text-white dark:hover:bg-green-500" 
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 19.5v-15m0 0l-6.75 6.75M12 4.5l6.75 6.75" />
-              </svg>
-              <div class="z-30 w-auto min-w-max py-2 px-4 absolute top-0 left-14 text-white bg-midnight-500 rounded font-bold scale-0 group-hover:scale-100 transition-all duration-200">
-                Back to Previous Step
-              </div>
-            </button>
-          </NuxtLink>
-          <NuxtLink :to="`/step_` + general_store.current_step" class="relative group">
-            <button 
-                class="p-1 relative rounded-lg hover:bg-green-200 text-black dark:text-white dark:hover:bg-green-500" 
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-              </svg>
-              <div class="z-30 w-auto min-w-max py-2 px-4 absolute top-0 left-14 text-white bg-midnight-500 rounded font-bold scale-0 group-hover:scale-100 transition-all duration-200">
-                To Your Current Step
-              </div>
-            </button>
-          </NuxtLink>
+          <ul class="inline-flex flex-col items-center gap-4 -space-y-px text-sm">
+            <div class="dark:text-gray-400 font-bold">Step</div>
+            <div class="flex flex-col">
+              <li 
+                v-for="(_, step_index) in general_store.n_steps"
+                class="flex flex-col items-center"
+                :class="{
+                  'opacity-30': step_index > general_store.current_step,
+                }"
+              >
+                <div 
+                  v-if="step_index > 0" 
+                  class="leading-3 font-bold text-gray-300 dark:text-gray-700" 
+                >
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="4" stroke="currentColor" 
+                    class="w-6 h-6"
+                  >
+                    <line stroke-width="4" stroke-linecap="square" stroke-linejoin="undefined" y2="24" x2="12" y1="0" x1="12" fill="none"/>
+                  </svg>
+                </div>
+                <button 
+                  :disabled="step_index > general_store.current_step"
+                  @click="direct_step(step_index)"
+                  class="
+                    px-3 h-8
+                    flex items-center justify-center
+                    rounded-full
+                    leading-tight 
+                    border border-gray-300 dark:border-gray-700
+                    transition-all duration-200
+                    font-bold
+                  "
+                  :class="{
+                    'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white \
+                    bg-white hover:bg-gray-100 dark:bg-midnight-200 dark:hover:bg-gray-700': (general_store.current_step >= step_index) & (!index_is_current_step(step_index)),
+                    'text-gray-700 hover:text-gray-700 dark:text-midnight-200 bg-green-500': index_is_current_step(step_index),
+                    'text-gray-500 dark:text-gray-400 bg-white dark:bg-midnight-100 cursor-not-allowed': general_store.current_step < step_index,
+                  }"
+                >
+                  {{ step_index }}
+                </button>
+              </li>
+            </div>
+          </ul>
         </BaseBox>
         <BaseBox class="ml-4 px-[1em] py-4 flex-col gap-8">
           <div class="relative group">
@@ -93,4 +113,25 @@
 
   const aInput = useAnnotationInputStore()
   const general_store = useGeneralStore()
+  const router = useRouter()
+  const route = useRoute()
+
+  function direct_step(step_index) {
+    const ROUTE_PREFIX = 'step_'
+    console.log(route.name.substring(ROUTE_PREFIX.length, route.name.length), step_index)
+    if (index_is_current_step(step_index))
+      return
+    router.push('./step_' + step_index)
+  }
+
+  function get_index_from_route_name() {
+    const ROUTE_PREFIX = 'step_'
+    return route.name.substring(ROUTE_PREFIX.length, route.name.length)
+  }
+
+  function index_is_current_step(index) {
+    index = String(index)
+    return index == get_index_from_route_name()
+  }
+
 </script>
