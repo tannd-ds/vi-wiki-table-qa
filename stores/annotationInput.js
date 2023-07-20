@@ -58,11 +58,13 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
               current_hints_set[table_index].push({
                 'hint_index': hint_index,
                 'is_checked': false,
-                'percent_on_display_next': 1.0,
+                'percent_on_display_next': 0.4,
               })
             }
+            current_hints_set[table_index] = this.update_display_hints(current_hints_set[table_index], true)
           }
           this.hints['current_hints_set'] = current_hints_set
+          window.localStorage.setItem('current_hints_set', JSON.stringify(this.hints['current_hints_set']))
         }
       },
       confirmData() {
@@ -74,11 +76,12 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
           useGeneralStore().show_toast('error', 'Please Enter an Answer!')
           return
         }
+        let checked_hints = this.getCheckedHintsContent(this.hints['current_hints_set'][this.current_table_index].slice(0, this.hints['n_displayed_hints']))
         let dataPoint = {
           "question": this.question,
           "answer": this.answer,
           "table_id": this.current_table_index,
-          "hints": this.hints['current_hints_set'][this.current_table_index].slice(0, this.hints['n_displayed_hints'])
+          "hints": checked_hints,
         }
         this.confirmedData.push(dataPoint)
         window.localStorage.setItem('confirmed_qa', JSON.stringify(this.confirmedData))
@@ -127,21 +130,46 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
       setCurrentTableID(new_id) {
         this.current_table_index = new_id
       },
-      update_display_hints(current_hints_set) {
-        for (let i = 0; i < 3; i++) {
-          let hints = current_hints_set[0]
-          hints['is_checked'] = false
-          current_hints_set.splice(0, 1)
-          current_hints_set.push(hints)
+      update_display_hints(current_hints_set, is_first_run=false) {
+
+        if (!is_first_run) {
+          for (let i = 0; i < this.hints.n_displayed_hints; i++) {
+            if (current_hints_set[i].is_checked) current_hints_set[i].percent_on_display_next /= 3
+            else current_hints_set[i].percent_on_display_next /= 2
+            current_hints_set[i].is_checked = false
+          }
+          for (let i = this.hints.n_displayed_hints; i < current_hints_set.length; i++)
+            current_hints_set[i].percent_on_display_next = Math.min(current_hints_set[i].percent_on_display_next + 0.10, 1.0)
+          current_hints_set.push(...current_hints_set.slice(0, 3))
+          current_hints_set.splice(0, 3)
         }
-        return current_hints_set
+        let chosen_hints = []
+        let hint_index = 0
+        while (chosen_hints.length < this.hints.n_displayed_hints) {
+          let threshhold = current_hints_set[hint_index].percent_on_display_next
+          
+          let random_number = Math.random()
+          if (random_number < threshhold) {
+            chosen_hints.push(current_hints_set[hint_index])
+            current_hints_set.splice(hint_index, 1)
+          }
+          hint_index = (hint_index + 1) % current_hints_set.length
+        }
+        return [...chosen_hints, ...current_hints_set]
+      },
+      getCheckedHintsContent(hints) {
+        let checked_hints = []
+        for (let i = 0; i < hints.length; i++) {
+          if (hints[i].is_checked)
+            checked_hints.push(this.hints.all_hints[hints[i]['hint_index']])
+        }
+        return checked_hints
       }
     },
     getters: {
       getConfirmedData() {
         return this.confirmedData['qa']
       },
-
       getCurrentTableHTML() {
         return this.anno_file_data[this.current_table_index]['table_html']
       },
