@@ -28,10 +28,53 @@
             </div>
             <div class="mt-8 p-4 dark:bg-midnight-100 rounded-2xl dark:text-gray-300 leading-8">
               <p class="font-bold text-center">Your QA should meet ONE OF THESE CRITERIA</p>
-              <ul class="pl-12 list-disc">
-                <li>This is Criteria 1.</li>
-                <li>Like above, but this is Criteria 2. I make this longer for experimental purpose.</li>
-                <li>And this is Criteria 3, of course.</li>
+              <ul class="p-4 flex flex-col gap-2 list-none">
+                <li 
+                  v-for="(hint, hint_index) in aInput.hints['current_hints_set'][aInput.current_table_index].slice(0, aInput.hints['n_displayed_hints'])" :key="hint"
+                >
+                  <div 
+                    class="
+                      flex items-center gap-2 
+                      px-4 
+                      border 
+                      hover:bg-gray-100 dark:hover:bg-midnight-200
+                      rounded 
+                      transition-all duration-200
+                    "
+                    :class="{
+                      'pr-2 border-r-8 border-green-500 dark:border-r-green-600': hint.is_checked,
+                      'border-gray-200 dark:border-zinc-800': !hint.is_checked
+                    }"
+                  >
+                    <input 
+                      hidden
+                      :id="getCheckboxID(hint_index, aInput.current_table_index)" 
+                      type="checkbox" value="" 
+                      v-model="hint.is_checked"
+                    >
+                    <div 
+                      class="
+                        w-4 h-4 
+                        flex justify-center items-center
+                        text-green-600 
+                        border rounded 
+                      "
+                      :class="{
+                        'bg-green-300 dark:bg-green-500 dark:border-none': hint.is_checked,
+                        'bg-gray-100 dark:bg-zinc-700 border-gray-300 dark:border-zinc-600': !hint.is_checked,
+                      }"
+                    >
+                      <Transition name="fade">
+                        <svg v-if="hint.is_checked" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="6" stroke="currentColor" class="w-3 h-3 dark:text-green-900">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                        </svg>
+                      </Transition>
+                    </div>
+                    <label :for="getCheckboxID(hint_index, aInput.current_table_index)" class="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                      {{ aInput.hints['all_hints'][hint['hint_index']] }}
+                    </label>
+                  </div>
+                </li>
               </ul>
             </div>
           </div>
@@ -139,5 +182,9 @@
   function choose_table(table_index) {
     aInput.setCurrentTableID(table_index)
     table_dropdown_is_open.value = false
+  }
+  
+  function getCheckboxID(hint_id, table_id) {
+    return 'h' + hint_id + '_t' + table_id
   }
 </script>

@@ -9,10 +9,23 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
             confirmedData: [],
             anno_file_data: null,
             current_table_index: 0,
+            hints: {
+              'all_hints': [],
+              'current_hints_set': {
+                "table_index_01": [
+                  {
+                    'hint_index': 0,
+                    'is_checked': false,
+                    'percent_on_display_next': 1.0,
+                  }
+                ]
+              },
+              'n_displayed_hints': 3,
+            },
         }
     },
     actions: { 
-      loadConfirmedData() {
+      async loadConfirmedData() {
         let confirmed_qa = localStorage.getItem('confirmed_qa')
         if (confirmed_qa) this.confirmedData = JSON.parse(confirmed_qa)
   
@@ -21,6 +34,26 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
 
         let current_table_index = localStorage.getItem('current_table_index')
         if (current_table_index) this.current_table_index = Number(current_table_index)
+
+        let { data: hints } = await useFetch('/server/api/hints.txt')
+        this.hints['all_hints'] = hints.value.split('\n')
+        // Create New Hints Set for each table
+        let current_hints_set = localStorage.getItem('current_hints_set')
+        if (current_hints_set) this.hints['current_hints_set'] = JSON.parse(current_hints_set)
+        else {
+          current_hints_set = {}
+          for (let table_index = 0; table_index < this.anno_file_data.length; table_index++) {
+            current_hints_set[table_index] = []
+            for (let hint_index = 0; hint_index < this.hints['all_hints'].length; hint_index++) {
+              current_hints_set[table_index].push({
+                'hint_index': hint_index,
+                'is_checked': false,
+                'percent_on_display_next': 1.0,
+              })
+            }
+          }
+          this.hints['current_hints_set'] = current_hints_set
+        }
       },
       confirmData() {
         if (!this.question) {
@@ -34,7 +67,8 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
         let dataPoint = {
           "question": this.question,
           "answer": this.answer,
-          "table_id": this.getCurrentTableID,
+          "table_id": this.current_table_index,
+          "hints": this.hints['current_hints_set'][this.current_table_index].slice(0, this.hints['n_displayed_hints'])
         }
         this.confirmedData.push(dataPoint)
         window.localStorage.setItem('confirmed_qa', JSON.stringify(this.confirmedData))
@@ -42,6 +76,9 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
         // Reset Input QA Values
         this.question = ""
         this.answer = "" 
+        // Update New Hints set
+        this.hints['current_hints_set'][this.current_table_index] = this.update_display_hints(this.hints['current_hints_set'][this.current_table_index])
+        window.localStorage.setItem('current_hints_set', JSON.stringify(this.hints['current_hints_set']))
       },
       download_confirmed() {
         if (this.confirmedData.length == 0) {
@@ -79,6 +116,15 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
       },
       setCurrentTableID(new_id) {
         this.current_table_index = new_id
+      },
+      update_display_hints(current_hints_set) {
+        for (let i = 0; i < 3; i++) {
+          let hints = current_hints_set[0]
+          hints['is_checked'] = false
+          current_hints_set.splice(0, 1)
+          current_hints_set.push(hints)
+        }
+        return current_hints_set
       }
     },
     getters: {
