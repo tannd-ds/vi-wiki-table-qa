@@ -3,8 +3,9 @@
     <OverlayConfirmedData />
     <BaseToastList />
     <div class="h-screen flex items-center justify-start gap-4 mr-8">
-      <div>
-        <BaseBox class="ml-4 px-[1em] py-4 flex-col gap-8">
+      
+      <div class="fixed z-[9]">
+        <BaseBox class="ml-4 px-[1em] w-20 flex-col gap-8">
           <ul class="inline-flex flex-col items-center gap-4 -space-y-px text-sm">
             <div class="dark:text-gray-400 font-bold">Step</div>
             <div class="flex flex-col">
@@ -51,8 +52,8 @@
             </div>
           </ul>
         </BaseBox>
-        <BaseBox class="ml-4 px-[1em] py-4 flex-col gap-8">
-          <div class="relative group">
+        <BaseBox class="ml-4 px-[1em] max-w-[5em] flex-col gap-8 group hover:max-w-none">
+          <div class="relative flex gap-2">
             <button 
                 :disabled="aInput.confirmedData.length <= 0"
                 class="p-1 relative rounded-lg hover:bg-green-200 text-black dark:text-white dark:hover:bg-green-500"
@@ -65,22 +66,35 @@
                 {{ aInput.confirmedData.length }}
               </div>
             </button>
-            <div class="z-30 w-auto min-w-max py-2 px-4 absolute top-0 left-14 text-white bg-midnight-500 rounded font-bold scale-0 group-hover:scale-100 transition-all duration-200">All Comfirmed QA Pairs</div>
+            <div class="z-30 min-w-max py-2 px-4 text-white rounded font-bold hidden group-hover:block transition-all duration-200">
+              <div class="font-medium text-black dark:text-white">
+                <div>Show Comfirmed QA Pairs</div>
+              </div>
+            </div>
           </div>
-          <NuxtLink class="relative group">
-            <button disabled class="p-1 relative rounded-lg text-black dark:text-white" >
+          <NuxtLink class="relative flex gap-2">
+            <button 
+              class="p-1 relative rounded-lg hover:bg-green-200 text-black dark:text-white dark:hover:bg-green-500" 
+            >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             </button>
-            <div class="z-30 w-auto min-w-max py-2 px-4 absolute top-0 left-14 text-white bg-midnight-500 rounded font-bold scale-0 group-hover:scale-100 transition-all duration-200">
-              <div class="font-medium dark:text-white">
-                <div class="text-sm text-gray-500 dark:text-gray-400">Welcome,</div>
-                <div>Annotator 01!</div>
+            <div class="z-30 min-w-max py-2 px-4 text-white rounded font-bold hidden group-hover:block transition-all duration-200">
+              <div class="flex items-center gap-4">
+                <div class="font-medium dark:text-white">
+                  <span class="text-sm text-gray-500 dark:text-gray-400">Welcome, </span>
+                  <span>{{ aInput.anno_name }}!</span>
+                </div>
+                <button>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                  </svg>
+                </button>
               </div>
             </div>
           </NuxtLink>
-          <div class="relative group">
+          <div class="relative flex gap-2">
             <button 
                 @click="general_store.use_darkmode = !general_store.use_darkmode" 
                 class="p-1 relative rounded-lg hover:bg-green-200 text-black dark:text-white dark:hover:bg-green-500" >
@@ -88,9 +102,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
               </svg>
             </button>
-            <div class="z-30 w-auto min-w-max py-2 px-4 absolute top-0 left-14 text-white bg-midnight-500 rounded font-bold scale-0 group-hover:scale-100 transition-all duration-200">
-              <div class="font-medium dark:text-white">
-                <div class="text-sm text-gray-500 dark:text-gray-400">Welcome,</div>
+            <div class="z-30 min-w-max py-2 px-4 text-white rounded font-bold hidden group-hover:block transition-all duration-200">
+              <div class="font-medium text-black dark:text-white">
                 <div>Toggle Color Mode</div>
               </div>
             </div>
@@ -100,7 +113,7 @@
       <!-- <div class="absolute w-full h-full dark:bg-midnight-100 -z-50" > </div> -->
       <div class="absolute w-full h-full bg-gray-100 dark:bg-gradient-to-bl dark:from-zinc-800 dark:to-midnight-400 -z-50" > </div>
 
-      <div class="w-full h-screen flex-grow">
+      <div class="ml-28 w-full h-screen flex-grow">
         <slot></slot>
       </div>
     </div>
@@ -131,7 +144,7 @@
 
   function index_is_current_step(index) {
     index = String(index)
-    return index == get_index_from_route_name()
+    return (index == get_index_from_route_name())
   }
 
 </script>
