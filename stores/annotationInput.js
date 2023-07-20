@@ -10,7 +10,19 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
             anno_file_data: null,
             current_table_index: 0,
             hints: {
-              'all_hints': [],
+              'all_hints': [
+                "Câu hỏi phải bao gồm từ \"Bao nhiêu\" hoặc các từ đồng nghĩa",
+                "Câu hỏi phải bao gồm từ \"Thứ\" hoặc các từ đồng nghĩa",
+                "Câu hỏi phải bao gồm từ \"Và\" hoặc các từ đồng nghĩa",
+                "Câu hỏi phải bao gồm từ \"Hoặc\" hoặc các từ đồng nghĩa",
+                "Câu hỏi phải bao gồm từ \"Không\" hoặc các từ đồng nghĩa",
+                "Câu hỏi phải bao gồm từ \"Nào\" hoặc các từ đồng nghĩa",
+                "Câu hỏi phải bao gồm từ \"Thuộc\" hoặc các từ đồng nghĩa",
+                "Câu hỏi phải bao gồm từ \"Ở đâu\" hoặc các từ đồng nghĩa",
+                "Câu hỏi phải bao gồm từ \"Khi nào\" hoặc các từ đồng nghĩa",
+                "Câu hỏi phải bao gồm từ \"Cái gì\" hoặc các từ đồng nghĩa",
+                "Câu hỏi phải bao gồm từ \"Ai\" hoặc các từ đồng nghĩa"
+              ],
               'current_hints_set': {
                 "table_index_01": [
                   {
@@ -35,8 +47,6 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
         let current_table_index = localStorage.getItem('current_table_index')
         if (current_table_index) this.current_table_index = Number(current_table_index)
 
-        let { data: hints } = await useFetch('/server/api/hints.txt')
-        this.hints['all_hints'] = hints.value.split('\n')
         // Create New Hints Set for each table
         let current_hints_set = localStorage.getItem('current_hints_set')
         if (current_hints_set) this.hints['current_hints_set'] = JSON.parse(current_hints_set)
