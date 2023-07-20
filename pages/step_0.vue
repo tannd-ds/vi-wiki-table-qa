@@ -88,10 +88,6 @@
 
   definePageMeta({
     layout: 'custom',
-    pageTransition: {
-      'name': 'fade',
-      'mode': 'in-out'
-    }
   })
 
   const aInput = useAnnotationInputStore()

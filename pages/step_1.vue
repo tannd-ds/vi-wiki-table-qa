@@ -115,10 +115,6 @@
 <script setup>
   definePageMeta({
     layout: "custom",
-    pageTransition: {
-      name: "page",
-      mode: "out-in"
-    },
   })
 
   import { useAnnotationInputStore } from "~/stores/annotationInput"
