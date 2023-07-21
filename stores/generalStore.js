@@ -32,7 +32,7 @@ export const useGeneralStore = defineStore('general_store', {
                 newToast['id'] = String(Number(this.toast_list[this.toast_list.length - 1].id) + 1)
             this.toast_list.push(newToast)
         },
-        show_overlay(type="table_list") {
+        show_overlay(type="confirmed_list") {
             this.overlay.type = type
             this.overlay.is_show = true
         },

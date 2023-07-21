@@ -9,6 +9,7 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
             confirmedData: [],
             anno_file_data: null,
             current_table_index: 0,
+            anno_name: "Annotator 1",
             hints: {
               'all_hints': [
                 "Câu hỏi phải bao gồm từ \"Bao nhiêu\" hoặc các từ đồng nghĩa",
@@ -38,6 +39,9 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
     },
     actions: { 
       async loadConfirmedData() {
+        let anno_name = localStorage.getItem('anno_name')
+        if (anno_name) this.anno_name = anno_name
+
         let confirmed_qa = localStorage.getItem('confirmed_qa')
         if (confirmed_qa) this.confirmedData = JSON.parse(confirmed_qa)
   
@@ -168,6 +172,15 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
             checked_hints.push(this.hints.all_hints[hints[i]['hint_index']])
         }
         return checked_hints
+      },
+      save_anno_name(new_name) {
+        // TODO: Check Name validity
+
+
+        this.anno_name = new_name
+        window.localStorage.setItem('anno_name', this.anno_name)
+        useGeneralStore().overlay.is_show = false
+        useGeneralStore().show_toast('success', 'Save Your Name Successfully')
       }
     },
     getters: {
