@@ -4,6 +4,7 @@ export const useGeneralStore = defineStore('general_store', {
     state: () => {
         return { 
             use_darkmode: true,
+            use_sounds: true,
             current_step: window.localStorage.getItem('current_step') ? window.localStorage.getItem('current_step') : 0,
             n_steps: 2,
             overlay: {
@@ -21,6 +22,11 @@ export const useGeneralStore = defineStore('general_store', {
     },
     actions: {
         show_toast(type='sucess', content) {
+            if (this.use_sounds) {
+                let notification_sound = new Audio('../assets/sounds/hard-pop-click.wav')
+                notification_sound.play()
+            }
+
             let newToast = {
                 'type': type,
                 'content': content,
