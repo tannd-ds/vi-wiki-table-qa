@@ -1,32 +1,53 @@
 <template>
-  <div 
-      class="flex gap-4 items-center max-w-xs p-4 mb-4 text-gray-500 bg-red-200 rounded-lg shadow dark:text-gray-400 dark:bg-midnight-400"
-      :class="{'bg-green-200': toastBackgroundColor == 'green',}"
-      role="alert"
+  <div
+    class="
+      w-full min-w-[20em] max-w-sm
+      mx-auto
+      flex
+      overflow-hidden
+      bg-white dark:bg-zinc-800
+      rounded-lg shadow-md cursor-pointer
+    "
+    @click="generalStore.toast_list.splice(generalStore.toast_list.indexOf(props.toast), 1)"
   >
-    <div v-if="toast.type=='success'" class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
-        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
-        </svg>
-        <span class="sr-only">Check icon</span>
-    </div>
-    <div v-else class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
-      <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"/>
+    <div 
+      class="flex items-center justify-center w-14"
+      :class="{
+        'bg-green-500': props.toast.type == 'success',
+        'bg-red-500': props.toast.type == 'error',
+      }"
+    >
+      <svg
+        class="w-6 h-6 text-white fill-current"
+        viewBox="0 0 40 40"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path v-if="props.toast.type == 'success'"
+          d="M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM16.6667 28.3333L8.33337 20L10.6834 17.65L16.6667 23.6166L29.3167 10.9666L31.6667 13.3333L16.6667 28.3333Z"
+        />
+        <path v-if="props.toast.type == 'error'"
+          d="M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM21.6667 28.3333H18.3334V25H21.6667V28.3333ZM21.6667 21.6666H18.3334V11.6666H21.6667V21.6666Z"
+        />
       </svg>
-      <span class="sr-only">Error icon</span>
     </div>
-    <div class="text-sm font-normal">{{ toast.content }}</div>
-    <button 
-      type="button" 
-      @click="generalStore.toast_list.splice(generalStore.toast_list.indexOf(props.toast), 1)"
-      class="ml-auto -mx-1.5 -my-1.5 bg-gray-100 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-red-500 inline-flex items-center justify-center h-8 w-8 dark:text-white dark:hover:text-white dark:bg-midnight-200 dark:hover:bg-midnight-100" 
-      aria-label="Close">
-        <span class="sr-only select-none">Close</span>
-        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-        </svg>
-    </button>
+
+    <div class="px-4 py-2 -mx-3">
+      <div class="mx-3">
+        <span 
+          class="font-semibold"
+          :class="{
+            'text-green-500 dark:text-green-400': props.toast.type == 'success',
+            'text-red-500 dark:text-red-400': props.toast.type == 'error',
+          }"
+
+        >
+          {{ props.toast.type.substring(0, 1).toUpperCase() + props.toast.type.substring(1, props.toast.type.length) }}
+        </span>
+        <p class="text-sm text-gray-600 dark:text-gray-200">
+          {{ props.toast.content }}
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -37,18 +58,6 @@
   })
   const generalStore = useGeneralStore()
 
-
-  const style = {'success': {
-      'background-color': 'green'
-    },
-    'error': {
-      'background-color': 'red'
-    }
-  };
-
-  const toastBackgroundColor = computed(() => {
-    return style[props.toast.type]['background-color'] || 'white'
-  })
 
   // Automatically Remove toast after a certain amount of time
   setTimeout(
