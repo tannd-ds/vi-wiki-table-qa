@@ -34,8 +34,14 @@ export const useGeneralStore = defineStore('general_store', {
 
             if (this.toast_list.length <= 0)
                 newToast['id'] = '0'
-            else
-                newToast['id'] = String(Number(this.toast_list[this.toast_list.length - 1].id) + 1)
+            else {
+                // Prevent Annotator from spamming the toast
+                let previous_toast = this.toast_list[this.toast_list.length - 1]
+                if (previous_toast['content'] == newToast['content']) 
+                    return
+                
+                newToast['id'] = String(Number(previous_toast['id']) + 1)
+            }
             this.toast_list.push(newToast)
         },
         show_overlay(type="confirmed_list") {
