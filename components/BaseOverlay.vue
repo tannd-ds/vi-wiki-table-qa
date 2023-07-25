@@ -5,7 +5,7 @@
         class="
           absolute top-0 left-0 w-screen h-screen 
           flex items-center justify-center 
-          backdrop-blur-sm
+          backdrop-blur-xl
           z-10
         "
       >
@@ -28,4 +28,11 @@
   onClickOutside(modal, () => general_store.overlay.is_show = false)
 
   const general_store = useGeneralStore()
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key == 'Escape') {
+      console.log("Escape pressed")
+      general_store.overlay.is_show = false
+    }
+  })
 </script>
