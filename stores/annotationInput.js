@@ -181,7 +181,11 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
         window.localStorage.setItem('anno_name', this.anno_name)
         useGeneralStore().overlay.is_show = false
         useGeneralStore().show_toast('success', 'Save Your Name Successfully')
-      }
+      },
+      getTableHTMLFromIndex(index) {
+        console.log(index)
+        return this.anno_file_data[index]['table_html']
+      },
     },
     getters: {
       getConfirmedData() {

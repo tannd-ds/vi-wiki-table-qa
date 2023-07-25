@@ -1,9 +1,9 @@
 <template>
   <Transition name="fade">
     <BaseOverlay v-if="general_store.overlay.type == 'confirmed_list'">
-      <div class="flex gap-8 justify-center">
+      <div class="h-[80vh] flex gap-8 justify-center">
         <div
-          class="w-[30vw] h-full max-h-[80vh] p-2 flex flex-col bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-midnight-200 dark:border-zinc-800"
+          class="w-[30vw] h-fit max-h-[80vh] p-2 flex flex-col bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-midnight-200 dark:border-zinc-800"
         >
           <div class="flex justify-between">
             <div class="mb-4 flex justify-center gap-4">
@@ -53,15 +53,28 @@
           <div class="h-full overflow-auto">
             <ul role="list" class="divide-y divide-gray-200 dark:divide-zinc-700">
               <TransitionGroup name="fade">
-                <li class="mr-4 py-3 sm:py-4 hover:cursor-pointer" v-for="confirmed in aInput.confirmedData"
-                  :key="confirmed" @click="set_chosen_table(confirmed.table_id)"
+                <li 
+                  class="mr-4 py-3 sm:py-4 hover:cursor-pointer" 
+                  v-for="(confirmed, confirmed_index) in aInput.confirmedData"
+                  :key="confirmed" 
+                  @click="set_chosen_table(confirmed_index, confirmed.table_id)"
                 >
                   <div class="flex items-center space-x-4">
                     <div class="flex-1 min-w-0">
-                      <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                      <p 
+                        class="text-sm font-medium text-gray-900 dark:text-white"
+                        :class="{
+                          'truncate': confirmed_index != displayed_confirmed_index,
+                        }"
+                      >
                         {{ confirmed.question }}
                       </p>
-                      <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                      <p 
+                        class="text-sm text-gray-500 dark:text-gray-400"
+                        :class="{
+                          'truncate': confirmed_index != displayed_confirmed_index,
+                        }"
+                      >
                         {{ confirmed.answer }}
                       </p>
                       <p class="text-sm text-gray-500 truncate dark:text-gray-400">
@@ -83,7 +96,7 @@
             </ul>
           </div>
         </div>
-        <TableDisplay class="max-w-[55vw]" />
+        <TableDisplay class="max-w-[55vw]" :displayed_table_index="chosen_table"/>
       </div>
     </BaseOverlay>
   </Transition>
@@ -95,8 +108,11 @@
   const aInput = useAnnotationInputStore()
   const general_store = useGeneralStore()
 
+  // TODO: Clean up this code, we don't really need chosen_table variable
   const chosen_table = ref(0)
-  function set_chosen_table(index) {
+  const displayed_confirmed_index = ref(0)
+  function set_chosen_table(confirmed_index, index) {
+    displayed_confirmed_index.value = confirmed_index
     chosen_table.value = index
   }
 
