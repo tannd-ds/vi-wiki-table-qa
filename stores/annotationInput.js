@@ -124,6 +124,8 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
           return
         this.confirmedData.splice(this.confirmedData.indexOf(confirmed), 1)
         window.localStorage.setItem('confirmed_qa', JSON.stringify(this.confirmedData))
+        if (this.confirmedData.length == 0) 
+          useGeneralStore().overlay.is_show = false
       },
       update_anno_file_data(new_data) {
         if (this.anno_file_data != null)
