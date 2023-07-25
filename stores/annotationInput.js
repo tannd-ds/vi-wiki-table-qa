@@ -129,6 +129,10 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
         if (this.anno_file_data != null)
           if (!confirm('There is already data uploaded, Are you sure to continue?'))
             return
+        // Reset Confirmed Data
+        this.confirmedData = []
+        window.localStorage.removeItem('anno_file_data')
+
         this.anno_file_data = new_data
         if (new_data == null)
           window.localStorage.removeItem('anno_file_data')
