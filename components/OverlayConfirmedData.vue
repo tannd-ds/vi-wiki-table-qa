@@ -1,51 +1,89 @@
 <template>
   <Transition name="fade">
-    <BaseOverlay v-if="general_store.overlay.type=='confirmed_list'">
-      <div class="h-full flex justify-center items-center">
-        <div class="flex gap-2">
-            <button 
-              class="h-fit w-fit p-2 relative rounded bg-white group dark:bg-green-600 dark:text-gray-300 dark:hover:bg-green-700"
+    <BaseOverlay v-if="general_store.overlay.type == 'confirmed_list'">
+      <div class="flex gap-8 justify-center">
+        <div
+          class="w-[30vw] h-full max-h-[80vh] p-2 flex flex-col bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-midnight-200 dark:border-zinc-800"
+        >
+          <div class="flex justify-between">
+            <div class="mb-4 flex justify-center gap-4">
+              <div 
+                v-for="tab in tabs" :key="tab"
+                class="
+                  relative 
+                  min-w-[20%] h-10 px-4 py-2 
+                  flex justify-center items-center gap-2 
+                  rounded-lg 
+                  text-xs font-bold dark:text-gray-200
+                "
+                :class="{
+                  'cursor-pointer hover:bg-gray-200 dark:hover:bg-midnight-100': tab.is_available,
+                  'cursor-not-allowed': !tab.is_available,
+                }"
+                @click="change_tab(tab)"
+              >
+                <div v-html="tab.icon"></div>
+                {{ tab.name }}
+                <Transition name="fade">
+                  <div 
+                    v-if="tab.is_show"
+                    class="absolute -bottom-1 w-1/2 h-[0.1em] bg-green-300 dark:bg-green-500 rounded-full"
+                  ></div>
+                </Transition>
+              </div>
+            </div>
+            <div 
+              class="
+                relative 
+                min-w-[20%] h-10 px-4 py-2 
+                flex justify-center items-center gap-2 
+                rounded-lg  
+                text-xs font-bold dark:text-gray-200
+                hover:bg-gray-200 dark:hover:bg-midnight-100
+                cursor-pointer
+              "
               @click="aInput.download_confirmed"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24"> 
+                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 4v8h3.586a1 1 0 0 1 .707 1.707l-6.586 6.586a1 1 0 0 1-1.414 0l-6.586-6.586A1 1 0 0 1 5.414 12H9V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1z"/> 
               </svg>
-              <div class="w-auto h-auto min-w-max py-2 px-4 absolute top-0 right-16 text-white bg-gray-900 rounded font-bold scale-0 group-hover:scale-100 transition-all duration-200">Download All Data</div>
-            </button>
-          <BaseBox class="w-fit max-w-[50vw] max-h-[70vh] relative gap-4 overflow-auto">
-          <div class="p-2 flex flex-col gap-2" >
-            <div v-if="aInput.confirmedData.length <= 0">There is nothing here.</div>
-              <TransitionGroup name="fade">
-                <div 
-                    class="w-full relative p-4 flex justify-between items-center border-green-400 border rounded-lg hover:bg-green-50 dark:text-gray-100 dark:hover:bg-midnight-400 transition-all duration-200 cursor-pointer"
-                    v-for="confirmed in aInput.confirmedData" 
-                    :key="confirmed"
-                >
-                  <div class="leading-8">
-                    <div 
-                        class="
-                          inline-flex items-center justify-center
-                          mr-2 px-2.5 py-0.5 
-                          bg-blue-100 
-                          text-blue-800 text-xs font-semibold 
-                          border border-blue-400 rounded 
-                          dark:bg-gray-700 dark:text-blue-400 
-                        "
-                      > Table ID: {{ confirmed.table_id }}
-                    </div>
-                    <div><span class="font-mono font-bold">Question</span>: {{ confirmed.question }} </div>
-                    <div><span class="font-mono font-bold">Answer</span>: {{ confirmed.answer }} </div>
-                  </div>
-                  <button class="w-fit h-fit p-1 rounded-full hover:bg-slate-300 dark:hover:bg-midnight-100" @click="aInput.removeConfirmed(confirmed)">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-              </TransitionGroup>
+              Save
             </div>
-          </BaseBox>
+          </div>
+          <div class="h-full overflow-auto">
+            <ul role="list" class="divide-y divide-gray-200 dark:divide-zinc-700">
+              <TransitionGroup name="fade">
+                <li class="mr-4 py-3 sm:py-4 hover:cursor-pointer" v-for="confirmed in aInput.confirmedData"
+                  :key="confirmed" @click="set_chosen_table(confirmed.table_id)"
+                >
+                  <div class="flex items-center space-x-4">
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                        {{ confirmed.question }}
+                      </p>
+                      <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                        {{ confirmed.answer }}
+                      </p>
+                      <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                        Table {{ confirmed.table_id }}
+                      </p>
+                    </div>
+                    <button class="p-2 inline-flex items-center rounded hover:bg-red-300 dark:hover:bg-red-700 text-base font-semibold text-gray-900 dark:text-white"
+                      @click="aInput.removeConfirmed(confirmed)"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24">
+                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M4 7h16m-10 4v6m4-6v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3" />
+                      </svg>
+                    </button>
+                  </div>
+                </li>
+              </TransitionGroup>
+            </ul>
+          </div>
         </div>
+        <TableDisplay class="max-w-[55vw]" />
       </div>
     </BaseOverlay>
   </Transition>
@@ -56,4 +94,30 @@
   import { useGeneralStore } from '~/stores/generalStore';
   const aInput = useAnnotationInputStore()
   const general_store = useGeneralStore()
+
+  const chosen_table = ref(0)
+  function set_chosen_table(index) {
+    chosen_table.value = index
+  }
+
+  const tabs = ref([
+    {
+      name: 'All',
+      icon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24"> <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zm2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8m-9 4h4"/> </svg>',
+      is_show: true,
+      is_available: true, 
+    },
+    {
+      name: 'Statistics',
+      icon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24"> <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"> <path d="M3 3v18h18"/> <path d="M7 9a2 2 0 1 0 4 0a2 2 0 1 0-4 0m10-2a2 2 0 1 0 4 0a2 2 0 1 0-4 0m-5 8a2 2 0 1 0 4 0a2 2 0 1 0-4 0m-1.84-4.38l2.34 2.88m2.588-.172l2.837-4.586"/> </g> </svg>',
+      is_show: false,
+      is_available: false, 
+    },
+  ])
+  function change_tab(to_tab) {
+    for (let tab of tabs.value) {
+      tab.is_show = false
+    }
+    to_tab.is_show = true
+  }
 </script>
