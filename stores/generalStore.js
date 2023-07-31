@@ -22,11 +22,6 @@ export const useGeneralStore = defineStore('general_store', {
     },
     actions: {
         show_toast(type='sucess', content) {
-            if (this.use_sounds) {
-                let notification_sound = new Audio('../assets/sounds/hard-pop-click.wav')
-                notification_sound.play()
-            }
-
             let newToast = {
                 'type': type,
                 'content': content,
@@ -58,7 +53,6 @@ export const useGeneralStore = defineStore('general_store', {
 
             const to_step = Number(to_page.substring(5, to_page.length))
             if (to_step > this.current_step) {
-                console.log('redirected')
                 return '/step_' + String(this.current_step)
             }
             return to_page
@@ -71,5 +65,4 @@ export const useGeneralStore = defineStore('general_store', {
             return this.current_step - 1
         }
     }
-  
 })

@@ -189,7 +189,6 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
         useGeneralStore().show_toast('success', 'Save Your Name Successfully')
       },
       getTableHTMLFromIndex(index) {
-        console.log(index)
         return this.anno_file_data[index]['table_html']
       },
     },

@@ -134,7 +134,6 @@
 
   function direct_step(step_index) {
     const ROUTE_PREFIX = 'step_'
-    console.log(route.name.substring(ROUTE_PREFIX.length, route.name.length), step_index)
     if (index_is_current_step(step_index))
       return
     router.push('./step_' + step_index)
