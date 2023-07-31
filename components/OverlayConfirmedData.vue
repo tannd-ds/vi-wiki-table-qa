@@ -15,11 +15,8 @@
                   flex justify-center items-center gap-2 
                   rounded-lg 
                   text-xs font-bold dark:text-gray-200
+                  cursor-pointer
                 "
-                :class="{
-                  'cursor-pointer hover:bg-gray-200 dark:hover:bg-midnight-100': tab.is_available,
-                  'cursor-not-allowed': !tab.is_available,
-                }"
                 @click="change_tab(tab)"
               >
                 <div v-html="tab.icon"></div>
@@ -51,7 +48,7 @@
             </div>
           </div>
           <div class="h-full overflow-auto">
-            <ul role="list" class="divide-y divide-gray-200 dark:divide-zinc-700">
+            <ul v-if="tabs[0].is_show" role="list" class="divide-y divide-gray-200 dark:divide-zinc-700">
               <TransitionGroup name="fade">
                 <li 
                   class="mr-4 py-3 sm:py-4 hover:cursor-pointer" 
@@ -94,6 +91,7 @@
                 </li>
               </TransitionGroup>
             </ul>
+            <PieChart v-if="tabs[1].is_show" />
           </div>
         </div>
         <TableDisplay class="max-w-[55vw]" :displayed_table_index="chosen_table"/>
@@ -121,13 +119,11 @@
       name: 'All',
       icon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24"> <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zm2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8m-9 4h4"/> </svg>',
       is_show: true,
-      is_available: true, 
     },
     {
       name: 'Statistics',
       icon: '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24"> <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"> <path d="M3 3v18h18"/> <path d="M7 9a2 2 0 1 0 4 0a2 2 0 1 0-4 0m10-2a2 2 0 1 0 4 0a2 2 0 1 0-4 0m-5 8a2 2 0 1 0 4 0a2 2 0 1 0-4 0m-1.84-4.38l2.34 2.88m2.588-.172l2.837-4.586"/> </g> </svg>',
       is_show: false,
-      is_available: false, 
     },
   ])
   function change_tab(to_tab) {
