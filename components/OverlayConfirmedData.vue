@@ -109,7 +109,7 @@
   const general_store = useGeneralStore()
 
   // TODO: Clean up this code, we don't really need chosen_table variable
-  const chosen_table = ref(0)
+  const chosen_table = ref(aInput.confirmedData[0].table_id)
   const displayed_confirmed_index = ref(0)
   function set_chosen_table(confirmed_index, index) {
     displayed_confirmed_index.value = confirmed_index
