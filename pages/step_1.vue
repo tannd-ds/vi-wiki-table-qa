@@ -63,6 +63,7 @@
                         'bg-green-300 dark:bg-green-500 dark:border-none': hint.is_checked,
                         'bg-gray-100 dark:bg-zinc-700 border-gray-300 dark:border-zinc-600': !hint.is_checked,
                       }"
+                      @click="hint.is_checked = !hint.is_checked" 
                     >
                       <Transition name="fade">
                         <svg v-if="hint.is_checked" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="6" stroke="currentColor" class="w-2 h-2 dark:text-green-900">
