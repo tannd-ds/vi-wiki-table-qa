@@ -22,7 +22,6 @@
 
   const displayed_table = computed(() => {
     if (!general_store.overlay.is_show) {
-      console.log(aInput.current_table_index)
       return aInput.getCurrentTableHTML
     } else {
       return aInput.getTableHTMLFromIndex(props.displayed_table_index)
