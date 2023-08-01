@@ -127,6 +127,10 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
         if (this.confirmedData.length == 0) 
           useGeneralStore().overlay.is_show = false
       },
+      update_confirmed(new_confirmed) {
+        window.localStorage.setItem('confirmed_qa', JSON.stringify(this.confirmedData))
+        useGeneralStore().show_toast('success', 'Your QA is updated successfully')
+      },
       update_anno_file_data(new_data) {
         if (this.anno_file_data != null)
           if (!confirm('There is already data uploaded, Are you sure to continue?'))

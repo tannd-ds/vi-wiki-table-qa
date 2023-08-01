@@ -54,11 +54,28 @@
                   class="mr-4 py-3 sm:py-4 hover:cursor-pointer" 
                   v-for="(confirmed, confirmed_index) in aInput.confirmedData"
                   :key="confirmed" 
-                  @click="set_chosen_table(confirmed_index)"
+                  @click.prevent="set_chosen_table(confirmed_index)"
                 >
                   <div class="flex items-center space-x-4">
                     <div class="flex-1 min-w-0">
+                      <form
+                        class="
+                          py-2
+                          flex flex-col gap-2 
+                        "
+                        v-if="confirmed_index == displayed_confirmed_index && confirmed == confirmed_is_editing" 
+                      >
+                        <input 
+                          v-model="qa_after_edit['question']"
+                          class="w-full p-2 rounded bg-gray-100 dark:bg-midnight-100 text-sm dark:text-gray-200"
+                        />
+                        <input 
+                          v-model="qa_after_edit['answer']"
+                          class="w-full p-2 rounded bg-gray-100 dark:bg-midnight-100 text-sm dark:text-gray-200"
+                        />
+                      </form>
                       <p 
+                        v-if="confirmed_index != displayed_confirmed_index | confirmed != confirmed_is_editing"
                         class="text-sm font-medium text-gray-900 dark:text-white"
                         :class="{
                           'truncate': confirmed_index != displayed_confirmed_index,
@@ -67,6 +84,7 @@
                         {{ confirmed.question }}
                       </p>
                       <p 
+                        v-if="confirmed_index != displayed_confirmed_index | confirmed != confirmed_is_editing"
                         class="text-sm text-gray-500 dark:text-gray-400"
                         :class="{
                           'truncate': confirmed_index != displayed_confirmed_index,
@@ -78,15 +96,45 @@
                         Table {{ confirmed.table_id }}
                       </p>
                     </div>
-                    <button class="p-2 inline-flex items-center rounded hover:bg-red-300 dark:hover:bg-red-700 text-base font-semibold text-gray-900 dark:text-white"
-                      @click="aInput.removeConfirmed(confirmed)"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24">
-                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M4 7h16m-10 4v6m4-6v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3" />
+                    <button v-if="confirmed_index != displayed_confirmed_index" class="p-1 rounded dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-zinc-700">
+                      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M12 20q-.825 0-1.413-.588T10 18q0-.825.588-1.413T12 16q.825 0 1.413.588T14 18q0 .825-.588 1.413T12 20Zm0-6q-.825 0-1.413-.588T10 12q0-.825.588-1.413T12 10q.825 0 1.413.588T14 12q0 .825-.588 1.413T12 14Zm0-6q-.825 0-1.413-.588T10 6q0-.825.588-1.413T12 4q.825 0 1.413.588T14 6q0 .825-.588 1.413T12 8Z"/>
                       </svg>
                     </button>
+                    <div v-if="confirmed_index == displayed_confirmed_index">
+                      <div 
+                        v-if="confirmed_is_editing != confirmed"
+                        class="flex flex-col gap-2"
+                      >
+                        <button class="p-2 inline-flex items-center rounded hover:bg-red-300 dark:hover:bg-red-700 text-base font-semibold text-gray-900 dark:text-white"
+                          @click="edit_confirmed(confirmed)"
+                        >
+                          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="m19.3 8.925l-4.25-4.2l1.4-1.4q.575-.575 1.413-.575t1.412.575l1.4 1.4q.575.575.6 1.388t-.55 1.387L19.3 8.925ZM4 21q-.425 0-.713-.288T3 20v-2.825q0-.2.075-.388t.225-.337l10.3-10.3l4.25 4.25l-10.3 10.3q-.15.15-.337.225T6.825 21H4Z"/>
+                          </svg>
+                        </button>
+                        <button class="p-2 inline-flex items-center rounded hover:bg-red-300 dark:hover:bg-red-700 text-base font-semibold text-gray-900 dark:text-white"
+                          @click="aInput.removeConfirmed(confirmed)"
+                        >
+                          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M4 7h16m-10 4v6m4-6v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3" />
+                          </svg>
+                        </button>
+                      </div>
+                      <div v-if="confirmed_is_editing == confirmed">
+                        <button 
+                          class="p-2 inline-flex items-center rounded hover:bg-green-300 dark:hover:bg-green-700 text-base font-semibold text-gray-900 dark:text-white"
+                          @click="save_edit_confirmed()"
+                        >
+
+                          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M9 16.17L5.53 12.7a.996.996 0 1 0-1.41 1.41l4.18 4.18c.39.39 1.02.39 1.41 0L20.29 7.71a.996.996 0 1 0-1.41-1.41L9 16.17z"/>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </li>
               </TransitionGroup>
@@ -132,4 +180,24 @@
     }
     to_tab.is_show = true
   }
+
+  const confirmed_is_editing = ref(null)
+  const qa_after_edit = ref(null)
+  function edit_confirmed(confirmed) {
+    confirmed_is_editing.value = confirmed
+    qa_after_edit.value = {
+      'question': (confirmed_is_editing.value) ? confirmed_is_editing.value['question'] : null,
+      'answer': (confirmed_is_editing.value) ? confirmed_is_editing.value['answer'] : null,
+    }
+  }
+  function save_edit_confirmed() {
+    confirmed_is_editing.value['question'] = qa_after_edit.value['question']
+    confirmed_is_editing.value['answer'] = qa_after_edit.value['answer']
+    aInput.update_confirmed(confirmed_is_editing.value)
+    confirmed_is_editing.value = null
+    qa_after_edit.value = null
+  }
+  watch(displayed_confirmed_index, () => {
+    edit_confirmed(null)
+  })
 </script>
