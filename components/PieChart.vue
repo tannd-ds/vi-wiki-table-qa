@@ -20,7 +20,7 @@
         </div>
         <!-- Annots -->
         <span
-          v-for="(table, table_index) in aInput.anno_file_data" :key="table"
+          v-for="(table, table_index) in counted" :key="table"
           class="
             absolute 
             p-2
@@ -52,7 +52,11 @@
   for (let i = 0; i < aInput.anno_file_data.length; i++)
     counted.value[i] = 0
   for (let confirmed of aInput.confirmedData)
-      counted.value[confirmed.table_id] += 1
+    counted.value[confirmed.table_id] += 1
+  for (let i = 0; i < aInput.anno_file_data.length; i++)
+    // remove counted.value[i] if its value is 0
+    if (counted.value[i] == 0)
+      delete counted.value[i]
 
   const pie_drawing = computed(() => {
     let current_begin_degree = 0
@@ -74,7 +78,7 @@
     let current_begin_radian = -Math.PI / 2
     let radius = 9
     for (let table_id in counted.value) {
-      // turn counted into degree
+      // turn counted into radian
       let radian = counted.value[table_id] / aInput.confirmedData.length * 2*Math.PI
       // Calculate X and Y trasformation using mathemetics
       let x_translate = String(Math.sin(current_begin_radian + radian / 2) * radius) + 'rem'
