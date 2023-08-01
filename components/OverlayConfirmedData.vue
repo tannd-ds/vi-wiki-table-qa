@@ -54,7 +54,7 @@
                   class="mr-4 py-3 sm:py-4 hover:cursor-pointer" 
                   v-for="(confirmed, confirmed_index) in aInput.confirmedData"
                   :key="confirmed" 
-                  @click="set_chosen_table(confirmed_index, confirmed.table_id)"
+                  @click="set_chosen_table(confirmed_index)"
                 >
                   <div class="flex items-center space-x-4">
                     <div class="flex-1 min-w-0">
@@ -106,14 +106,12 @@
   const aInput = useAnnotationInputStore()
   const general_store = useGeneralStore()
 
-  // TODO: Clean up this code, we don't really need chosen_table variable
   const chosen_table = computed(() => {
-    return aInput.confirmedData[0].table_id
+    return aInput.confirmedData[displayed_confirmed_index.value].table_id
   })
   const displayed_confirmed_index = ref(0)
-  function set_chosen_table(confirmed_index, index) {
+  function set_chosen_table(confirmed_index) {
     displayed_confirmed_index.value = confirmed_index
-    chosen_table.value = index
   }
 
   const tabs = ref([
