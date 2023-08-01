@@ -3,8 +3,11 @@
     <OverlayConfirmedData />
     <OverlayRename />
     <BaseToastList />
-    <div class="h-screen flex items-center justify-start gap-4 mr-8">
-      
+    <div class="
+      w-screen min-h-screen flex items-center justify-start gap-4 mr-8
+      bg-gray-100 dark:bg-gradient-to-bl dark:from-zinc-800 dark:to-midnight-400 
+      "
+    > 
       <div class="fixed z-[9]">
         <BaseBox class="ml-4 px-[1em] w-20 flex-col gap-8">
           <ul class="inline-flex flex-col items-center gap-4 -space-y-px text-sm">
@@ -113,10 +116,8 @@
           </div>
         </BaseBox> 
       </div>
-      <!-- <div class="absolute w-full h-full dark:bg-midnight-100 -z-50" > </div> -->
-      <div class="absolute w-full h-full bg-gray-100 dark:bg-gradient-to-bl dark:from-zinc-800 dark:to-midnight-400 -z-50" > </div>
 
-      <div class="ml-28 w-full h-screen flex-grow">
+      <div class="ml-28 w-full h-full flex-grow">
         <slot></slot>
       </div>
     </div>
