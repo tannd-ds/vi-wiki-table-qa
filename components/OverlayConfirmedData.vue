@@ -3,7 +3,7 @@
     <BaseOverlay v-if="general_store.overlay.type == 'confirmed_list'">
       <div class="h-[80vh] flex gap-8 justify-center">
         <div
-          class="w-[30vw] h-fit max-h-[80vh] p-2 flex flex-col bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-midnight-200 dark:border-zinc-800"
+          class="w-[35vw] h-fit max-h-[80vh] p-2 flex flex-col bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-midnight-200 dark:border-zinc-800"
         >
           <div class="flex justify-between">
             <div class="mb-4 flex justify-center gap-4">
@@ -76,7 +76,7 @@
                       </form>
                       <p 
                         v-if="confirmed_index != displayed_confirmed_index | confirmed != confirmed_is_editing"
-                        class="text-sm font-medium text-gray-900 dark:text-white"
+                        class="text-sm font-medium text-gray-900 dark:text-gray-100"
                         :class="{
                           'truncate': confirmed_index != displayed_confirmed_index,
                         }"
@@ -92,7 +92,13 @@
                       >
                         {{ confirmed.answer }}
                       </p>
-                      <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                      <p 
+                        class="
+                          mt-2 px-2 py-[2px] w-fit
+                          rounded border border-green-500 dark:border-green-300
+                          text-xs text-green-500 truncate dark:text-green-400
+                        "
+                      >
                         Table {{ confirmed.table_id }}
                       </p>
                     </div>
@@ -106,14 +112,14 @@
                         v-if="confirmed_is_editing != confirmed"
                         class="flex flex-col gap-2"
                       >
-                        <button class="p-2 inline-flex items-center rounded hover:bg-red-300 dark:hover:bg-red-700 text-base font-semibold text-gray-900 dark:text-white"
+                        <button class="p-1 inline-flex items-center rounded hover:bg-gray-300 dark:hover:bg-zinc-700 text-base font-semibold text-gray-900 dark:text-white"
                           @click="edit_confirmed(confirmed)"
                         >
                           <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path fill="currentColor" d="m19.3 8.925l-4.25-4.2l1.4-1.4q.575-.575 1.413-.575t1.412.575l1.4 1.4q.575.575.6 1.388t-.55 1.387L19.3 8.925ZM4 21q-.425 0-.713-.288T3 20v-2.825q0-.2.075-.388t.225-.337l10.3-10.3l4.25 4.25l-10.3 10.3q-.15.15-.337.225T6.825 21H4Z"/>
                           </svg>
                         </button>
-                        <button class="p-2 inline-flex items-center rounded hover:bg-red-300 dark:hover:bg-red-700 text-base font-semibold text-gray-900 dark:text-white"
+                        <button class="p-1 inline-flex items-center rounded hover:bg-red-300 dark:hover:bg-red-700 text-base font-semibold text-gray-900 dark:text-white"
                           @click="aInput.removeConfirmed(confirmed)"
                         >
                           <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
