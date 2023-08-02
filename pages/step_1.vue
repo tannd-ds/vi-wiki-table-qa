@@ -85,7 +85,6 @@
             <div class="relative">
               <InputField 
                 is="div"
-                label_name="Table"
                 @click="table_dropdown_is_open = !table_dropdown_is_open"
                 ref="table_dropdown_modal"
               >
