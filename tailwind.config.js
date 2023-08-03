@@ -20,7 +20,21 @@ module.exports = {
           100: '#222423',
         }
       },
-
+      keyframes: {
+        'fade-up': {
+          '0%': {
+            opacity: 0,
+            transform: 'translateY(5em)'
+          },
+          '100%': {
+            opacity: 1,
+            transform: 'translateY(0%)'
+          }
+        }
+      },
+      animation: {
+        'fade-up': 'fade-up 0.5s ease-out',
+      }
     },
   },
   plugins: [],

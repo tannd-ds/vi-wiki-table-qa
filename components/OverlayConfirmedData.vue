@@ -1,7 +1,10 @@
 <template>
   <Transition name="fade">
-    <BaseOverlay v-if="general_store.overlay.type == 'confirmed_list'">
-      <div class="h-[80vh] flex gap-8 justify-center">
+    <BaseOverlay 
+      v-if="general_store.overlay.type == 'confirmed_list'"
+      class="overflow-hidden"
+    >
+      <div class="h-[80vh] flex gap-8 justify-center animate-fade-up">
         <div
           class="w-[35vw] h-fit max-h-[80vh] p-2 flex flex-col bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-midnight-200 dark:border-zinc-800"
         >
