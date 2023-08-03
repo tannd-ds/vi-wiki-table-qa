@@ -168,6 +168,7 @@
   })
   const displayed_confirmed_index = ref(0)
   function set_chosen_table(confirmed_index) {
+    if (confirmed_index >= aInput.confirmedData.length) return
     displayed_confirmed_index.value = confirmed_index
   }
 
@@ -206,6 +207,9 @@
     confirmed_is_editing.value = null
     qa_after_edit.value = null
   }
+  watch(aInput.confirmedData, () => {
+    set_chosen_table(0)
+  })
   watch(displayed_confirmed_index, () => {
     edit_confirmed(null)
   })
