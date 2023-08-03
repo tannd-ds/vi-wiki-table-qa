@@ -56,7 +56,9 @@
             </div>
           </ul>
         </BaseBox>
-        <BaseBox class="ml-4 px-[1em] max-w-[5em] flex-col gap-8 group hover:max-w-none">
+        <BaseBox class="ml-4 w-[5em] px-[1em] flex-col gap-8 group hover:max-w-none transition-all duration-300 hover:w-[18em]">
+
+          <!-- Show Confirmed -->
           <div class="relative flex gap-2">
             <button 
                 :disabled="aInput.confirmedData.length <= 0"
@@ -70,13 +72,22 @@
                 {{ aInput.confirmedData.length }}
               </div>
             </button>
-            <div class="z-30 min-w-max py-2 px-4 text-white rounded font-bold hidden group-hover:block transition-all duration-200">
-              <div class="font-medium text-black dark:text-white">
+            <div 
+              class="
+                z-30 py-2 px-4 
+                truncate
+                text-black dark:text-white text-sm font-medium 
+                hidden group-hover:block 
+                rounded 
+                transition-all duration-300
+              "
+            >
                 <div>Show Comfirmed QA Pairs</div>
-              </div>
             </div>
           </div>
-          <NuxtLink class="relative flex gap-2">
+
+          <!-- User -->
+          <div class="relative flex gap-2">
             <button 
               class="p-1 relative rounded-lg hover:bg-green-200 text-black dark:text-white dark:hover:bg-green-500" 
             >
@@ -84,22 +95,33 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             </button>
-            <div class="z-30 min-w-max py-2 px-4 text-white rounded font-bold hidden group-hover:block transition-all duration-200">
-              <div class="flex items-center gap-4">
-                <div class="font-medium dark:text-white">
+            <div 
+              class="
+                z-30 py-2 px-4 
+                truncate
+                text-black dark:text-white text-sm font-medium 
+                hidden group-hover:block 
+                rounded 
+                transition-all duration-300
+              "
+            >
+              <div class="flex items-center gap-2">
+                <div class="font-medium text-sm dark:text-white">
                   <span class="text-sm text-gray-500 dark:text-gray-400">Welcome, </span>
                   <span>{{ aInput.anno_name }}!</span>
                 </div>
                 <button 
                   @click="general_store.show_overlay('rename')"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                     <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 20h4L18.5 9.5a1.5 1.5 0 0 0-4-4L4 16v4m9.5-13.5l4 4"/>
                   </svg>
                 </button>
               </div>
             </div>
-          </NuxtLink>
+          </div>
+
+          <!-- Color Mode -->
           <div class="relative flex gap-2">
             <button 
                 @click="general_store.use_darkmode = !general_store.use_darkmode" 
@@ -108,7 +130,16 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
               </svg>
             </button>
-            <div class="z-30 min-w-max py-2 px-4 text-white rounded font-bold hidden group-hover:block transition-all duration-200">
+            <div 
+              class="
+                z-30 py-2 px-4 
+                truncate
+                text-black dark:text-white text-sm font-medium 
+                hidden group-hover:block 
+                rounded 
+                transition-all duration-300
+              "
+            >
               <div class="font-medium text-black dark:text-white">
                 <div>Toggle Color Mode</div>
               </div>
