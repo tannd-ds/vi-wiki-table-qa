@@ -5,10 +5,11 @@
           :is="is" 
           class="
             appearance-none rounded-lg
-            w-full p-3
+            w-full px-3 pb-3
             text-gray-700 leading-tight focus:outline-green-400 
             dark:bg-midnight-200 dark:border-gray-500 dark:text-gray-100
           " 
+          :class="[has_label ? 'pt-5' : 'pt-2']"
           :id="id" 
           :type="type" 
           :value="modelValue"
@@ -23,6 +24,7 @@
           <slot></slot>
         </component>
         <label 
+          v-if="has_label"
           class="
             px-2
             absolute left-2
@@ -31,7 +33,7 @@
           "
           :class="{
             '-top-3 rounded bg-green-500 dark:bg-green-400 text-white dark:text-midnight-100': is_label_slide_up,
-            'top-3 dark:text-gray-400': !is_label_slide_up,
+            'top-4 dark:text-gray-400': !is_label_slide_up,
           }"
           :for="id"
         >
@@ -55,6 +57,9 @@
     })
     defineEmits(['update:modelValue'])
 
+    const has_label = computed(() => {
+      return props.label_name != null
+    })
     const is_input_focused = ref(false)
     const is_label_slide_up = computed(() => {
       return is_input_focused.value | props.modelValue != ""
