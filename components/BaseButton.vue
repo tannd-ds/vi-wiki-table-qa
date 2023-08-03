@@ -10,7 +10,7 @@
         bg-green-500 hover:bg-green-700
         rounded-xl 
         border--500
-        focus:outline-none
+        focus:outline-1 focus:outline-offset-2 focus:outline-green-300
       " 
       >
         <slot>
