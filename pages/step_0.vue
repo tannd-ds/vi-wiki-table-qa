@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-row justify-center h-full">
+    <div class="flex flex-row justify-center h-full min-h-[90vh]">
       <Head>
         <Title>ViWiki Table - Input Assigned File</Title>
       </Head>
