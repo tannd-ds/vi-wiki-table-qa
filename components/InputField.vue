@@ -8,13 +8,14 @@
             w-full p-3
             text-gray-700 leading-tight focus:outline-green-400 
             dark:bg-midnight-200 dark:border-gray-500 dark:text-gray-100
-            peer
           " 
           :id="id" 
           :type="type" 
           :value="modelValue"
           :rows="is == `textarea` ? 10 : 1"
           @input="$emit('update:modelValue', $event.target.value)"
+          @focus="is_input_focused = true"
+          @blur="is_input_focused = false"
           spellcheck="false" 
           autocomplete="off" 
           aria-autocomplete="none"
@@ -24,11 +25,14 @@
         <label 
           class="
             px-2
-            absolute top-3 left-2 peer-focus:-top-3 peer-focus:bg-midnight-100
-            block 
-            text-gray-700 text-sm font-bold mb-2 dark:text-gray-400 peer-focus:text-gray-200
+            absolute left-2
+            text-gray-700 text-sm font-bold mb-2
             transition-all
-          " 
+          "
+          :class="{
+            '-top-3 rounded bg-green-500 dark:bg-green-400 text-white dark:text-midnight-100': is_label_slide_up,
+            'top-3 dark:text-gray-400': !is_label_slide_up,
+          }"
           :for="id"
         >
           {{ label_name }}
@@ -38,7 +42,7 @@
 </template>
 
 <script setup>
-    defineProps({
+    const props = defineProps({
         modelValue: String,
         is: {
           type: String,
@@ -51,4 +55,8 @@
     })
     defineEmits(['update:modelValue'])
 
+    const is_input_focused = ref(false)
+    const is_label_slide_up = computed(() => {
+      return is_input_focused.value | props.modelValue != ""
+    })
 </script>
