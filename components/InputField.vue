@@ -4,19 +4,19 @@
         <component
           :is="is" 
           class="
-            appearance-none rounded-lg
+            appearance-none placeholder:text-transparent rounded-lg
             w-full px-3 pb-3
-            text-gray-700 leading-tight focus:outline-green-400 
+            text-gray-700 leading-tight outline-none focus:outline-green-400
             dark:bg-midnight-200 dark:border-gray-500 dark:text-gray-100
+            peer
           " 
-          :class="[has_label ? 'pt-5' : 'pt-2']"
+          :class="[has_label ? 'pt-5' : 'pt-3']"
           :id="id" 
           :type="type" 
           :value="modelValue"
+          placeholder=" "
           :rows="is == `textarea` ? 10 : 1"
           @input="$emit('update:modelValue', $event.target.value)"
-          @focus="is_input_focused = true"
-          @blur="is_input_focused = false"
           spellcheck="false" 
           autocomplete="off" 
           aria-autocomplete="none"
@@ -26,15 +26,21 @@
         <label 
           v-if="has_label"
           class="
-            px-2
-            absolute left-2
-            text-gray-700 text-sm font-bold mb-2
+            px-2 mb-2
+            absolute left-2 -top-3
+            bg-green-500 dark:bg-green-400
+            text-gray-700 text-sm font-bold dark:text-midnight-100
+            rounded
             transition-all
+            peer-placeholder-shown:font-normal
+            peer-placeholder-shown:text-gray-500
+            peer-placeholder-shown:bg-transparent
+            peer-placeholder-shown:top-4
+            peer-placeholder-shown:text-base
+            peer-focus:-top-3
+            peer-focus:bg-green-500 peer-focus:dark:bg-green-400
+            peer-focus:text-gray-700 peer-focus:text-sm peer-focus:font-bold peer-focus:dark:text-midnight-100
           "
-          :class="{
-            '-top-3 rounded bg-green-500 dark:bg-green-400 text-white dark:text-midnight-100': is_label_slide_up,
-            'top-4 dark:text-gray-400': !is_label_slide_up,
-          }"
           :for="id"
         >
           {{ label_name }}
@@ -59,9 +65,5 @@
 
     const has_label = computed(() => {
       return props.label_name != null
-    })
-    const is_input_focused = ref(false)
-    const is_label_slide_up = computed(() => {
-      return is_input_focused.value | props.modelValue != ""
     })
 </script>
