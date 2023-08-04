@@ -6,8 +6,10 @@
           class="
             appearance-none placeholder:text-transparent rounded-lg
             w-full px-3 pb-3
-            text-gray-700 leading-tight outline-none focus:outline-green-400
-            dark:bg-midnight-200 dark:border-gray-500 dark:text-gray-100
+            bg-gray-100 dark:bg-midnight-200 
+            text-midnight-200 dark:text-gray-100
+            leading-tight 
+            outline-none focus:outline-green-400
             peer
           " 
           :class="[has_label ? 'pt-5' : 'pt-3']"
