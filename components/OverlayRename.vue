@@ -8,13 +8,16 @@
             </svg>
             <div class="font-bold">Change Your Name</div>
           </div>
-          <form class="w-[80vw] max-w-xl flex flex-col items-center">
+          <form 
+            class="w-[80vw] max-w-xl flex flex-col items-center"
+            @submit.prevent="save_name"
+          >
             <InputField 
               type="text" 
               id="question" 
               v-model:model-value="new_name"
               placeholder="Tell me your new Name!" 
-              label_name=""
+              label_name="New Name"
               class="w-full"
             />
             <div class="flex items-center justify-between">
@@ -33,4 +36,8 @@
   const general_store = useGeneralStore()
 
   const new_name = ref('')
+
+  const save_name = () => {
+    aInput.save_anno_name(new_name.value)
+  }
 </script>
