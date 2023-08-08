@@ -4,7 +4,7 @@
   >
     <div>
       <div 
-        class="my-8 w-72 h-72 rounded-full relative flex justify-center items-center"
+        class="my-8 w-48 h-48 lg:w-72 lg:h-72 rounded-full relative flex justify-center items-center"
         :style="pie_drawing"
       >
         <div

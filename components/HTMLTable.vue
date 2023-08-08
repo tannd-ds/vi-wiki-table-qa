@@ -2,7 +2,7 @@
   <div
     v-html="computed_html" 
     :id="$style.wikitable"
-    class="max-h-[80vh] max-w-[60vw] rounded-xl shadow-md overflow-auto dark:shadow-midnight-500"
+    class="max-h-[80vh] max-w-[90vw] lg:max-w-[60vw] rounded-xl shadow-md overflow-auto dark:shadow-midnight-500"
   ></div>
 </template>
 
@@ -21,8 +21,8 @@
     
     // Apply new styles
     processed_html = processed_html.replace(/<tr/g, '<tr class="bg-white border-b cursor-pointer dark:bg-midnight-100 dark:text-gray-100 dark:border-midnight-500"')
-    processed_html = processed_html.replace(/<th/g, '<th class="px-6 py-4 text-gray-700 bg-gray-50 dark:bg-midnight-200 dark:text-gray-300"')
-    processed_html = processed_html.replace(/<td/g, '<td class="px-6 py-4 hover:bg-gray-200 dark: dark:hover:bg-midnight-300"')
+    processed_html = processed_html.replace(/<th/g, '<th class="p-2 lg:px-6 lg:py-4 text-gray-700 bg-gray-50 dark:bg-midnight-200 dark:text-gray-300"')
+    processed_html = processed_html.replace(/<td/g, '<td class="p-2 lg:px-6 lg:py-4 hover:bg-gray-200 dark:hover:bg-midnight-300"')
     return processed_html
   }
 
@@ -33,6 +33,9 @@
 <style module>
   #wikitable {
     width: 100%;
+  }
+  #wikitable *{
+    @apply text-xs lg:text-base;
     font-size: 0.875rem;
     line-height: 1.5rem;
   }

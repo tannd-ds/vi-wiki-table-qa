@@ -1,12 +1,12 @@
 <template>
-    <Transition name="fade">
+    <Transition name="fade" is="div">
       <div 
         v-if="general_store.overlay.is_show" 
         class="
-          absolute top-0 left-0 w-screen h-screen 
-          flex items-center justify-center 
+          absolute top-0 left-0 w-screen h-full min-h-screen 
+          flex items-baseline lg:items-center justify-center 
           backdrop-blur-xl
-          z-10
+          z-20
         "
       >
         <div ref="modal">

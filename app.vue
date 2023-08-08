@@ -8,9 +8,16 @@
 
 <script setup>
   import { useAnnotationInputStore } from "~/stores/annotationInput"
+  import { useGeneralStore } from "~/stores/generalStore"
+
+  const general_store = useGeneralStore()
   const aInput = useAnnotationInputStore()
 
   aInput.loadConfirmedData()
+  const isLargeScreen = useMediaQuery('(min-width: 1024px)')
+  watch(isLargeScreen, () => {
+    general_store.isLargeScreen = isLargeScreen.value
+  })
 </script>
 
 <style>

@@ -4,9 +4,9 @@
       v-if="general_store.overlay.type == 'confirmed_list'"
       class="overflow-hidden"
     >
-      <div class="h-[80vh] flex gap-8 justify-center animate-fade-up">
+      <div class="h-[80vh] flex flex-col lg:flex-row gap-8 lg:justify-center animate-fade-up">
         <div
-          class="w-[35vw] h-fit max-h-[80vh] p-2 flex flex-col bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-midnight-200 dark:border-zinc-800"
+          class="lg:w-[35vw] h-fit max-h-[80vh] p-2 flex flex-col bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-midnight-200 dark:border-zinc-800"
         >
           <div class="flex justify-between">
             <div class="mb-4 flex justify-center gap-4">
@@ -151,7 +151,7 @@
             <PieChart v-if="tabs[1].is_show" />
           </div>
         </div>
-        <TableDisplay class="max-w-[55vw]" :displayed_table_index="chosen_table"/>
+        <TableDisplay class="lg:max-w-[55vw]" :displayed_table_index="chosen_table"/>
       </div>
     </BaseOverlay>
   </Transition>

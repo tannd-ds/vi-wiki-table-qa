@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute z-50 h-full flex flex-col justify-end gap-2 bottom-4 right-4 overflow-hidden">
+  <div class="fixed z-50 h-full flex flex-col justify-end gap-2 bottom-4 right-4 overflow-hidden">
     <TransitionGroup name="fade">
       <BaseToast v-for="t in toast_list" :toast="t" :key="t">
       </BaseToast>

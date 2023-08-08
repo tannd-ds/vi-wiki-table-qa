@@ -1,14 +1,34 @@
 <template>
-  <div :class="{'dark': general_store.use_darkmode,}">
+  <div 
+    class="relative"  
+    :class="{'dark': general_store.use_darkmode,}"
+  >
     <OverlayConfirmedData />
     <OverlayRename />
     <BaseToastList />
     <div class="
-      w-screen min-h-screen flex items-center justify-start gap-4 mr-8
-      bg-gray-100 dark:bg-gradient-to-bl dark:from-zinc-800 dark:to-midnight-400 
+      fixed h-screen flex items-center justify-start gap-4 mr-8
+      z-10
       "
     > 
-      <div class="fixed z-[9]">
+      <button
+        v-if="!general_store.isLargeScreen"
+        type="button"
+        @click="navbar_is_show = !navbar_is_show"
+        class="z-[1] fixed top-0 p-4 dark:text-gray-200"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+
+      </button>
+      <div 
+        class="z-0 fixed transition-all"
+        :class="{
+          '-translate-x-full': !(navbar_is_show | general_store.isLargeScreen),
+          'translate-x-0': navbar_is_show | general_store.isLargeScreen
+        }"
+      >
         <BaseBox class="ml-4 px-[1em] w-20 flex-col gap-8">
           <ul class="inline-flex flex-col items-center gap-4 -space-y-px text-sm">
             <div class="dark:text-gray-400 font-bold">Step</div>
@@ -148,9 +168,14 @@
         </BaseBox> 
       </div>
 
-      <div class="ml-28 w-full h-full flex-grow">
-        <slot></slot>
-      </div>
+    </div>
+    <div 
+      class="
+        lg:pl-28 w-full h-full min-h-screen flex justify-center items-center
+      bg-gray-100 dark:bg-gradient-to-bl dark:from-zinc-800 dark:to-midnight-400 
+      "
+    >
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -180,5 +205,11 @@
     index = String(index)
     return (index == get_index_from_route_name())
   }
+
+  const navbar_is_show = ref(true)
+  const isLargeScreen = useMediaQuery('(min-width: 1024px)')
+  watch(general_store.isLargeScreen, () => {
+    console.log(general_store.isLargeScreen)
+  })
 
 </script>
