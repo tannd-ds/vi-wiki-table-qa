@@ -206,5 +206,5 @@
     return (index == get_index_from_route_name())
   }
 
-  const navbar_is_show = ref(true)
+  const navbar_is_show = ref(general_store.isLargeScreen)
 </script>
