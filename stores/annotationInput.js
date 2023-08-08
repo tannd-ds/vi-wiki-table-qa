@@ -139,6 +139,7 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
         // Reset Confirmed Data
         this.confirmedData = []
         window.localStorage.removeItem('anno_file_data')
+        window.localStorage.removeItem('confirmed_qa')
 
         this.anno_file_data = new_data
         if (new_data == null)
