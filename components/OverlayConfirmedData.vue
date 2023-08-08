@@ -72,12 +72,57 @@
               </div>
             </div>
           </div>
+          <ul 
+            v-if="tabs[0].is_show"
+            class="my-3 flex gap-2 dark:text-gray-200">
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
+              </svg>
+
+            </li>
+            <li 
+              v-for="(show_table, show_table_index) in confirmed_table_is_show" :key="show_table_index"
+              class="
+                px-2 min-w-[2em] h-full min-h-[2em]
+                flex justify-center items-center
+                hover:bg-gray-200 dark:hover:bg-midnight-100
+                text-xs
+                border border-gray-200 dark:border-zinc-700
+                rounded
+                cursor-pointer
+              "
+              :class="[
+                confirmed_table_is_show[show_table_index] ? 'bg-green-600 dark:hover:bg-green-500 dark:text-midnight-100' : 'dark:text-zinc-500'
+              ]"
+              @click.exact="toggle_show_table(show_table_index)"
+              @click.ctrl.exact="toggle_show_table_only(show_table_index)"
+            >
+              Table {{ show_table_index }}
+            </li>
+            <li class="relative group">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-400 group-hover:text-white">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+              </svg>
+              <div
+                class="
+                  absolute -top-1/3 left-[calc(100%+5px)] 
+                  w-0 group-hover:w-auto group-hover:p-2 
+                  dark:bg-zinc-800
+                  text-sm truncate rounded
+                  transition-all
+                "
+              >
+                  <span class="font-mono text-green-500">Ctrl + Click</span> on 1 Table to show it only.
+              </div>
+            </li>
+          </ul>
           <div class="h-full overflow-auto">
             <ul v-if="tabs[0].is_show" role="list" class="divide-y divide-gray-200 dark:divide-zinc-700">
               <TransitionGroup name="fade">
                 <li 
                   class="mr-4 py-3 sm:py-4 hover:cursor-pointer" 
-                  v-for="(confirmed, confirmed_index) in aInput.confirmedData"
+                  v-for="(confirmed, confirmed_index) in filter_confirmed"
                   :key="confirmed" 
                   @click.prevent="set_chosen_table(confirmed_index)"
                 >
@@ -242,6 +287,24 @@
 
   const confirmed_is_editing = ref(null)
   const qa_after_edit = ref(null)
+
+  const confirmed_table_is_show = ref([])
+  for (let i = 0; i < aInput.anno_file_data.length; i++) {
+    confirmed_table_is_show.value.push(true)
+  }
+  const filter_confirmed = computed(() => {
+    return aInput.confirmedData.filter((confirmed) => confirmed_table_is_show.value[confirmed.table_id])
+  })
+
+  function toggle_show_table(table_index) {
+    confirmed_table_is_show.value[table_index] = !confirmed_table_is_show.value[table_index]
+  }
+  function toggle_show_table_only(table_index) {
+    for (let i = 0; i < confirmed_table_is_show.value.length; i++)
+      confirmed_table_is_show.value[i] = false
+    confirmed_table_is_show.value[table_index] = true
+  }
+
   function edit_confirmed(confirmed) {
     confirmed_is_editing.value = confirmed
     qa_after_edit.value = {
