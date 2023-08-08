@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :style="`color-scheme: ${general_store.use_darkmode ? 'dark' : 'light'}`">
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
@@ -8,6 +8,9 @@
 
 <script setup>
   import { useAnnotationInputStore } from "~/stores/annotationInput"
+  import { useGeneralStore } from "~/stores/generalStore"
+
+  const general_store = useGeneralStore()
   const aInput = useAnnotationInputStore()
 
   aInput.loadConfirmedData()
