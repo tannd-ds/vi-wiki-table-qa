@@ -42,13 +42,14 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
       async loadConfirmedData() {
         let anno_name = localStorage.getItem('anno_name')
         if (anno_name) this.anno_name = anno_name
+        
+        let anno_file_data = localStorage.getItem('anno_file_data')
+        if (!anno_file_data) return 
+        this.anno_file_data = JSON.parse(anno_file_data)
 
         let confirmed_qa = localStorage.getItem('confirmed_qa')
         if (confirmed_qa) this.confirmedData = JSON.parse(confirmed_qa)
   
-        let anno_file_data = localStorage.getItem('anno_file_data')
-        if (anno_file_data) this.anno_file_data = JSON.parse(anno_file_data)
-
         let current_table_index = localStorage.getItem('current_table_index')
         if (current_table_index) this.current_table_index = Number(current_table_index)
 
@@ -146,6 +147,7 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
           window.localStorage.removeItem('anno_file_data')
         else 
           window.localStorage.setItem('anno_file_data', JSON.stringify(new_data))
+        this.loadConfirmedData()
       },
       setCurrentTableID(new_id) {
         this.current_table_index = new_id
