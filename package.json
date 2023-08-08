@@ -25,6 +25,7 @@
     "@headlessui/vue": "^1.7.14",
     "@heroicons/vue": "^2.0.18",
     "@vueuse/core": "^10.2.1",
+    "@vueuse/nuxt": "^10.3.0",
     "nuxt-storage": "^1.2.2",
     "pinia": "^2.1.4"
   }
