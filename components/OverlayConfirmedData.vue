@@ -6,7 +6,7 @@
     >
       <div class="h-[80vh] flex gap-8 justify-center animate-fade-up">
         <div
-          class="w-[35vw] h-fit max-h-[80vh] p-2 flex flex-col bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-midnight-200 dark:border-zinc-800"
+          class="w-[35vw] h-fit max-h-[80vh] p-2 flex flex-col bg-white border border-gray-300 rounded-lg shadow sm:p-8 dark:bg-midnight-200 dark:border-zinc-700"
         >
           <div class="flex justify-between">
             <div class="mb-4 flex justify-center gap-4">
@@ -39,7 +39,7 @@
                 flex justify-center items-center 
                 rounded-lg  
                 text-xs font-bold dark:text-gray-200
-                border border-gray-200 dark:border-zinc-700
+                border border-gray-300 dark:border-zinc-700
                 overflow-hidden
                 cursor-pointer
               "
@@ -101,7 +101,7 @@
                       </form>
                       <p 
                         v-if="confirmed_index != displayed_confirmed_index | confirmed != confirmed_is_editing"
-                        class="text-sm font-medium text-gray-900 dark:text-gray-100"
+                        class="text-sm font-medium text-midnight-100 dark:text-gray-200"
                         :class="{
                           'truncate': confirmed_index != displayed_confirmed_index,
                         }"
@@ -137,14 +137,14 @@
                         v-if="confirmed_is_editing != confirmed"
                         class="flex flex-col gap-2"
                       >
-                        <button class="p-1 inline-flex items-center rounded hover:bg-gray-300 dark:hover:bg-zinc-700 text-base font-semibold text-gray-900 dark:text-white"
+                        <button class="p-1 inline-flex items-center rounded hover:bg-gray-300 dark:hover:bg-zinc-700 text-base font-semibold text-midnight-100 dark:text-gray-200"
                           @click="edit_confirmed(confirmed)"
                         >
                           <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path fill="currentColor" d="m19.3 8.925l-4.25-4.2l1.4-1.4q.575-.575 1.413-.575t1.412.575l1.4 1.4q.575.575.6 1.388t-.55 1.387L19.3 8.925ZM4 21q-.425 0-.713-.288T3 20v-2.825q0-.2.075-.388t.225-.337l10.3-10.3l4.25 4.25l-10.3 10.3q-.15.15-.337.225T6.825 21H4Z"/>
                           </svg>
                         </button>
-                        <button class="p-1 inline-flex items-center rounded hover:bg-red-300 dark:hover:bg-red-700 text-base font-semibold text-gray-900 dark:text-white"
+                        <button class="p-1 inline-flex items-center rounded hover:bg-red-300 dark:hover:bg-red-700 text-base font-semibold text-midnight-100 dark:text-gray-200"
                           @click="aInput.removeConfirmed(confirmed)"
                         >
                           <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -156,7 +156,7 @@
                       </div>
                       <div v-if="confirmed_is_editing == confirmed">
                         <button 
-                          class="p-2 inline-flex items-center rounded hover:bg-green-300 dark:hover:bg-green-700 text-base font-semibold text-gray-900 dark:text-white"
+                          class="p-2 inline-flex items-center rounded hover:bg-green-300 dark:hover:bg-green-700 text-base font-semibold text-midnight-100 dark:text-gray-200"
                           @click="save_edit_confirmed()"
                         >
 

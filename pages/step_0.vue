@@ -43,7 +43,7 @@
             rounded-lg 
             cursor-pointer 
             bg-gray-50
-            dark:text-gray-100
+            dark:text-gray-200
             dark:bg-midnight-100
             dark:border-gray-600
           "

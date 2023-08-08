@@ -20,8 +20,8 @@
     processed_html = processed_html.replace(/href ?= ?/g, '')
     
     // Apply new styles
-    processed_html = processed_html.replace(/<tr/g, '<tr class="bg-white border-b cursor-pointer dark:bg-midnight-100 dark:text-gray-100 dark:border-midnight-500"')
-    processed_html = processed_html.replace(/<th/g, '<th class="px-6 py-4 text-gray-700 bg-gray-50 dark:bg-midnight-200 dark:text-gray-300"')
+    processed_html = processed_html.replace(/<tr/g, '<tr class="bg-white border-b cursor-pointer dark:bg-midnight-100 dark:text-gray-200 dark:border-midnight-500"')
+    processed_html = processed_html.replace(/<th/g, '<th class="px-6 py-4 text-midnight-100 bg-gray-50 dark:bg-midnight-200 dark:text-gray-200"')
     processed_html = processed_html.replace(/<td/g, '<td class="px-6 py-4 hover:bg-gray-200 dark: dark:hover:bg-midnight-300"')
     return processed_html
   }

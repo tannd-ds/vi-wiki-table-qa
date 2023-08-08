@@ -6,7 +6,7 @@
         py-2.5 px-5
         inline-flex items-center justify-center
         overflow-hidden 
-        text-sm font-medium text-gray-900 hover:text-white 
+        text-sm font-medium text-midnight-100 hover:text-gray-200 
         bg-green-500 hover:bg-green-700
         rounded-xl 
         border--500

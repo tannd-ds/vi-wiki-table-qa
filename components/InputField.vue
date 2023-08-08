@@ -7,7 +7,7 @@
             appearance-none placeholder:text-transparent rounded-lg
             w-full px-3 pb-3
             bg-gray-100 dark:bg-midnight-200 
-            text-midnight-200 dark:text-gray-100
+            text-midnight-200 dark:text-gray-200
             leading-tight 
             outline-none focus:outline-green-400
             peer
@@ -31,7 +31,7 @@
             px-2 mb-2
             absolute left-2 -top-3
             bg-green-500 dark:bg-green-400
-            text-gray-700 text-sm font-bold dark:text-midnight-100
+            text-midnight-100 text-sm font-bold dark:text-midnight-100
             rounded
             transition-all
             peer-placeholder-shown:font-normal
@@ -41,7 +41,7 @@
             peer-placeholder-shown:text-base
             peer-focus:-top-3
             peer-focus:bg-green-500 peer-focus:dark:bg-green-400
-            peer-focus:text-gray-700 peer-focus:text-sm peer-focus:font-bold peer-focus:dark:text-midnight-100
+            peer-focus:text-midnight-100 peer-focus:text-sm peer-focus:font-bold peer-focus:dark:text-midnight-100
           "
           :for="id"
         >

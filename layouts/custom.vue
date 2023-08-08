@@ -22,7 +22,7 @@
               >
                 <div 
                   v-if="step_index > 0" 
-                  class="my-1 leading-3 font-bold text-gray-300 dark:text-gray-700" 
+                  class="my-1 leading-3 font-bold text-gray-200 dark:text-zinc-500" 
                 >
                   <svg 
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" 
@@ -39,14 +39,14 @@
                     flex items-center justify-center
                     rounded-full
                     leading-tight 
-                    border border-gray-300 dark:border-gray-700
+                    border border-gray-300 dark:border-zinc-700
                     transition-all duration-200
                     font-bold font-mono text-lg
                   "
                   :class="{
-                    'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white \
+                    'text-gray-500 hover:text-midnight-100 dark:text-gray-400 dark:hover:text-gray-200 \
                     bg-white hover:bg-gray-100 dark:bg-midnight-200 dark:hover:bg-gray-700': (general_store.current_step >= step_index) & (!index_is_current_step(step_index)),
-                    'text-gray-700 hover:text-gray-700 dark:text-midnight-200 bg-green-500': index_is_current_step(step_index),
+                    'text-midnight-100 hover:text-midnight-100 dark:text-midnight-200 bg-green-500': index_is_current_step(step_index),
                     'text-gray-500 dark:text-gray-400 bg-white dark:bg-midnight-100 cursor-not-allowed': general_store.current_step < step_index,
                   }"
                 >
@@ -62,13 +62,18 @@
           <div class="relative flex gap-2">
             <button 
                 :disabled="aInput.confirmedData.length <= 0"
-                class="p-1 relative rounded-lg hover:bg-green-200 text-black dark:text-white dark:hover:bg-green-500"
+                class="
+                  p-1 relative 
+                  rounded-lg 
+                  hover:bg-green-200 dark:hover:bg-green-500
+                  text-midnight-100 dark:text-gray-200 
+                "
                 @click="general_store.show_overlay('confirmed_list')"
               >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3" />
               </svg>  
-              <div class="absolute inline-flex items-center justify-center w-7 h-7 text-xs font-bold text-white bg-green-500 border-2 border-white rounded-full -top-1 -right-2 dark:border-gray-900" >
+              <div class="absolute inline-flex items-center justify-center w-7 h-7 text-xs font-bold text-gray-200 bg-green-500 border-2 border-white rounded-full -top-1 -right-2 dark:border-gray-900" >
                 {{ aInput.confirmedData.length }}
               </div>
             </button>
@@ -76,7 +81,7 @@
               class="
                 z-30 py-2 px-4 
                 truncate
-                text-black dark:text-white text-sm font-medium 
+                text-midnight-100 dark:text-gray-200 text-sm font-medium 
                 hidden group-hover:block 
                 rounded 
                 transition-all duration-300
@@ -89,7 +94,7 @@
           <!-- User -->
           <div class="relative flex gap-2">
             <button 
-              class="p-1 relative rounded-lg hover:bg-green-200 text-black dark:text-white dark:hover:bg-green-500" 
+              class="p-1 relative rounded-lg hover:bg-green-200 text-midnight-100 dark:text-gray-200 dark:hover:bg-green-500" 
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -99,14 +104,14 @@
               class="
                 z-30 py-2 px-4 
                 truncate
-                text-black dark:text-white text-sm font-medium 
+                text-midnight-100 dark:text-gray-200 text-sm font-medium 
                 hidden group-hover:block 
                 rounded 
                 transition-all duration-300
               "
             >
               <div class="flex items-center gap-2">
-                <div class="font-medium text-sm dark:text-white">
+                <div class="font-medium text-sm dark:text-gray-200">
                   <span class="text-sm text-gray-500 dark:text-gray-400">Welcome, </span>
                   <span>{{ aInput.anno_name }}!</span>
                 </div>
@@ -125,7 +130,7 @@
           <div class="relative flex gap-2">
             <button 
                 @click="general_store.use_darkmode = !general_store.use_darkmode" 
-                class="p-1 relative rounded-lg hover:bg-green-200 text-black dark:text-white dark:hover:bg-green-500" >
+                class="p-1 relative rounded-lg hover:bg-green-200 text-midnight-100 dark:text-gray-200 dark:hover:bg-green-500" >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
               </svg>
@@ -134,13 +139,13 @@
               class="
                 z-30 py-2 px-4 
                 truncate
-                text-black dark:text-white text-sm font-medium 
+                text-midnight-100 dark:text-gray-200 text-sm font-medium 
                 hidden group-hover:block 
                 rounded 
                 transition-all duration-300
               "
             >
-              <div class="font-medium text-black dark:text-white">
+              <div class="font-medium text-midnight-100 dark:text-gray-200">
                 <div>Toggle Color Mode</div>
               </div>
             </div>
