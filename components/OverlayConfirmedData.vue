@@ -35,19 +35,41 @@
             <div 
               class="
                 relative 
-                min-w-[20%] h-10 px-4 py-2 
-                flex justify-center items-center gap-2 
+                min-w-[20%] h-10  
+                flex justify-center items-center 
                 rounded-lg  
                 text-xs font-bold dark:text-gray-200
-                hover:bg-gray-200 dark:hover:bg-midnight-100
+                border border-gray-200 dark:border-zinc-700
+                overflow-hidden
                 cursor-pointer
               "
-              @click="aInput.download_confirmed"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24"> 
-                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 4v8h3.586a1 1 0 0 1 .707 1.707l-6.586 6.586a1 1 0 0 1-1.414 0l-6.586-6.586A1 1 0 0 1 5.414 12H9V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1z"/> 
-              </svg>
-              Save
+              <div 
+                class="
+                  px-4 py-2
+                  w-4/5 h-full
+                  flex justify-center items-center gap-2
+                  hover:bg-gray-200 dark:hover:bg-midnight-100
+                "
+                @click="aInput.download_confirmed"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24"> 
+                  <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 4v8h3.586a1 1 0 0 1 .707 1.707l-6.586 6.586a1 1 0 0 1-1.414 0l-6.586-6.586A1 1 0 0 1 5.414 12H9V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1z"/> 
+                </svg>
+                Save
+              </div>
+              <div
+                class="
+                  w-1/5 h-full
+                  flex justify-center items-center
+                  hover:bg-gray-200 dark:hover:bg-midnight-100
+                "
+                @click="aInput.download_as_confirmed"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+                </svg>
+              </div>
             </div>
           </div>
           <div class="h-full overflow-auto">

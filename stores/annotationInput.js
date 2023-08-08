@@ -120,6 +120,24 @@ export const useAnnotationInputStore = defineStore('annotation_input', {
 
         URL.revokeObjectURL(url);
         useGeneralStore().show_toast('success', "Successfully Download data.json");
+
+      },
+      async download_as_confirmed() {
+        const dataType = ref('Text')
+        const res = useFileSystemAccess({
+          dataType,
+          types: [{
+            description: 'JSON',
+            accept: {
+              'application/json': ['.json'],
+            },
+          }],
+          excludeAcceptAllOption: true,
+        })
+        res.data.value = JSON.stringify(this.confirmedData)
+        await res.saveAs()
+        useGeneralStore().show_toast('success', "Successfully Download data.json");
+
       },
       removeConfirmed(confirmed) {
         if (!confirm('Are you sure want to remove this?'))
