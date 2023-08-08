@@ -148,7 +148,34 @@
                 </li>
               </TransitionGroup>
             </ul>
-            <PieChart v-if="tabs[1].is_show" />
+            <div 
+              class="flex flex-col gap-8"
+              v-if="tabs[1].is_show"
+              >
+              <PieChart />
+              <div 
+                class="
+                  w-full px-4
+                  flex justify-around
+                  dark:text-gray-200
+                "
+              >
+                <div>
+                  <div class="text-4xl">
+                    <span v-if="aInput.anno_file_data.length < 10">0</span>
+                    <span>{{ aInput.anno_file_data.length }}</span>
+                  </div>
+                  <div class="text-gray-500">Tables</div>
+                </div>
+                <div>
+                  <div class="text-4xl">
+                    <span v-if="aInput.confirmedData.length < 10">0</span>
+                    <span>{{ aInput.confirmedData.length }}</span>
+                  </div>
+                  <div class="text-gray-500">Pairs</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <TableDisplay class="lg:max-w-[55vw]" :displayed_table_index="chosen_table"/>
