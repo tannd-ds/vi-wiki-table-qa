@@ -207,9 +207,4 @@
   }
 
   const navbar_is_show = ref(true)
-  const isLargeScreen = useMediaQuery('(min-width: 1024px)')
-  watch(general_store.isLargeScreen, () => {
-    console.log(general_store.isLargeScreen)
-  })
-
 </script>

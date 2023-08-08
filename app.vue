@@ -15,6 +15,7 @@
 
   aInput.loadConfirmedData()
   const isLargeScreen = useMediaQuery('(min-width: 1024px)')
+  general_store.isLargeScreen = isLargeScreen.value
   watch(isLargeScreen, () => {
     general_store.isLargeScreen = isLargeScreen.value
   })
