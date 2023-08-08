@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :style="`color-scheme: ${general_store.use_darkmode ? 'dark' : 'light'}`">
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
