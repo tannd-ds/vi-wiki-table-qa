@@ -1,10 +1,10 @@
 <template>
-    <div class="flex flex-row justify-center h-full min-h-[90vh]">
+    <div class="w-full h-full min-h-[90vh] flex flex-row justify-center">
       <Head>
         <Title>ViWiki Table - Input Assigned File</Title>
       </Head>
       <div 
-        class="flex items-center justify-center w-1/2"
+        class="w-3/4 lg:w-1/2 flex items-center justify-center"
       >
         <label 
           v-if="!upload_success"
@@ -57,7 +57,7 @@
                 Your file is read successfully!
               </span>
             </div>
-            <div class="flex gap-4">
+            <div class="flex flex-col lg:flex-row items-center gap-4">
               <BaseButton @click="restart">
                 <div class="group flex flex-row gap-2 justify-center items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

@@ -5,6 +5,7 @@ export const useGeneralStore = defineStore('general_store', {
         return { 
             use_darkmode: true,
             use_sounds: true,
+            isLargeScreen: true,
             current_step: window.localStorage.getItem('current_step') ? window.localStorage.getItem('current_step') : 0,
             n_steps: 2,
             overlay: {

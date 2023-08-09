@@ -4,15 +4,17 @@
   >
     <div>
       <div 
-        class="my-8 w-72 h-72 rounded-full relative flex justify-center items-center"
+        class="
+          group my-8 w-48 h-48 lg:w-72 lg:h-72 rounded-full relative flex justify-center items-center
+        "
         :style="pie_drawing"
       >
         <div
           class="
-            w-2/3 h-2/3
+            w-4/5 h-4/5
             flex flex-col justify-center items-center
             rounded-full
-          bg-white dark:bg-midnight-100"
+          bg-white dark:bg-midnight-200"
         >
           <span class="dark:text-gray-200">Total of</span>
           <span class="text-6xl font-bold dark:text-gray-200">{{ aInput.confirmedData.length }}</span>
@@ -22,11 +24,12 @@
         <span
           v-for="(table, table_index) in counted" :key="table"
           class="
-            absolute 
+            absolute z-[1]
             p-2
-            flex flex-col justify-center items-center
-            shadow-zinc-800 dark:shadow-midnight-100 shadow-lg
+            opacity-0 group-hover:opacity-100 flex flex-col justify-center items-center
+            shadow-zinc-300 dark:shadow-midnight-100 shadow-lg
             rounded
+            transition-all duration-200
           "
           :style="{
             translate: `${pie_annot_translate[table_index][1]} ${pie_annot_translate[table_index][0]}`,
@@ -38,6 +41,35 @@
             {{ Math.round(counted[table_index] / aInput.confirmedData.length * 1000) / 10 }} %
           </span>
         </span>
+        
+        <!-- Rounded end -->
+        <span
+          v-for="(table, table_index) in counted" :key="table"
+          class="
+            absolute w-[10%] h-[100%]
+            flex flex-col justify-start items-center
+          "
+          :style="{ rotate: `${rotation_rate[table_index]}deg`, }"
+        >
+          <div 
+            class="
+              absolute w-full aspect-square 
+              flex justify-end
+              rounded-full
+            "
+            :style="{
+              backgroundColor: color_set[table_index]
+            }"
+          >
+            <div
+              class="
+                absolute -top-[7.6px] aspect-[1/2] h-full
+                rounded-r-full
+                border-r-8 border-y-8 border-white dark:border-midnight-200 box-content
+              "
+            />
+          </div>
+        </span>
       </div>
     </div>
   </div>
@@ -47,8 +79,10 @@
   import { useAnnotationInputStore } from '~/stores/annotationInput';
   const aInput = useAnnotationInputStore()
 
-  const color_set = ['#ef476f', '#ffd166', '#90a955', '#06d6a0', '#118ab2', '#fb8b24']
+  const color_set = ['#DDFFBB', '#B5F1CC', '#C7E9B0', '#C9F4AA', '#B9F3E4', '#fb8b24']
   const counted = ref({})
+  const rotation_rate = ref({})
+  
   for (let i = 0; i < aInput.anno_file_data.length; i++)
     counted.value[i] = 0
   for (let confirmed of aInput.confirmedData)
@@ -65,6 +99,7 @@
       if (counted.value[table_id] == 0) continue
       // turn counted into degree
       let degree = counted.value[table_id] / aInput.confirmedData.length * 360 
+      rotation_rate.value[table_id] = current_begin_degree + degree
       pie_conic_gradient_value += color_set[table_id] + ' ' + String(current_begin_degree) + 'deg ' + String(current_begin_degree + degree) + 'deg, '
       current_begin_degree += degree
     }
@@ -76,7 +111,7 @@
   const pie_annot_translate = computed(() => {
     let annot_translate = {}
     let current_begin_radian = -Math.PI / 2
-    let radius = 9
+    let radius = 8.1
     for (let table_id in counted.value) {
       // turn counted into radian
       let radian = counted.value[table_id] / aInput.confirmedData.length * 2*Math.PI
