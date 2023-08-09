@@ -86,14 +86,15 @@
               class="
                 px-2 min-w-[2em] h-full min-h-[2em]
                 flex justify-center items-center
-                hover:bg-gray-200 dark:hover:bg-midnight-100
                 text-xs
                 border border-gray-200 dark:border-zinc-700
                 rounded
                 cursor-pointer
               "
               :class="[
-                confirmed_table_is_show[show_table_index] ? 'bg-green-600 dark:hover:bg-green-500 dark:text-midnight-100' : 'dark:text-zinc-500'
+                confirmed_table_is_show[show_table_index] 
+                  ? 'bg-green-300 dark:bg-green-600 hover:bg-green-200 dark:hover:bg-green-500 dark:text-midnight-100' 
+                  : 'hover:bg-gray-100 dark:hover:bg-zinc-700 dark:text-zinc-500'
               ]"
               @click.exact="toggle_show_table(show_table_index)"
               @click.ctrl.exact="toggle_show_table_only(show_table_index)"
