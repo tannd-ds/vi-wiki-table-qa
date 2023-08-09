@@ -23,6 +23,7 @@
     processed_html = processed_html.replace(/<tr/g, '<tr class="bg-white border-b cursor-pointer dark:bg-midnight-100 dark:text-gray-100 dark:border-midnight-500"')
     processed_html = processed_html.replace(/<th/g, '<th class="p-2 lg:px-6 lg:py-4 text-gray-700 bg-gray-50 dark:bg-midnight-200 dark:text-gray-300"')
     processed_html = processed_html.replace(/<td/g, '<td class="p-2 lg:px-6 lg:py-4 hover:bg-gray-200 dark:hover:bg-midnight-300"')
+
     return processed_html
   }
 

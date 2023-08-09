@@ -39,7 +39,7 @@
                     "
                     :class="{
                       'pr-2 border-r-8 border-green-500 dark:border-r-green-600': hint.is_checked,
-                      'border-gray-200 dark:border-zinc-800': !hint.is_checked
+                      'border-gray-300 dark:border-zinc-700': !hint.is_checked
                     }"
                   >
                     <input 
@@ -57,7 +57,7 @@
                       "
                       :class="{
                         'bg-green-300 dark:bg-green-500 dark:border-none': hint.is_checked,
-                        'bg-gray-100 dark:bg-zinc-700 border-gray-300 dark:border-zinc-600': !hint.is_checked,
+                        'bg-gray-100 dark:bg-zinc-700 border-gray-300 dark:border-zinc-700': !hint.is_checked,
                       }"
                       @click="hint.is_checked = !hint.is_checked" 
                     >
@@ -67,7 +67,7 @@
                         </svg>
                       </Transition>
                     </div>
-                    <label :for="getCheckboxID(hint_index, aInput.current_table_index)" class="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                    <label :for="getCheckboxID(hint_index, aInput.current_table_index)" class="w-full py-4 ml-2 text-sm font-medium text-midnight-100 dark:text-gray-200">
                       {{ aInput.hints['all_hints'][hint['hint_index']] }}
                     </label>
                   </div>
@@ -98,7 +98,7 @@
                   v-if="table_dropdown_is_open"
                   class="w-full absolute -bottom-full z-10 bg-white rounded-lg shadow dark:bg-midnight-100 border-2 border-green-700"
                 >
-                  <ul class="text-sm text-gray-700 dark:text-gray-200 divide-y dark:divide-zinc-700" aria-labelledby="dropdownDefaultButton">
+                  <ul class="text-sm text-midnight-100 dark:text-gray-200 divide-y dark:divide-zinc-700" aria-labelledby="dropdownDefaultButton">
                     <li 
                       v-for="(data, table_index) in aInput.anno_file_data"
                       key="table_index"
