@@ -14,7 +14,7 @@
             w-4/5 h-4/5
             flex flex-col justify-center items-center
             rounded-full
-          bg-white dark:bg-midnight-100"
+          bg-white dark:bg-midnight-200"
         >
           <span class="dark:text-gray-200">Total of</span>
           <span class="text-6xl font-bold dark:text-gray-200">{{ aInput.confirmedData.length }}</span>
@@ -27,7 +27,7 @@
             absolute z-[1]
             p-2
             opacity-0 group-hover:opacity-100 flex flex-col justify-center items-center
-            shadow-zinc-800 dark:shadow-midnight-100 shadow-lg
+            shadow-zinc-300 dark:shadow-midnight-100 shadow-lg
             rounded
             transition-all duration-200
           "
@@ -63,9 +63,9 @@
           >
             <div
               class="
-                absolute -top-[8px] aspect-[1/2] h-full
+                absolute -top-[7.6px] aspect-[1/2] h-full
                 rounded-r-full
-                border-r-8 border-y-8 border-white dark:border-midnight-100 box-content
+                border-r-8 border-y-8 border-white dark:border-midnight-200 box-content
               "
             />
           </div>
