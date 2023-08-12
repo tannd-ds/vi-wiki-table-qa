@@ -7,7 +7,7 @@
       <button
         :disabled="aInput.confirmedData.length <= 0"
         class="relative rounded-lg bg-green-200 p-2 text-green-500 dark:bg-green-400 dark:bg-opacity-80 dark:text-green-200 dark:hover:bg-opacity-70"
-        @click="general_store.show_overlay('confirmed_list')"
+        @click="general_store.show_overlay('confirmed')"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -1,7 +1,6 @@
 <template>
   <div class="relative" :class="{ dark: general_store.use_darkmode }">
-    <OverlayConfirmedData />
-    <OverlayRename />
+    <AppOverlay />
     <BaseToastList />
     <SideBar />
     <div
@@ -14,6 +13,5 @@
 
 <script setup>
 import { useGeneralStore } from "~/stores/generalStore";
-
 const general_store = useGeneralStore();
 </script>

@@ -13,6 +13,7 @@ export const useGeneralStore = defineStore("general_store", {
       overlay: {
         is_show: false,
         type: "edit",
+        list: [],
       },
       toast: {
         id: "",
@@ -40,9 +41,22 @@ export const useGeneralStore = defineStore("general_store", {
       }
       this.toast_list.push(newToast);
     },
-    show_overlay(type = "confirmed_list") {
-      this.overlay.type = type;
-      this.overlay.is_show = true;
+    show_overlay(overlay_name) {
+      // Check if overlay_name is already on display
+      if (this.overlay.list[this.toast_list.length - 1] == overlay_name) return;
+
+      // check if overlay_name is already in OverlayList
+      const previous_type_instant_index =
+        this.overlay.list.indexOf(overlay_name);
+
+      if (previous_type_instant_index != -1)
+        this.overlay.list.splice(previous_type_instant_index, 1);
+
+      // display this overlay_name
+      this.overlay.list.push(overlay_name);
+    },
+    close_overlay() {
+      this.overlay.list.pop();
     },
     update_step(to_step) {
       this.current_step = to_step;
