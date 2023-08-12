@@ -31,7 +31,7 @@
         'translate-x-0': navbar_is_show | general_store.isLargeScreen,
       }"
     >
-      <StepIndicator
+      <SideBarStepIndicator
         :n_steps="general_store.n_steps"
         :current_step="general_store.current_step"
       />
