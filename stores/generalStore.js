@@ -7,7 +7,7 @@ export const useGeneralStore = defineStore("general_store", {
       use_sounds: true,
       isLargeScreen: true,
       current_step: window.localStorage.getItem("current_step")
-        ? window.localStorage.getItem("current_step")
+        ? Number(window.localStorage.getItem("current_step"))
         : 0,
       n_steps: 2,
       overlay: {
