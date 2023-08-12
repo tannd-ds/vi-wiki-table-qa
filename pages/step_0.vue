@@ -1,169 +1,198 @@
 <template>
-    <div class="w-full h-full min-h-[90vh] flex flex-row justify-center">
-      <Head>
-        <Title>ViWiki Table - Input Assigned File</Title>
-      </Head>
-      <div 
-        class="w-3/4 lg:w-1/2 flex items-center justify-center"
+  <div class="flex h-full min-h-[90vh] w-full flex-row justify-center">
+    <Head>
+      <Title>ViWiki Table - Input Assigned File</Title>
+    </Head>
+    <div class="flex w-3/4 items-center justify-center lg:w-1/2">
+      <label
+        v-if="!upload_success"
+        for="dropzone-file"
+        @dragenter.prevent="toggle_dropzone"
+        @dragleave.prevent="toggle_dropzone"
+        @dragover.prevent
+        @drop.prevent="read_dropped_file"
+        class="flex h-2/3 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-midnight-100 dark:hover:border-gray-500 dark:hover:bg-midnight-200"
+        :class="{ 'dark:bg-gray-950': dropzone_active }"
       >
-        <label 
-          v-if="!upload_success"
-          for="dropzone-file" 
-          @dragenter.prevent="toggle_dropzone" 
-          @dragleave.prevent="toggle_dropzone"
-          @dragover.prevent
-          @drop.prevent="read_dropped_file"
-          class="
-            w-full h-2/3
-            flex flex-col items-center justify-center 
-            border-2 border-gray-300 border-dashed
-            rounded-lg 
-            cursor-pointer 
-            bg-gray-50 hover:bg-gray-100 
-            dark:bg-midnight-100 dark:hover:bg-midnight-200
-            dark:border-gray-600 dark:hover:border-gray-500 
-          "
-          :class="{'dark:bg-gray-950': dropzone_active, }"
-        >
-            <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+        <div class="flex flex-col items-center justify-center pb-6 pt-5">
+          <svg
+            class="mb-4 h-8 w-8 text-gray-500 dark:text-gray-400"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 20 16"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+            />
+          </svg>
+          <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+            <span class="font-semibold">Click to upload</span> or drag and drop
+          </p>
+          <p class="text-xs text-gray-500 dark:text-gray-400">
+            .JSON Files that we gave you
+          </p>
+        </div>
+        <input
+          id="dropzone-file"
+          type="file"
+          class="hidden"
+          accept="application/json"
+          @change="read_selected_file"
+        />
+      </label>
+      <div
+        v-else
+        class="flex h-2/3 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-gray-300 bg-gray-50 dark:border-gray-600 dark:bg-midnight-100 dark:text-gray-200"
+      >
+        <div class="flex flex-col items-center justify-center gap-8 pb-6 pt-5">
+          <div class="flex flex-col items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1"
+              stroke="currentColor"
+              class="h-12 w-12"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12"
+              />
+            </svg>
+            <span> Your file is read successfully! </span>
+          </div>
+          <div class="flex flex-col items-center gap-4 lg:flex-row">
+            <BaseButton @click="restart">
+              <div
+                class="group flex flex-row items-center justify-center gap-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="h-6 w-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                  />
                 </svg>
-                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">.JSON Files that we gave you</p>
-            </div>
-            <input id="dropzone-file" type="file" class="hidden" accept="application/json" @change="read_selected_file"/>
-        </label>
-        <div 
-          v-else
-          class="
-            w-full h-2/3
-            flex flex-col items-center justify-center 
-            border-2 border-gray-300 
-            rounded-lg 
-            cursor-pointer 
-            bg-gray-50
-            dark:text-gray-200
-            dark:bg-midnight-100
-            dark:border-gray-600
-          "
-        >
-          <div class="flex flex-col gap-8 items-center justify-center pt-5 pb-6">
-            <div class="flex flex-col items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-12 h-12">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12" />
-              </svg>
-              <span>
-                Your file is read successfully!
-              </span>
-            </div>
-            <div class="flex flex-col lg:flex-row items-center gap-4">
-              <BaseButton @click="restart">
-                <div class="group flex flex-row gap-2 justify-center items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-                  </svg>
-                  <span>
-                    Reload
-                  </span>
-                </div>
-              </BaseButton>
-              <BaseButton @click="router.push('/step_1')">
-                <div class="group flex flex-row gap-2 justify-center items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
-                  </svg>
-                  <span>
-                    To Next Step!
-                  </span>
-                </div>
-              </BaseButton>
-            </div>
+                <span> Reload </span>
+              </div>
+            </BaseButton>
+            <BaseButton @click="router.push('/step_1')">
+              <div
+                class="group flex flex-row items-center justify-center gap-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="h-6 w-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
+                  />
+                </svg>
+                <span> To Next Step! </span>
+              </div>
+            </BaseButton>
           </div>
         </div>
       </div>
-
     </div>
+  </div>
 </template>
 
 <script setup>
-  import { useGeneralStore } from '~/stores/generalStore';
-  import { useAnnotationInputStore } from '~/stores/annotationInput';
+import { useGeneralStore } from "~/stores/generalStore";
+import { useAnnotationInputStore } from "~/stores/annotationInput";
 
-  definePageMeta({
-    layout: 'custom',
-  })
+definePageMeta({
+  layout: "custom",
+});
 
-  const aInput = useAnnotationInputStore()
-  const general_store = useGeneralStore()
+const aInput = useAnnotationInputStore();
+const general_store = useGeneralStore();
 
-  const dropzone_active = ref(false)
-  const upload_success  = ref(false)
+const dropzone_active = ref(false);
+const upload_success = ref(false);
 
-  const route  = useRoute()
-  const router = useRouter()
-  watchEffect(() => {
-    const redirect_to = general_store.check_step(route.name)
-    if (redirect_to != route.name) router.push(redirect_to)
+const route = useRoute();
+const router = useRouter();
+watchEffect(() => {
+  const redirect_to = general_store.check_step(route.name);
+  if (redirect_to != route.name) router.push(redirect_to);
 
-    upload_success.value = (aInput.anno_file_data != null)
+  upload_success.value = aInput.anno_file_data != null;
 
-    if (general_store.current_step < 1 & upload_success.value == true) {
-      general_store.update_step(1)
+  if ((general_store.current_step < 1) & (upload_success.value == true)) {
+    general_store.update_step(1);
+  }
+});
+
+function toggle_dropzone() {
+  dropzone_active.value = !dropzone_active.value;
+}
+
+const read_dropped_file = (event) => {
+  const uploaded_file = event.dataTransfer.files[0];
+  toggle_dropzone();
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    const contents = event.target.result; // Get the file contents
+    try {
+      const jsonData = JSON.parse(contents); // Parse the JSON data
+      aInput.update_anno_file_data(jsonData);
+      return jsonData;
+    } catch (error) {
+      console.log(error.message);
+      useGeneralStore().show_toast("error", error.message);
+      upload_success.value = false;
+      return;
     }
-  })
+  };
+  upload_success.value = true;
+  reader.readAsText(uploaded_file);
+};
 
-
-  function toggle_dropzone() {
-    dropzone_active.value = !dropzone_active.value
-  }
-
-  const read_dropped_file = (event) => {
-    const uploaded_file = event.dataTransfer.files[0]
-    toggle_dropzone()
-    const reader = new FileReader(); 
-    reader.onload = (event) => {
-      const contents = event.target.result; // Get the file contents
-      try {
-        const jsonData = JSON.parse(contents) // Parse the JSON data
-        aInput.update_anno_file_data(jsonData)
-        return jsonData
-      } catch (error) {
-        console.log(error.message)
-        useGeneralStore().show_toast('error', error.message)
-        upload_success.value = false
-        return
-      }
+const read_selected_file = (event) => {
+  const uploaded_file = event.target.files[0];
+  toggle_dropzone();
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    const contents = event.target.result; // Get the file contents
+    try {
+      const jsonData = JSON.parse(contents); // Parse the JSON data
+      aInput.update_anno_file_data(jsonData);
+      return jsonData;
+    } catch (error) {
+      console.log(error.message);
+      useGeneralStore().show_toast("error", error.message);
+      upload_success.value = false;
+      return;
     }
-    upload_success.value = true
-    reader.readAsText(uploaded_file)
-  }
+  };
+  upload_success.value = true;
+  reader.readAsText(uploaded_file);
+};
 
-  const read_selected_file = (event) => {
-    const uploaded_file = event.target.files[0]
-    toggle_dropzone()
-    const reader = new FileReader(); 
-    reader.onload = (event) => {
-      const contents = event.target.result; // Get the file contents
-      try {
-        const jsonData = JSON.parse(contents) // Parse the JSON data
-        aInput.update_anno_file_data(jsonData)
-        return jsonData
-      } catch (error) {
-        console.log(error.message)
-        useGeneralStore().show_toast('error', error.message)
-        upload_success.value = false
-        return
-      }
-    }
-    upload_success.value = true
-    reader.readAsText(uploaded_file)
-  }
-
-  const restart = () => {
-    aInput.update_anno_file_data(null)
-    upload_success.value = false
-    general_store.update_step(0)
-  }
-
+const restart = () => {
+  aInput.update_anno_file_data(null);
+  upload_success.value = false;
+  general_store.update_step(0);
+};
 </script>

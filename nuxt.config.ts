@@ -3,18 +3,14 @@ export default defineNuxtConfig({
   ssr: false,
   devtools: { enabled: true },
   app: {
-    pageTransition: { name: 'page', mode: 'out-in' }
+    pageTransition: { name: "page", mode: "out-in" },
   },
-  modules: [
-    "@pinia/nuxt",
-    "@vueuse/nuxt",
-    "nuxt-icon",
-  ],
-  css: ['~/assets/css/main.css'],
+  modules: ["@pinia/nuxt", "@vueuse/nuxt", "nuxt-icon"],
+  css: ["~/assets/css/main.css"],
   postcss: {
     plugins: {
       tailwindcss: {},
       autoprefixer: {},
-    }
+    },
   },
-})
+});

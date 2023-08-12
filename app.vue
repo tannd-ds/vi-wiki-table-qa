@@ -1,5 +1,7 @@
 <template>
-  <div :style="`color-scheme: ${general_store.use_darkmode ? 'dark' : 'light'}`">
+  <div
+    :style="`color-scheme: ${general_store.use_darkmode ? 'dark' : 'light'}`"
+  >
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
@@ -7,18 +9,18 @@
 </template>
 
 <script setup>
-  import { useAnnotationInputStore } from "~/stores/annotationInput"
-  import { useGeneralStore } from "~/stores/generalStore"
+import { useAnnotationInputStore } from "~/stores/annotationInput";
+import { useGeneralStore } from "~/stores/generalStore";
 
-  const general_store = useGeneralStore()
-  const aInput = useAnnotationInputStore()
+const general_store = useGeneralStore();
+const aInput = useAnnotationInputStore();
 
-  aInput.loadConfirmedData()
-  const isLargeScreen = useMediaQuery('(min-width: 1024px)')
-  general_store.isLargeScreen = isLargeScreen.value
-  watch(isLargeScreen, () => {
-    general_store.isLargeScreen = isLargeScreen.value
-  })
+aInput.loadConfirmedData();
+const isLargeScreen = useMediaQuery("(min-width: 1024px)");
+general_store.isLargeScreen = isLargeScreen.value;
+watch(isLargeScreen, () => {
+  general_store.isLargeScreen = isLargeScreen.value;
+});
 </script>
 
 <style>
