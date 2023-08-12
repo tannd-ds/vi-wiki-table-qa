@@ -1,84 +1,11 @@
 <template>
-  <div class="flex h-full" :class="{ dark: general_store.use_darkmode }">
+  <div>
     <Head>
       <Title>ViWiki Table</Title>
     </Head>
     <div
       class="flex w-full flex-col items-center justify-center gap-8 lg:flex-row"
-    >
-      <div class="w-full max-w-lg">
-        <div></div>
-        <BaseBox class="flex-col gap-4">
-          <div
-            v-if="aInput.chosen_table != null"
-            class="rounded-lg border-2 border-green-500 p-4 text-green-700 dark:text-gray-200"
-          >
-            <span class="font-bold text-midnight-100 dark:text-green-500"
-              >Hint:
-            </span>
-            <span class="italic">The "Generic Prompt" will go here!</span>
-          </div>
-          <form class="w-full">
-            <InputField
-              type="text"
-              id="question"
-              v-model:model-value="aInput.question"
-              placeholder="Give me a Question!"
-              label_name="Question"
-            />
-            <InputField
-              type="text"
-              id="answer"
-              v-model:model-value="aInput.answer"
-              placeholder="Answer, please"
-              label_name="Answer"
-            />
-            <div class="flex items-center justify-between">
-              <BaseButton @click="aInput.confirmData">Confirm</BaseButton>
-            </div>
-          </form>
-        </BaseBox>
-      </div>
-      <div class="flex flex-col">
-        <div
-          class="flex flex-col items-center gap-2"
-          v-if="aInput.chosen_table != null"
-        >
-          <div
-            class="mr-2 inline-flex items-center justify-center rounded border border-blue-400 bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-800 dark:bg-gray-700 dark:text-blue-400"
-          >
-            Table ID: {{ aInput.chosen_table.id }}
-          </div>
-          <BaseTable :table="aInput.chosen_table.content" />
-          <BaseButton
-            @click="general_store.show_overlay((type = 'table_list'))"
-          >
-            <Icon name="carbon:renew" size="1.5em" color="currentColor" />
-            <div>Change Table</div>
-          </BaseButton>
-        </div>
-        <BaseButton
-          v-else
-          @click="general_store.show_overlay((type = 'table_list'))"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="h-6 w-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <span>Load Table</span>
-        </BaseButton>
-      </div>
-    </div>
+    ></div>
   </div>
 </template>
 

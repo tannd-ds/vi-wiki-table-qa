@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-full" :class="{ dark: general_store.use_darkmode }">
+  <div class="flex h-full">
     <Head>
       <Title>ViWiki Table</Title>
     </Head>
