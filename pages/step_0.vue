@@ -1,169 +1,2515 @@
 <template>
-    <div class="w-full h-full min-h-[90vh] flex flex-row justify-center">
-      <Head>
-        <Title>ViWiki Table - Input Assigned File</Title>
-      </Head>
-      <div 
-        class="w-3/4 lg:w-1/2 flex items-center justify-center"
+  <div class="flex h-full min-h-[90vh] w-full flex-row justify-center">
+    <Head>
+      <Title>ViWiki Table - Input Assigned File</Title>
+    </Head>
+    <div class="flex w-3/4 flex-col items-center justify-center gap-4 lg:w-1/2">
+      <button
+        v-if="!upload_success"
+        type="button"
+        class="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-2 ring-gray-900/10 hover:ring-gray-900/20 dark:text-gray-400 dark:ring-gray-600/50 dark:hover:ring-gray-600"
+        @click="load_demo_file"
       >
-        <label 
-          v-if="!upload_success"
-          for="dropzone-file" 
-          @dragenter.prevent="toggle_dropzone" 
-          @dragleave.prevent="toggle_dropzone"
-          @dragover.prevent
-          @drop.prevent="read_dropped_file"
-          class="
-            w-full h-2/3
-            flex flex-col items-center justify-center 
-            border-2 border-gray-300 border-dashed
-            rounded-lg 
-            cursor-pointer 
-            bg-gray-50 hover:bg-gray-100 
-            dark:bg-midnight-100 dark:hover:bg-midnight-200
-            dark:border-gray-600 dark:hover:border-gray-500 
-          "
-          :class="{'dark:bg-gray-950': dropzone_active, }"
-        >
-            <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+        Don't have a file?
+        <a href="#" class="font-semibold text-green-500">
+          <span class="absolute inset-0" aria-hidden="true"></span>
+          Load a DEMO File
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+      </button>
+      <label
+        v-if="!upload_success"
+        for="dropzone-file"
+        @dragenter.prevent="toggle_dropzone"
+        @dragleave.prevent="toggle_dropzone"
+        @dragover.prevent
+        @drop.prevent="read_dropped_file"
+        class="flex h-2/3 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-midnight-100 dark:hover:border-gray-500 dark:hover:bg-midnight-200"
+        :class="{ 'dark:bg-gray-950': dropzone_active }"
+      >
+        <div class="flex flex-col items-center justify-center pb-6 pt-5">
+          <svg
+            class="mb-4 h-8 w-8 text-gray-500 dark:text-gray-400"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 20 16"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+            />
+          </svg>
+          <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+            <span class="font-semibold">Click to upload</span> or drag and drop
+          </p>
+          <p class="text-xs text-gray-500 dark:text-gray-400">
+            .JSON Files that we gave you
+          </p>
+        </div>
+        <input
+          id="dropzone-file"
+          type="file"
+          class="hidden"
+          accept="application/json"
+          @change="read_selected_file"
+        />
+      </label>
+      <div
+        v-else
+        class="flex h-2/3 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-gray-300 bg-gray-50 dark:border-gray-600 dark:bg-midnight-100 dark:text-gray-200"
+      >
+        <div class="flex flex-col items-center justify-center gap-8 pb-6 pt-5">
+          <div class="flex flex-col items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1"
+              stroke="currentColor"
+              class="h-12 w-12"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12"
+              />
+            </svg>
+            <span> Your file is read successfully! </span>
+          </div>
+          <div class="flex flex-col items-center gap-4 lg:flex-row">
+            <BaseButton @click="restart">
+              <div
+                class="group flex flex-row items-center justify-center gap-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="h-6 w-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                  />
                 </svg>
-                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">.JSON Files that we gave you</p>
-            </div>
-            <input id="dropzone-file" type="file" class="hidden" accept="application/json" @change="read_selected_file"/>
-        </label>
-        <div 
-          v-else
-          class="
-            w-full h-2/3
-            flex flex-col items-center justify-center 
-            border-2 border-gray-300 
-            rounded-lg 
-            cursor-pointer 
-            bg-gray-50
-            dark:text-gray-200
-            dark:bg-midnight-100
-            dark:border-gray-600
-          "
-        >
-          <div class="flex flex-col gap-8 items-center justify-center pt-5 pb-6">
-            <div class="flex flex-col items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-12 h-12">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12" />
-              </svg>
-              <span>
-                Your file is read successfully!
-              </span>
-            </div>
-            <div class="flex flex-col lg:flex-row items-center gap-4">
-              <BaseButton @click="restart">
-                <div class="group flex flex-row gap-2 justify-center items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-                  </svg>
-                  <span>
-                    Reload
-                  </span>
-                </div>
-              </BaseButton>
-              <BaseButton @click="router.push('/step_1')">
-                <div class="group flex flex-row gap-2 justify-center items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
-                  </svg>
-                  <span>
-                    To Next Step!
-                  </span>
-                </div>
-              </BaseButton>
-            </div>
+                <span> Reload </span>
+              </div>
+            </BaseButton>
+            <BaseButton @click="router.push('/step_1')">
+              <div
+                class="group flex flex-row items-center justify-center gap-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="h-6 w-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
+                  />
+                </svg>
+                <span> To Next Step! </span>
+              </div>
+            </BaseButton>
           </div>
         </div>
       </div>
-
     </div>
+  </div>
 </template>
 
 <script setup>
-  import { useGeneralStore } from '~/stores/generalStore';
-  import { useAnnotationInputStore } from '~/stores/annotationInput';
+import { useGeneralStore } from "~/stores/generalStore";
+import { useAnnotationInputStore } from "~/stores/annotationInput";
 
-  definePageMeta({
-    layout: 'custom',
-  })
+definePageMeta({
+  layout: "custom",
+});
 
-  const aInput = useAnnotationInputStore()
-  const general_store = useGeneralStore()
+const aInput = useAnnotationInputStore();
+const general_store = useGeneralStore();
 
-  const dropzone_active = ref(false)
-  const upload_success  = ref(false)
+const dropzone_active = ref(false);
+const upload_success = ref(false);
 
-  const route  = useRoute()
-  const router = useRouter()
-  watchEffect(() => {
-    const redirect_to = general_store.check_step(route.name)
-    if (redirect_to != route.name) router.push(redirect_to)
+const route = useRoute();
+const router = useRouter();
+watchEffect(() => {
+  const redirect_to = general_store.check_step(route.name);
+  if (redirect_to != route.name) router.push(redirect_to);
 
-    upload_success.value = (aInput.anno_file_data != null)
+  upload_success.value = aInput.anno_file_data != null;
 
-    if (general_store.current_step < 1 & upload_success.value == true) {
-      general_store.update_step(1)
+  if ((general_store.current_step < 1) & (upload_success.value == true)) {
+    general_store.update_step(1);
+  }
+});
+
+function toggle_dropzone() {
+  dropzone_active.value = !dropzone_active.value;
+}
+
+const read_dropped_file = (event) => {
+  const uploaded_file = event.dataTransfer.files[0];
+  toggle_dropzone();
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    const contents = event.target.result; // Get the file contents
+    try {
+      const jsonData = JSON.parse(contents); // Parse the JSON data
+      aInput.update_anno_file_data(jsonData);
+      return jsonData;
+    } catch (error) {
+      console.log(error.message);
+      useGeneralStore().show_toast("error", error.message);
+      upload_success.value = false;
+      return;
     }
-  })
+  };
+  upload_success.value = true;
+  reader.readAsText(uploaded_file);
+};
 
-
-  function toggle_dropzone() {
-    dropzone_active.value = !dropzone_active.value
-  }
-
-  const read_dropped_file = (event) => {
-    const uploaded_file = event.dataTransfer.files[0]
-    toggle_dropzone()
-    const reader = new FileReader(); 
-    reader.onload = (event) => {
-      const contents = event.target.result; // Get the file contents
-      try {
-        const jsonData = JSON.parse(contents) // Parse the JSON data
-        aInput.update_anno_file_data(jsonData)
-        return jsonData
-      } catch (error) {
-        console.log(error.message)
-        useGeneralStore().show_toast('error', error.message)
-        upload_success.value = false
-        return
-      }
+const read_selected_file = (event) => {
+  const uploaded_file = event.target.files[0];
+  toggle_dropzone();
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    const contents = event.target.result; // Get the file contents
+    try {
+      const jsonData = JSON.parse(contents); // Parse the JSON data
+      aInput.update_anno_file_data(jsonData);
+      return jsonData;
+    } catch (error) {
+      console.log(error.message);
+      useGeneralStore().show_toast("error", error.message);
+      upload_success.value = false;
+      return;
     }
-    upload_success.value = true
-    reader.readAsText(uploaded_file)
-  }
+  };
+  upload_success.value = true;
+  reader.readAsText(uploaded_file);
+};
 
-  const read_selected_file = (event) => {
-    const uploaded_file = event.target.files[0]
-    toggle_dropzone()
-    const reader = new FileReader(); 
-    reader.onload = (event) => {
-      const contents = event.target.result; // Get the file contents
-      try {
-        const jsonData = JSON.parse(contents) // Parse the JSON data
-        aInput.update_anno_file_data(jsonData)
-        return jsonData
-      } catch (error) {
-        console.log(error.message)
-        useGeneralStore().show_toast('error', error.message)
-        upload_success.value = false
-        return
-      }
-    }
-    upload_success.value = true
-    reader.readAsText(uploaded_file)
-  }
+const load_demo_file = () => {
+  const jsonData = [
+    {
+      id: "Danh s\u00e1ch Thi\u00ean ho\u00e0ng_0",
+      table_json: [
+        [
+          "Th\u1ee9 t\u1ef1",
+          "Nhi\u1ec7m k\u1ef3",
+          "Ch\u00e2n dung",
+          "Th\u1ee5y hi\u1ec7u",
+          "\u00c2m H\u00e1n Vi\u1ec7t",
+          "T\u00ean ti\u1ebfng Nh\u1eadt",
+          "T\u00ean ri\u00eang (imina)",
+          "Ch\u00fa th\u00edch",
+        ],
+        [
+          "Thi\u00ean ho\u00e0ng truy\u1ec1n thuy\u1ebft",
+          "Thi\u00ean ho\u00e0ng truy\u1ec1n thuy\u1ebft",
+          "Thi\u00ean ho\u00e0ng truy\u1ec1n thuy\u1ebft",
+          "Thi\u00ean ho\u00e0ng truy\u1ec1n thuy\u1ebft",
+          "Thi\u00ean ho\u00e0ng truy\u1ec1n thuy\u1ebft",
+          "Thi\u00ean ho\u00e0ng truy\u1ec1n thuy\u1ebft",
+          "Thi\u00ean ho\u00e0ng truy\u1ec1n thuy\u1ebft",
+          "Thi\u00ean ho\u00e0ng truy\u1ec1n thuy\u1ebft",
+        ],
+        [
+          "1",
+          "660 TCN - 585 TCN",
+          "",
+          "Thi\u00ean ho\u00e0ng Jinmu",
+          "Th\u1ea7n V\u0169 Thi\u00ean ho\u00e0ng",
+          "\u795e\u6b66\u5929\u7687",
+          "Kamuyamato Iwarebiko",
+          "\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed; tuy\u00ean b\u1ed1 l\u00e0 h\u1eadu du\u1ec7 c\u1ee7a Thi\u00ean Chi\u1ebfu \u0110\u1ea1i Th\u1ea7n Amaterasu[22]",
+        ],
+        [
+          "2",
+          "581 TCN - 549 TCN",
+          "",
+          "Thi\u00ean ho\u00e0ng Suizei",
+          "Tuy T\u0129nh Thi\u00ean ho\u00e0ng",
+          "\u7d8f\u9756\u5929\u7687",
+          "Kamu Nunagawamimi no Mikoto",
+          "\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.[23]",
+        ],
+        [
+          "3",
+          "549 TCN - 511 TCN",
+          "",
+          "Thi\u00ean ho\u00e0ng Annei",
+          "An Ninh Thi\u00ean ho\u00e0ng",
+          "\u5b89\u5be7\u5929\u7687",
+          "Shikitsuhiko Tamademi no Mikoto",
+          "\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.[24]",
+        ],
+        [
+          "4",
+          "510 TCN - 476 TCN",
+          "",
+          "Thi\u00ean ho\u00e0ng Itoku",
+          "\u00dd \u0110\u1ee9c Thi\u00ean ho\u00e0ng",
+          "\u61ff\u5fb3\u5929\u7687",
+          "Oho Yamatohiko Sukitomo no Mikoto",
+          "\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.[24]",
+        ],
+        [
+          "5",
+          "475 TCN - 393 TCN",
+          "",
+          "Thi\u00ean ho\u00e0ng K\u014dsh\u014d",
+          "Hi\u1ebfu Chi\u00eau Thi\u00ean ho\u00e0ng",
+          "\u5b5d\u662d\u5929\u7687",
+          "Mimatsuhiko Kaesine no Mikoto",
+          "\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.[25]",
+        ],
+        [
+          "6",
+          "392 TCN - 291 TCN",
+          "",
+          "Thi\u00ean ho\u00e0ng K\u014dan",
+          "Hi\u1ebfu An Thi\u00ean ho\u00e0ng",
+          "\u5b5d\u5b89\u5929\u7687",
+          "Oho Yamato Tarasihiko Kuniosi Hito no Mikoto",
+          "\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.[26]",
+        ],
+        [
+          "7",
+          "290 TCN - 215 TCN",
+          "",
+          "Thi\u00ean ho\u00e0ng K\u014drei",
+          "Hi\u1ebfu Linh Thi\u00ean ho\u00e0ng",
+          "\u5b5d\u970a\u5929\u7687",
+          "Oho Yamato Nekohiko Futoni no Mikoto",
+          "\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.[27]",
+        ],
+        [
+          "8",
+          "214 TCN - 158 TCN",
+          "",
+          "Thi\u00ean ho\u00e0ng K\u014dgen",
+          "Hi\u1ebfu Nguy\u00ean Thi\u00ean ho\u00e0ng",
+          "\u5b5d\u5143\u5929\u7687",
+          "Oho Yamato Nekohiko Kuni Kuru no Mikoto",
+          "\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.[28]",
+        ],
+        [
+          "9",
+          "157 TCN - 98 TCN",
+          "",
+          "Thi\u00ean ho\u00e0ng Kaika",
+          "Khai H\u00f3a Thi\u00ean ho\u00e0ng",
+          "\u958b\u5316\u5929\u7687",
+          "Waka Yamato Nekohiko Oho Bibino no Mikoto",
+          "\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.[29]",
+        ],
+        [
+          "10",
+          "97 TCN - 30 TCN",
+          "",
+          "Thi\u00ean ho\u00e0ng Sujin",
+          "S\u00f9ng Th\u1ea7n Thi\u00ean ho\u00e0ng",
+          "\u5d07\u795e\u5929\u7687",
+          "Mimaki Irihiko Inie no Mikoto",
+          "\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.[30]",
+        ],
+        [
+          "11",
+          "29 TCN - 70",
+          "",
+          "Thi\u00ean ho\u00e0ng Suinin",
+          "Th\u00f9y Nh\u00e2n Thi\u00ean ho\u00e0ng",
+          "\u5782\u4ec1\u5929\u7687",
+          "Ikume Irihiko Isatsi no Mikoto",
+          "\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.[31]",
+        ],
+        [
+          "12",
+          "71 - 130",
+          "",
+          "Thi\u00ean ho\u00e0ng Keik\u014d",
+          "C\u1ea3nh H\u00e0nh Thi\u00ean ho\u00e0ng",
+          "\u666f\u884c\u5929\u7687",
+          "Oho Tarasihiko Osirowake no Mikoto",
+          "\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.[32]",
+        ],
+        [
+          "13",
+          "131 - 191",
+          "",
+          "Thi\u00ean ho\u00e0ng Seimu",
+          "Th\u00e0nh V\u1ee5 Thi\u00ean ho\u00e0ng",
+          "\u6210\u52d9\u5929\u7687",
+          "Waka Tarsihiko",
+          "\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.[33]",
+        ],
+        [
+          "14",
+          "192 - 200",
+          "",
+          "Thi\u00ean ho\u00e0ng Ch\u016bai",
+          "Tr\u1ecdng Ai Thi\u00ean ho\u00e0ng",
+          "\u4ef2\u54c0\u5929\u7687",
+          "Tarasi Nakatsuhiko no Mikoto",
+          "\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.[34]",
+        ],
+        [
+          "Th\u1eddi k\u1ef3 Yamato (Th\u1eddi k\u1ef3 Kofun)",
+          "Th\u1eddi k\u1ef3 Yamato (Th\u1eddi k\u1ef3 Kofun)",
+          "Th\u1eddi k\u1ef3 Yamato (Th\u1eddi k\u1ef3 Kofun)",
+          "Th\u1eddi k\u1ef3 Yamato (Th\u1eddi k\u1ef3 Kofun)",
+          "Th\u1eddi k\u1ef3 Yamato (Th\u1eddi k\u1ef3 Kofun)",
+          "Th\u1eddi k\u1ef3 Yamato (Th\u1eddi k\u1ef3 Kofun)",
+          "Th\u1eddi k\u1ef3 Yamato (Th\u1eddi k\u1ef3 Kofun)",
+          "Th\u1eddi k\u1ef3 Yamato (Th\u1eddi k\u1ef3 Kofun)",
+        ],
+        [
+          "15",
+          "270 - 310",
+          "",
+          "Thi\u00ean ho\u00e0ng \u014cjin",
+          "\u1ee8ng Th\u1ea7n Thi\u00ean ho\u00e0ng",
+          "\u5fdc\u795e\u5929\u7687",
+          "Fondano Miko no Mikoto / Otomowake no Mikoto / Humudawake no Mikoto",
+          "Thi\u00ean ho\u00e0ng ti\u1ec1n l\u1ecbch s\u1eed cu\u1ed1i c\u00f9ng, \u0111\u01b0\u1ee3c t\u00f4n l\u00e0m Hachiman.[35]",
+        ],
+        [
+          "16",
+          "313 - 399",
+          "",
+          "Thi\u00ean ho\u00e0ng Nintoku",
+          "Nh\u00e2n \u0110\u1ee9c Thi\u00ean ho\u00e0ng",
+          "\u4ec1\u5fb3\u5929\u7687",
+          "Oho Sazaki no Mikoto",
+          "Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.[36]",
+        ],
+        [
+          "17",
+          "400 - 405",
+          "",
+          "Thi\u00ean ho\u00e0ng Rich\u016b",
+          "L\u00fd Trung Thi\u00ean ho\u00e0ng",
+          "\u5c65\u4e2d\u5929\u7687",
+          "Isaho Wake no Mikoto",
+          "Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.[37]",
+        ],
+        [
+          "18",
+          "406 - 410",
+          "",
+          "Thi\u00ean ho\u00e0ng Hanzei",
+          "Ph\u00e0n Ch\u00ednh Thi\u00ean ho\u00e0ng",
+          "\u53cd\u6b63\u5929\u7687",
+          "Misu wa Wake no Mikoto",
+          "Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.[38]",
+        ],
+        [
+          "19",
+          "411 - 453",
+          "",
+          "Thi\u00ean ho\u00e0ng Ingy\u014d",
+          "Du\u1eabn Cung Thi\u00ean ho\u00e0ng",
+          "\u5141\u606d\u5929\u7687",
+          "Wo Asazuma Wakugo no Sukune",
+          "Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.[39]",
+        ],
+        [
+          "20",
+          "453 - 456",
+          "",
+          "Thi\u00ean ho\u00e0ng Ank\u014d",
+          "An Khang Thi\u00ean ho\u00e0ng",
+          "\u5b89\u5eb7\u5929\u7687",
+          "Anaho no Mikoto",
+          "Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.[40]",
+        ],
+        [
+          "21",
+          "456 - 479",
+          "",
+          "Thi\u00ean ho\u00e0ng Y\u016bryaku",
+          "H\u00f9ng L\u01b0\u1ee3c Thi\u00ean ho\u00e0ng",
+          "\u96c4\u7565\u5929\u7687",
+          "Oho Hatsuneno no Mikoto",
+          "Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.[41]",
+        ],
+        [
+          "22",
+          "480 - 484",
+          "",
+          "Thi\u00ean ho\u00e0ng Seinei",
+          "Thanh Ninh Thi\u00ean ho\u00e0ng",
+          "\u6e05\u5be7\u5929\u7687",
+          "Siraga Takehiro Kuni Osi Wakai Yamato Neko no Mikoto",
+          "Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.[42]",
+        ],
+        [
+          "23",
+          "485 - 487",
+          "",
+          "Thi\u00ean ho\u00e0ng Kenz\u014d",
+          "Hi\u1ec3n T\u00f4ng Thi\u00ean ho\u00e0ng",
+          "\u9855\u5b97\u5929\u7687",
+          "Ohoke no Mikoto",
+          "Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.[43]",
+        ],
+        [
+          "24",
+          "488 - 498",
+          "",
+          "Thi\u00ean ho\u00e0ng Ninken",
+          "Nh\u00e2n Hi\u1ec1n Thi\u00ean ho\u00e0ng",
+          "\u4ec1\u8ce2\u5929\u7687",
+          "Ohosi(Ohosu) no Mikoto/ Simano Iratsuko",
+          "Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.[44]",
+        ],
+        [
+          "25",
+          "498 - 506",
+          "",
+          "Thi\u00ean ho\u00e0ng Buretsu",
+          "V\u0169 Li\u1ec7t Thi\u00ean ho\u00e0ng",
+          "\u6b66\u70c8\u5929\u7687",
+          "Wohatsuse Wakasazaki",
+          "Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.[45]",
+        ],
+        [
+          "26",
+          "507 - 531",
+          "",
+          "Thi\u00ean ho\u00e0ng Keitai",
+          "K\u1ebf Th\u1ec3 Thi\u00ean ho\u00e0ng",
+          "\u7d99\u4f53\u5929\u7687",
+          "\u014cto/Hikofuto (Hikofuto no Mikoto/\u014cdo no Sumera Mikoto)",
+          "C\u00f3 th\u1ec3 l\u00e0 ng\u01b0\u1eddi s\u00e1ng l\u1eadp tri\u1ec1u \u0111\u1ea1i m\u1edbi.[46]",
+        ],
+        [
+          "27",
+          "531 - 535",
+          "",
+          "Thi\u00ean ho\u00e0ng Ankan",
+          "An Nh\u00e0n Thi\u00ean ho\u00e0ng",
+          "\u5b89\u9591\u5929\u7687",
+          "Hirokuni Oshitake Kanahi no Mikoto",
+          "Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.[47]",
+        ],
+        [
+          "28",
+          "535 - 539",
+          "",
+          "Thi\u00ean ho\u00e0ng Senka",
+          "Tuy\u00ean H\u00f3a Thi\u00ean ho\u00e0ng",
+          "\u5ba3\u5316\u5929\u7687",
+          "Takeo Hirokuni Oshitate no Mikoto",
+          "Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.[48]",
+        ],
+        [
+          "Th\u1eddi k\u1ef3 Asuka (592-710)",
+          "Th\u1eddi k\u1ef3 Asuka (592-710)",
+          "Th\u1eddi k\u1ef3 Asuka (592-710)",
+          "Th\u1eddi k\u1ef3 Asuka (592-710)",
+          "Th\u1eddi k\u1ef3 Asuka (592-710)",
+          "Th\u1eddi k\u1ef3 Asuka (592-710)",
+          "Th\u1eddi k\u1ef3 Asuka (592-710)",
+          "Th\u1eddi k\u1ef3 Asuka (592-710)",
+        ],
+        [
+          "29",
+          "539 - 571",
+          "",
+          "Thi\u00ean ho\u00e0ng Kimmei",
+          "Kh\u00e2m Minh Thi\u00ean ho\u00e0ng",
+          "\u6b3d\u660e\u5929\u7687",
+          "Amekuni Oshiharuki Hironiwa no Sumera Mikoto",
+          "\u00c2m l\u1ecbch.[49]",
+        ],
+        [
+          "30",
+          "572 - 585",
+          "",
+          "Thi\u00ean ho\u00e0ng Bidatsu",
+          "M\u1eabn \u0110\u1ea1t Thi\u00ean ho\u00e0ng",
+          "\u654f\u9054\u5929\u7687",
+          "Osada no Nunakura no Futotamashiki no Mikoto",
+          "\u00c2m l\u1ecbch.[50]",
+        ],
+        [
+          "31",
+          "585 - 587",
+          "",
+          "Thi\u00ean ho\u00e0ng Y\u014dmei",
+          "D\u1ee5ng Minh Thi\u00ean ho\u00e0ng",
+          "\u7528\u660e\u5929\u7687",
+          "Ooe/Tachibana no Toyohi no Sumera Mikoto",
+          "\u00c2m l\u1ecbch.[51]",
+        ],
+        [
+          "32",
+          "587 - 592",
+          "",
+          "Thi\u00ean ho\u00e0ng Sushun",
+          "S\u00f9ng Tu\u1ea5n Thi\u00ean ho\u00e0ng",
+          "\u5d07\u5cfb\u5929\u7687",
+          "Hatsusebe no (Wakasasagi) Mikoto",
+          "\u00c2m l\u1ecbch.[52]",
+        ],
+        [
+          "33",
+          "592 - 628",
+          "",
+          "Thi\u00ean ho\u00e0ng Suiko (n\u1eef)",
+          "Th\u00f4i C\u1ed5 Thi\u00ean ho\u00e0ng",
+          "\u63a8\u53e4\u5929\u7687",
+          "Nukatabe/Toyomike Kashikiyahime",
+          "N\u1eef Thi\u00ean ho\u00e0ng kh\u00f4ng ph\u1ea3i huy\u1ec1n tho\u1ea1i \u0111\u1ea7u ti\u00ean (Th\u00e1nh \u0110\u1ee9c Th\u00e1i t\u1eed l\u00e0m nhi\u1ebfp ch\u00ednh); \u00c2m l\u1ecbch.[53]",
+        ],
+        [
+          "34",
+          "629 - 641",
+          "",
+          "Thi\u00ean ho\u00e0ng Jomei",
+          "Th\u01b0 Minh Thi\u00ean ho\u00e0ng",
+          "\u8212\u660e\u5929\u7687",
+          "Tamura (Oki Nagatarashihi Hironuka no Sumera Mikoto)",
+          "\u00c2m l\u1ecbch.[54]",
+        ],
+        [
+          "35",
+          "642 - 645",
+          "",
+          "Thi\u00ean ho\u00e0ng K\u014dgyoku (n\u1eef)",
+          "Ho\u00e0ng C\u1ef1c Thi\u00ean ho\u00e0ng",
+          "\u7687\u6975\u5929\u7687",
+          "Takara (Ame Toyotakaraikashi Hitarashi Hime no Sumera Mikoto)",
+          "\u00c2m l\u1ecbch,[55] tr\u1ecb v\u00ec hai l\u1ea7n",
+        ],
+        [
+          "36",
+          "645 - 654",
+          "",
+          "Thi\u00ean ho\u00e0ng K\u014dtoku",
+          "Hi\u1ebfu \u0110\u1ee9c Thi\u00ean ho\u00e0ng",
+          "\u5b5d\u5fb3\u5929\u7687",
+          "Karu (Ame Yorozu Toyohi no Sumera Mikoto)",
+          "\u00c2m l\u1ecbch.[56]",
+        ],
+        [
+          "37",
+          "655 - 661",
+          "",
+          "Thi\u00ean ho\u00e0ng Saimei (n\u1eef)",
+          "T\u1ec1 Minh Thi\u00ean ho\u00e0ng",
+          "\u6589\u660e\u5929\u7687",
+          "-- Xem 35 \u1edf tr\u00ean\u2014",
+          "\u00c2m l\u1ecbch.[57]",
+        ],
+        [
+          "38",
+          "661 - 672",
+          "",
+          "Thi\u00ean ho\u00e0ng Tenji",
+          "Thi\u00ean Tr\u00ed Thi\u00ean ho\u00e0ng",
+          "\u5929\u667a\u5929\u7687",
+          "Katsuragi/Nakano-ooe (Ame Mikoto Hirakasuwake no Mikoto/Amatsu Mikoto Sakiwake no Mikoto)",
+          "\u00c2m l\u1ecbch.[58]",
+        ],
+        [
+          "39",
+          "672",
+          "",
+          "Thi\u00ean ho\u00e0ng K\u014dbun",
+          "Ho\u1eb1ng V\u0103n Thi\u00ean ho\u00e0ng",
+          "\u5f18\u6587\u5929\u7687",
+          "\u014ctomo",
+          "Truy phong (1870),[59] b\u1ecb Tenmu ti\u1ebfm ng\u00f4i",
+        ],
+        [
+          "40",
+          "672 - 686",
+          "",
+          "Thi\u00ean ho\u00e0ng Tenmu",
+          "Thi\u00ean V\u0169 Thi\u00ean ho\u00e0ng",
+          "\u5929\u6b66\u5929\u7687",
+          "\u014cama/Ohoshiama/\u014csama (Ame no Nunahara Oki no Mahito no Sumera Mikoto)",
+          "\u00c2m l\u1ecbch.[60]",
+        ],
+        [
+          "41",
+          "686 - 697",
+          "",
+          "Thi\u00ean ho\u00e0ng Jit\u014d (n\u1eef)",
+          "Tr\u00ec Th\u1ed1ng Thi\u00ean ho\u00e0ng",
+          "\u6301\u7d71\u5929\u7687",
+          "Unonosarara (Takama no Harahiro no Hime no Sumera Mikoto)",
+          "\u00c2m l\u1ecbch.[61]",
+        ],
+        [
+          "42",
+          "697 - 707",
+          "",
+          "Thi\u00ean ho\u00e0ng Monmu",
+          "V\u0103n V\u0169 Thi\u00ean ho\u00e0ng",
+          "\u6587\u6b66\u5929\u7687",
+          "Karu (Ame no Mamune Toyoohoji no Sumera Mikoto)",
+          "\u00c2m l\u1ecbch.[62]",
+        ],
+        [
+          "43",
+          "707 - 715",
+          "",
+          "Thi\u00ean ho\u00e0ng Gemmei (n\u1eef)",
+          "Nguy\u00ean Minh Thi\u00ean ho\u00e0ng",
+          "\u5143\u660e\u5929\u7687",
+          "Ahe (Yamatoneko Amatsu Mishiro Toyokuni Narihime no Sumera Mikoto)",
+          "\u00c2m l\u1ecbch.[63]",
+        ],
+        [
+          "Th\u1eddi k\u1ef3 Nara (710-794)",
+          "Th\u1eddi k\u1ef3 Nara (710-794)",
+          "Th\u1eddi k\u1ef3 Nara (710-794)",
+          "Th\u1eddi k\u1ef3 Nara (710-794)",
+          "Th\u1eddi k\u1ef3 Nara (710-794)",
+          "Th\u1eddi k\u1ef3 Nara (710-794)",
+          "Th\u1eddi k\u1ef3 Nara (710-794)",
+          "Th\u1eddi k\u1ef3 Nara (710-794)",
+        ],
+        [
+          "44",
+          "715 - 724",
+          "",
+          "Thi\u00ean ho\u00e0ng Gensh\u014d (n\u1eef)",
+          "Nguy\u00ean Ch\u00ednh Thi\u00ean ho\u00e0ng",
+          "\u5143\u6b63\u5929\u7687",
+          "Hidaka/Niinomi (Yamatoneko Takamizu Kiyotarashi Hime no Sumera Mikoto)",
+          "\u00c2m l\u1ecbch.[64]",
+        ],
+        [
+          "45",
+          "724 - 749",
+          "",
+          "Thi\u00ean ho\u00e0ng Sh\u014dmu",
+          "Th\u00e1nh V\u0169 Thi\u00ean ho\u00e0ng",
+          "\u8056\u6b66\u5929\u7687",
+          "Obito (Ameshirushi Kunioshiharuki Toyosakurahiko no Sumera Mikoto)",
+          "\u00c2m l\u1ecbch.[65]",
+        ],
+        [
+          "46",
+          "749 - 758",
+          "",
+          "Thi\u00ean ho\u00e0ng K\u014dken (n\u1eef)",
+          "Hi\u1ebfu Khi\u00eam Thi\u00ean ho\u00e0ng",
+          "\u5b5d\u8b19\u5929\u7687",
+          "Abe (Yamatoneko no Sumera Mikoto)",
+          "\u00c2m l\u1ecbch,[66] tr\u1ecb v\u00ec hai l\u1ea7n.",
+        ],
+        [
+          "47",
+          "758 - 764",
+          "",
+          "Thi\u00ean ho\u00e0ng Junnin",
+          "Thu\u1ea7n Nh\u00e2n Thi\u00ean ho\u00e0ng",
+          "\u6df3\u4ec1\u5929\u7687",
+          "\u014ci",
+          "Truy phong (1870),[67] b\u1ecb tru\u1ea5t ng\u00f4i b\u1edfi Sh\u014dtoku",
+        ],
+        [
+          "48",
+          "764 - 770",
+          "",
+          "Thi\u00ean ho\u00e0ng Sh\u014dtoku (n\u1eef)",
+          "X\u01b0ng \u0110\u1ee9c Thi\u00ean ho\u00e0ng",
+          "\u79f0\u5fb3\u5929\u7687",
+          "\u2014Xem 46 \u1edf tr\u00ean --",
+          "\u00c2m l\u1ecbch, tr\u1ecb v\u00ec l\u1ea7n hai.[68]",
+        ],
+        [
+          "49",
+          "770 - 781",
+          "",
+          "Thi\u00ean ho\u00e0ng K\u014dnin",
+          "Quang Nh\u00e2n Thi\u00ean ho\u00e0ng",
+          "\u5149\u4ec1\u5929\u7687",
+          "Shirakabe (Amemune Takatsugi no Mikoto)",
+          "\u00c2m l\u1ecbch.[69]",
+        ],
+        [
+          "Th\u1eddi k\u1ef3 Heian (794-1192)",
+          "Th\u1eddi k\u1ef3 Heian (794-1192)",
+          "Th\u1eddi k\u1ef3 Heian (794-1192)",
+          "Th\u1eddi k\u1ef3 Heian (794-1192)",
+          "Th\u1eddi k\u1ef3 Heian (794-1192)",
+          "Th\u1eddi k\u1ef3 Heian (794-1192)",
+          "Th\u1eddi k\u1ef3 Heian (794-1192)",
+          "Th\u1eddi k\u1ef3 Heian (794-1192)",
+        ],
+        [
+          "50",
+          "781 - 806",
+          "",
+          "Thi\u00ean ho\u00e0ng Kanmu",
+          "Ho\u00e0n V\u0169 Thi\u00ean ho\u00e0ng",
+          "\u6853\u6b66\u5929\u7687",
+          "Yamabe (Yamatoneko Amatsu Hitsugi Iyaderi no Mikoto)",
+          "\u00c2m l\u1ecbch.[70]",
+        ],
+        [
+          "51",
+          "806 - 809",
+          "",
+          "Thi\u00ean ho\u00e0ng Heizei",
+          "B\u00ecnh Th\u00e0nh Thi\u00ean ho\u00e0ng",
+          "\u5e73\u57ce\u5929\u7687",
+          "Ate (Yamatoneko Ameoshikuni Takahiko no Mikoto)",
+          "\u00c2m l\u1ecbch.[71]",
+        ],
+        [
+          "52",
+          "809 - 823",
+          "",
+          "Thi\u00ean ho\u00e0ng Saga",
+          "Tha Nga Thi\u00ean ho\u00e0ng",
+          "\u5d6f\u5ce8\u5929\u7687",
+          "Kamino",
+          "\u00c2m l\u1ecbch.[72]",
+        ],
+        [
+          "53",
+          "823 - 833",
+          "",
+          "Thi\u00ean ho\u00e0ng Junna",
+          "Thu\u1ea7n H\u00f2a Thi\u00ean ho\u00e0ng",
+          "\u6df3\u548c\u5929\u7687",
+          "\u014ctomo",
+          "\u00c2m l\u1ecbch.[73]",
+        ],
+        [
+          "54",
+          "833 - 850",
+          "",
+          "Thi\u00ean ho\u00e0ng Ninmy\u014d",
+          "Nh\u00e2n Minh Thi\u00ean ho\u00e0ng",
+          "\u4ec1\u660e\u5929\u7687",
+          "Masara",
+          "\u00c2m l\u1ecbch.[74]",
+        ],
+        [
+          "55",
+          "850 - 858",
+          "",
+          "Thi\u00ean ho\u00e0ng Montoku",
+          "V\u0103n \u0110\u1ee9c Thi\u00ean ho\u00e0ng",
+          "\u6587\u5fb3\u5929\u7687",
+          "Michiyasu",
+          "\u00c2m l\u1ecbch.[75]",
+        ],
+        [
+          "56",
+          "858 - 876",
+          "",
+          "Thi\u00ean ho\u00e0ng Seiwa",
+          "Thanh H\u00f2a Thi\u00ean ho\u00e0ng",
+          "\u6e05\u548c\u5929\u7687",
+          "Korehito",
+          "\u00c2m l\u1ecbch.[76]",
+        ],
+        [
+          "57",
+          "876 - 884",
+          "",
+          "Thi\u00ean ho\u00e0ng Y\u014dzei",
+          "D\u01b0\u01a1ng Th\u00e0nh Thi\u00ean ho\u00e0ng",
+          "\u967d\u6210\u5929\u7687",
+          "Sadaakira",
+          "\u00c2m l\u1ecbch.[77]",
+        ],
+        [
+          "58",
+          "884 - 887",
+          "",
+          "Thi\u00ean ho\u00e0ng K\u014dk\u014d",
+          "Quang Hi\u1ebfu Thi\u00ean ho\u00e0ng",
+          "\u5149\u5b5d\u5929\u7687",
+          "Tokiyasu",
+          "\u00c2m l\u1ecbch.[78]",
+        ],
+        [
+          "59",
+          "887 - 897",
+          "",
+          "Thi\u00ean ho\u00e0ng Uda",
+          "V\u0169 \u0110a Thi\u00ean ho\u00e0ng",
+          "\u5b87\u591a\u5929\u7687",
+          "Sadami",
+          "\u00c2m l\u1ecbch.[79]",
+        ],
+        [
+          "60",
+          "897 - 930",
+          "",
+          "Thi\u00ean ho\u00e0ng Daigo",
+          "\u0110\u1ec1 H\u1ed3 Thi\u00ean ho\u00e0ng",
+          "\u918d\u9190\u5929\u7687",
+          "Atsuhito",
+          "\u00c2m l\u1ecbch.[80]",
+        ],
+        [
+          "61",
+          "930 - 946",
+          "",
+          "Thi\u00ean ho\u00e0ng Suzaku",
+          "Chu T\u01b0\u1edbc Thi\u00ean ho\u00e0ng",
+          "\u6731\u96c0\u5929\u7687",
+          "Yutaakira",
+          "\u00c2m l\u1ecbch.[81]",
+        ],
+        [
+          "62",
+          "946 - 967",
+          "",
+          "Thi\u00ean ho\u00e0ng Murakami",
+          "Th\u00f4n Th\u01b0\u1ee3ng Thi\u00ean ho\u00e0ng",
+          "\u6751\u4e0a\u5929\u7687",
+          "Nariakira",
+          "\u00c2m l\u1ecbch.[82]",
+        ],
+        [
+          "63",
+          "967 - 969",
+          "",
+          "Thi\u00ean ho\u00e0ng Reizei",
+          "Linh Tuy\u1ec1n Thi\u00ean ho\u00e0ng",
+          "\u51b7\u6cc9\u5929\u7687",
+          "Norihira",
+          "\u00c2m l\u1ecbch.[83]",
+        ],
+        [
+          "64",
+          "969 - 984",
+          "",
+          "Thi\u00ean ho\u00e0ng En'y\u016b",
+          "Vi\u00ean Dung Thi\u00ean ho\u00e0ng",
+          "\u5186\u878d\u5929\u7687",
+          "Morihira",
+          "\u00c2m l\u1ecbch.[84]",
+        ],
+        [
+          "65",
+          "984 - 986",
+          "",
+          "Thi\u00ean ho\u00e0ng Kazan",
+          "Hoa S\u01a1n Thi\u00ean ho\u00e0ng",
+          "\u82b1\u5c71\u5929\u7687",
+          "Morosada",
+          "\u00c2m l\u1ecbch.[85]",
+        ],
+        [
+          "66",
+          "986 - 1011",
+          "",
+          "Thi\u00ean ho\u00e0ng Ichij\u014d",
+          "Nh\u1ea5t \u0110i\u1ec1u Thi\u00ean ho\u00e0ng",
+          "\u4e00\u6761\u5929\u7687",
+          "Yasuhito/Kanehito",
+          "\u00c2m l\u1ecbch.[86]",
+        ],
+        [
+          "67",
+          "1011 - 1016",
+          "",
+          "Thi\u00ean ho\u00e0ng Sanj\u014d",
+          "Tam \u0110i\u1ec1u Thi\u00ean ho\u00e0ng",
+          "\u4e09\u6761\u5929\u7687",
+          "Okisada/Iyasada",
+          "\u00c2m l\u1ecbch.[87]",
+        ],
+        [
+          "68",
+          "1016 - 1036",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Ichij\u014d",
+          "H\u1eadu Nh\u1ea5t \u0110i\u1ec1u Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u4e00\u6761\u5929\u7687",
+          "Atsuhira",
+          "\u00c2m l\u1ecbch.[88]",
+        ],
+        [
+          "69",
+          "1036 - 1045",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Suzaku",
+          "H\u1eadu Chu T\u01b0\u1edbc Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u6731\u96c0\u5929\u7687",
+          "Atsunaga/Atsuyoshi",
+          "\u00c2m l\u1ecbch.[89]",
+        ],
+        [
+          "70",
+          "1045 - 1068",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Reizei",
+          "H\u1eadu Linh Tuy\u1ec1n Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u51b7\u6cc9\u5929\u7687",
+          "Chikahito",
+          "\u00c2m l\u1ecbch.[90]",
+        ],
+        [
+          "71",
+          "1068 - 1073",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Sanj\u014d",
+          "H\u1eadu Tam \u0110i\u1ec1u Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u4e09\u6761\u5929\u7687",
+          "Takahito",
+          "\u00c2m l\u1ecbch.[91]",
+        ],
+        [
+          "72",
+          "1073 - 1086",
+          "",
+          "Thi\u00ean ho\u00e0ng Shirakawa",
+          "B\u1ea1ch H\u00e0 Thi\u00ean ho\u00e0ng",
+          "\u767d\u6cb3\u5929\u7687",
+          "Sadahito",
+          "\u00c2m l\u1ecbch.[92]",
+        ],
+        [
+          "73",
+          "1087 - 1107",
+          "",
+          "Thi\u00ean ho\u00e0ng Horikawa",
+          "Qu\u1eadt H\u00e0 Thi\u00ean ho\u00e0ng",
+          "\u5800\u6cb3\u5929\u7687",
+          "Taruhito",
+          "\u00c2m l\u1ecbch.[93]",
+        ],
+        [
+          "74",
+          "1107 - 1123",
+          "",
+          "Thi\u00ean ho\u00e0ng Toba",
+          "\u0110i\u1ec3u V\u0169 Thi\u00ean ho\u00e0ng",
+          "\u9ce5\u7fbd\u5929\u7687",
+          "Munehito",
+          "\u00c2m l\u1ecbch.[94]",
+        ],
+        [
+          "75",
+          "1123 - 1142",
+          "",
+          "Thi\u00ean ho\u00e0ng Sutoku",
+          "S\u00f9ng \u0110\u1ee9c Thi\u00ean ho\u00e0ng",
+          "\u5d07\u5fb3\u5929\u7687",
+          "Akihito",
+          "\u00c2m l\u1ecbch.[95]",
+        ],
+        [
+          "76",
+          "1142 - 1155",
+          "",
+          "Thi\u00ean ho\u00e0ng Konoe",
+          "C\u1eadn V\u1ec7 Thi\u00ean ho\u00e0ng",
+          "\u8fd1\u885b\u5929\u7687",
+          "Narihito",
+          "\u00c2m l\u1ecbch.[96]",
+        ],
+        [
+          "77",
+          "1155 - 1158",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Shirakawa",
+          "H\u1eadu B\u1ea1ch H\u00e0 Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u767d\u6cb3\u5929\u7687",
+          "Masahito",
+          "\u00c2m l\u1ecbch.[97]",
+        ],
+        [
+          "78",
+          "1158 - 1165",
+          "",
+          "Thi\u00ean ho\u00e0ng Nij\u014d",
+          "Nh\u1ecb \u0110i\u1ec1u Thi\u00ean ho\u00e0ng",
+          "\u4e8c\u6761\u5929\u7687",
+          "Morihito",
+          "\u00c2m l\u1ecbch.[98]",
+        ],
+        [
+          "79",
+          "1165 - 1168",
+          "",
+          "Thi\u00ean ho\u00e0ng Rokuj\u014d",
+          "L\u1ee5c \u0110i\u1ec1u Thi\u00ean ho\u00e0ng",
+          "\u516d\u6761\u5929\u7687",
+          "Yorihito",
+          "\u00c2m l\u1ecbch.[99]",
+        ],
+        [
+          "80",
+          "1168 - 1180",
+          "",
+          "Thi\u00ean ho\u00e0ng Takakura",
+          "Cao Th\u01b0\u01a1ng Thi\u00ean ho\u00e0ng",
+          "\u9ad8\u5009\u5929\u7687",
+          "Norihito",
+          "\u00c2m l\u1ecbch.[99]",
+        ],
+        [
+          "81",
+          "1180 - 1185",
+          "",
+          "Thi\u00ean ho\u00e0ng Antoku",
+          "An \u0110\u1ee9c Thi\u00ean ho\u00e0ng",
+          "\u5b89\u5fb3\u5929\u7687",
+          "Tokihito",
+          "\u00c2m l\u1ecbch.[100]",
+        ],
+        [
+          "82",
+          "1183 - 1198",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Toba",
+          "H\u1eadu \u0110i\u1ec3u V\u0169 Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u9ce5\u7fbd\u5929\u7687",
+          "Takahira",
+          "\u00c2m l\u1ecbch.[101]",
+        ],
+        [
+          "Th\u1eddi k\u1ef3 Kamakura (1192?,1198?-1333)",
+          "Th\u1eddi k\u1ef3 Kamakura (1192?,1198?-1333)",
+          "Th\u1eddi k\u1ef3 Kamakura (1192?,1198?-1333)",
+          "Th\u1eddi k\u1ef3 Kamakura (1192?,1198?-1333)",
+          "Th\u1eddi k\u1ef3 Kamakura (1192?,1198?-1333)",
+          "Th\u1eddi k\u1ef3 Kamakura (1192?,1198?-1333)",
+          "Th\u1eddi k\u1ef3 Kamakura (1192?,1198?-1333)",
+          "Th\u1eddi k\u1ef3 Kamakura (1192?,1198?-1333)",
+        ],
+        [
+          "83",
+          "1198 - 1210",
+          "",
+          "Thi\u00ean ho\u00e0ng Tsuchimikado",
+          "Th\u1ed5 Ng\u1ef1 M\u00f4n Thi\u00ean ho\u00e0ng",
+          "\u571f\u5fa1\u9580\u5929\u7687",
+          "Tamehito",
+          "\u00c2m l\u1ecbch.[102]",
+        ],
+        [
+          "84",
+          "1210 - 1221",
+          "",
+          "Thi\u00ean ho\u00e0ng Juntoku",
+          "Thu\u1eadn \u0110\u1ee9c Thi\u00ean ho\u00e0ng",
+          "\u9806\u5fb3\u5929\u7687",
+          "Morihira/Morinari",
+          "\u00c2m l\u1ecbch.[103]",
+        ],
+        [
+          "85",
+          "1221",
+          "",
+          "Thi\u00ean ho\u00e0ng Ch\u016bky\u014d",
+          "Tr\u1ecdng Cung Thi\u00ean ho\u00e0ng",
+          "\u4ef2\u606d\u5929\u7687",
+          "Kanehira/Kanenari",
+          "Truy phong (1870).[104] b\u1ecb tru\u1ea5t ng\u00f4i",
+        ],
+        [
+          "86",
+          "1221 - 1232",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Horikawa",
+          "H\u1eadu Qu\u1eadt H\u00e0 Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u5800\u6cb3\u5929\u7687",
+          "Yutahito",
+          "\u00c2m l\u1ecbch.[105]",
+        ],
+        [
+          "87",
+          "1232 - 1242",
+          "",
+          "Thi\u00ean ho\u00e0ng Shij\u014d",
+          "T\u1ee9 \u0110i\u1ec1u Thi\u00ean ho\u00e0ng",
+          "\u56db\u6761\u5929\u7687",
+          "Mitsuhito/Hidehito",
+          "\u00c2m l\u1ecbch.[106]",
+        ],
+        [
+          "88",
+          "1242 - 1246",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Saga",
+          "H\u1eadu Tha Nga Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u5d6f\u5ce8\u5929\u7687",
+          "Kunihito",
+          "\u00c2m l\u1ecbch.[107]",
+        ],
+        [
+          "89",
+          "1246 - 1260",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Fukakusa",
+          "H\u1eadu Th\u00e2m Th\u1ea3o Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u6df1\u8349\u5929\u7687",
+          "Hisahito",
+          "\u00c2m l\u1ecbch.[108]",
+        ],
+        [
+          "90",
+          "1260 - 1274",
+          "",
+          "Thi\u00ean ho\u00e0ng Kameyama",
+          "Quy S\u01a1n Thi\u00ean ho\u00e0ng",
+          "\u4e80\u5c71\u5929\u7687",
+          "Tsunehito",
+          "\u00c2m l\u1ecbch.[109]",
+        ],
+        [
+          "91",
+          "1274 - 1287",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Uda",
+          "H\u1eadu V\u0169 \u0110a Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u5b87\u591a\u5929\u7687",
+          "Yohito",
+          "\u00c2m l\u1ecbch.[110]",
+        ],
+        [
+          "92",
+          "1287 - 1298",
+          "",
+          "Thi\u00ean ho\u00e0ng Fushimi",
+          "Ph\u1ee5c Ki\u1ebfn Thi\u00ean ho\u00e0ng",
+          "\u4f0f\u898b\u5929\u7687",
+          "Hirohito",
+          "\u00c2m l\u1ecbch.[111]",
+        ],
+        [
+          "93",
+          "1298 - 1301",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Fushimi",
+          "H\u1eadu Ph\u1ee5c Ki\u1ebfn Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u4f0f\u898b\u5929\u7687",
+          "Tanehito",
+          "\u00c2m l\u1ecbch.[112]",
+        ],
+        [
+          "94",
+          "1301 - 1308",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Nij\u014d",
+          "H\u1eadu Nh\u1ecb \u0110i\u1ec1u Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u4e8c\u6761\u5929\u7687",
+          "Kuniharu",
+          "\u00c2m l\u1ecbch.[113]",
+        ],
+        [
+          "95",
+          "1308 - 1318",
+          "",
+          "Thi\u00ean ho\u00e0ng Hanazono",
+          "Hoa Vi\u00ean Thi\u00ean ho\u00e0ng",
+          "\u82b1\u5712\u5929\u7687",
+          "Tomihito",
+          "\u00c2m l\u1ecbch.[114]",
+        ],
+        [
+          "96",
+          "1318 - 1339",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Daigo",
+          "H\u1eadu \u0110\u1ec1 H\u1ed3 Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u918d\u9190\u5929\u7687",
+          "Takaharu",
+          "\u00c2m l\u1ecbch;[115] Nam tri\u1ec1u",
+        ],
+        [
+          "B\u1eafc tri\u1ec1u",
+          "B\u1eafc tri\u1ec1u",
+          "B\u1eafc tri\u1ec1u",
+          "B\u1eafc tri\u1ec1u",
+          "B\u1eafc tri\u1ec1u",
+          "B\u1eafc tri\u1ec1u",
+          "B\u1eafc tri\u1ec1u",
+          "B\u1eafc tri\u1ec1u",
+        ],
+        [
+          "",
+          "1331 - 1333",
+          "",
+          "Thi\u00ean ho\u00e0ng K\u014dgon",
+          "Quang Nghi\u00eam Thi\u00ean ho\u00e0ng",
+          "\u5149\u53b3\u5929\u7687",
+          "Kazuhito",
+          "[116]",
+        ],
+        [
+          "",
+          "1336 - 1348",
+          "",
+          "Thi\u00ean ho\u00e0ng K\u014dmy\u014d",
+          "Quang Minh Thi\u00ean ho\u00e0ng",
+          "\u5149\u660e\u5929\u7687",
+          "Yutahito",
+          "[117]",
+        ],
+        [
+          "",
+          "1348 - 1351",
+          "",
+          "Thi\u00ean ho\u00e0ng Suk\u014d",
+          "S\u00f9ng Quang Thi\u00ean ho\u00e0ng",
+          "\u5d07\u5149\u5929\u7687",
+          "Okihito",
+          "[118]",
+        ],
+        [
+          "",
+          "1352 - 1371",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-K\u014dgon",
+          "H\u1eadu Quang Nghi\u00eam Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u5149\u53b3\u5929\u7687",
+          "Iyahito",
+          "[119]",
+        ],
+        [
+          "",
+          "1371 - 1382",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-En'y\u016b",
+          "H\u1eadu Vi\u00ean Dung Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u5186\u878d\u5929\u7687",
+          "Ohito",
+          "[120]",
+        ],
+        [
+          "",
+          "1382 - 1392",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Komatsu",
+          "H\u1eadu Ti\u1ec3u T\u00f9ng Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u5c0f\u677e\u5929\u7687",
+          "-- Xem 100 \u1edf d\u01b0\u1edbi --",
+          "2 tri\u1ec1u th\u1ed1ng nh\u1ea5t n\u0103m 1392 [121]",
+        ],
+        [
+          "Th\u1eddi k\u1ef3 Muromachi (1392-1573)",
+          "Th\u1eddi k\u1ef3 Muromachi (1392-1573)",
+          "Th\u1eddi k\u1ef3 Muromachi (1392-1573)",
+          "Th\u1eddi k\u1ef3 Muromachi (1392-1573)",
+          "Th\u1eddi k\u1ef3 Muromachi (1392-1573)",
+          "Th\u1eddi k\u1ef3 Muromachi (1392-1573)",
+          "Th\u1eddi k\u1ef3 Muromachi (1392-1573)",
+          "Th\u1eddi k\u1ef3 Muromachi (1392-1573)",
+        ],
+        [
+          "97",
+          "1339 - 1368",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Murakami",
+          "H\u1eadu Th\u00f4n Th\u01b0\u1ee3ng Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u6751\u4e0a\u5929\u7687",
+          "Norinaga/Noriyoshi",
+          "[122] Nam tri\u1ec1u",
+        ],
+        [
+          "98",
+          "1368 - 1383",
+          "",
+          "Thi\u00ean ho\u00e0ng Ch\u014dkei",
+          "Tr\u01b0\u1edfng Kh\u00e1nh Thi\u00ean ho\u00e0ng",
+          "\u9577\u6176\u5929\u7687",
+          "Yutanari",
+          "[123] Nam tri\u1ec1u",
+        ],
+        [
+          "99",
+          "1383 - 1392",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Kameyama",
+          "H\u1eadu Quy S\u01a1n Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u4e80\u5c71\u5929\u7687",
+          "Hironari",
+          "[124] Nam tri\u1ec1u",
+        ],
+        [
+          "100",
+          "1392 - 1412",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Komatsu",
+          "H\u1eadu Ti\u1ec3u T\u00f9ng Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u5c0f\u677e\u5929\u7687",
+          "Motohito",
+          "[125]",
+        ],
+        [
+          "101",
+          "1412 - 1428",
+          "",
+          "Thi\u00ean ho\u00e0ng Sh\u014dk\u014d",
+          "X\u01b0ng Quang Thi\u00ean ho\u00e0ng",
+          "\u79f0\u5149\u5929\u7687",
+          "Mihito",
+          "\u00c2m l\u1ecbch.[126]",
+        ],
+        [
+          "102",
+          "1428 - 1464",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Hanazono",
+          "H\u1eadu Hoa Vi\u00ean Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u82b1\u5712\u5929\u7687",
+          "Hikohito",
+          "\u00c2m l\u1ecbch.[127]",
+        ],
+        [
+          "103",
+          "1464 - 1500",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Tsuchimikado",
+          "H\u1eadu Th\u1ed5 Ng\u1ef1 M\u00f4n Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u571f\u5fa1\u9580\u5929\u7687",
+          "Fusahito",
+          "\u00c2m l\u1ecbch.[128]",
+        ],
+        [
+          "104",
+          "1500 - 1526",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Kashiwabara",
+          "H\u1eadu B\u00e1ch Nguy\u00ean Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u67cf\u539f\u5929\u7687",
+          "Katsuhito",
+          "\u00c2m l\u1ecbch.[129]",
+        ],
+        [
+          "105",
+          "1526 - 1557",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Nara",
+          "H\u1eadu N\u1ea1i L\u01b0\u01a1ng Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u5948\u826f\u5929\u7687",
+          "Tomohito",
+          "\u00c2m l\u1ecbch.[130]",
+        ],
+        [
+          "106",
+          "1557 - 1586",
+          "",
+          "Thi\u00ean ho\u00e0ng \u014cgimachi",
+          "Ch\u00ednh Th\u00e2n \u0110inh Thi\u00ean ho\u00e0ng",
+          "\u6b63\u89aa\u753a\u5929\u7687",
+          "Michihito",
+          "\u00c2m l\u1ecbch.[131]",
+        ],
+        [
+          "107",
+          "1586 - 1611",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Y\u014dzei",
+          "H\u1eadu D\u01b0\u01a1ng Th\u00e0nh Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u967d\u6210\u5929\u7687",
+          "Kazuhito/Katahito",
+          "\u00c2m l\u1ecbch.[132]",
+        ],
+        [
+          "Th\u1eddi k\u1ef3 Edo (1603-1867)",
+          "Th\u1eddi k\u1ef3 Edo (1603-1867)",
+          "Th\u1eddi k\u1ef3 Edo (1603-1867)",
+          "Th\u1eddi k\u1ef3 Edo (1603-1867)",
+          "Th\u1eddi k\u1ef3 Edo (1603-1867)",
+          "Th\u1eddi k\u1ef3 Edo (1603-1867)",
+          "Th\u1eddi k\u1ef3 Edo (1603-1867)",
+          "Th\u1eddi k\u1ef3 Edo (1603-1867)",
+        ],
+        [
+          "108",
+          "1611 - 1629",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Mizunoo (c\u00f2n g\u1ecdi l\u00e0 Thi\u00ean ho\u00e0ng Go-Minoo)",
+          "H\u1eadu Th\u1ee7y V\u0129 Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u6c34\u5c3e\u5929\u7687",
+          "Kotohito",
+          "\u00c2m l\u1ecbch.[133]",
+        ],
+        [
+          "109",
+          "1629 - 1643",
+          "",
+          "Thi\u00ean ho\u00e0ng Meish\u014d (n\u1eef)",
+          "Minh Ch\u00ednh Thi\u00ean ho\u00e0ng",
+          "\u660e\u6b63\u5929\u7687",
+          "Okiko",
+          "\u00c2m l\u1ecbch.[134]",
+        ],
+        [
+          "110",
+          "1643 - 1654",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-K\u014dmy\u014d",
+          "H\u1eadu Quang Minh Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u5149\u660e\u5929\u7687",
+          "Tsuguhito",
+          "\u00c2m l\u1ecbch.[135]",
+        ],
+        [
+          "111",
+          "1655 - 1663",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Sai",
+          "H\u1eadu T\u00e2y Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u897f\u5929\u7687",
+          "Nagahito",
+          "\u00c2m l\u1ecbch.[136]",
+        ],
+        [
+          "112",
+          "1663 - 1687",
+          "",
+          "Thi\u00ean ho\u00e0ng Reigen",
+          "Linh Nguy\u00ean Thi\u00ean ho\u00e0ng",
+          "\u970a\u5143\u5929\u7687",
+          "Satohito",
+          "\u00c2m l\u1ecbch.[137]",
+        ],
+        [
+          "113",
+          "1687 - 1709",
+          "",
+          "Thi\u00ean ho\u00e0ng Higashiyama",
+          "\u0110\u00f4ng S\u01a1n Thi\u00ean ho\u00e0ng",
+          "\u6771\u5c71\u5929\u7687",
+          "Asahito",
+          "\u00c2m l\u1ecbch.[138]",
+        ],
+        [
+          "114",
+          "1709 - 1735",
+          "",
+          "Thi\u00ean ho\u00e0ng Nakamikado",
+          "Trung Ng\u1ef1 M\u00f4n Thi\u00ean ho\u00e0ng",
+          "\u4e2d\u5fa1\u9580\u5929\u7687",
+          "Yasuhito",
+          "\u00c2m l\u1ecbch.[139]",
+        ],
+        [
+          "115",
+          "1735 - 1747",
+          "",
+          "Thi\u00ean ho\u00e0ng Sakuramachi",
+          "Anh \u0110inh Thi\u00ean ho\u00e0ng",
+          "\u685c\u753a\u5929\u7687",
+          "Teruhito",
+          "\u00c2m l\u1ecbch.[140]",
+        ],
+        [
+          "116",
+          "1747 - 1762",
+          "",
+          "Thi\u00ean ho\u00e0ng Momozono",
+          "\u0110\u00e0o Vi\u00ean Thi\u00ean ho\u00e0ng",
+          "\u6843\u5712\u5929\u7687",
+          "Toohito",
+          "\u00c2m l\u1ecbch.[141]",
+        ],
+        [
+          "117",
+          "1762 - 1771",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Sakuramachi (n\u1eef)",
+          "H\u1eadu Anh \u0110inh Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u685c\u753a\u5929\u7687",
+          "Toshiko",
+          "\u00c2m l\u1ecbch.[142]",
+        ],
+        [
+          "118",
+          "1771 - 1779",
+          "",
+          "Thi\u00ean ho\u00e0ng Go-Momozono",
+          "H\u1eadu \u0110\u00e0o Vi\u00ean Thi\u00ean ho\u00e0ng",
+          "\u5f8c\u6843\u5712\u5929\u7687",
+          "Hidehito",
+          "\u00c2m l\u1ecbch.[143]",
+        ],
+        [
+          "119",
+          "1780 - 1817",
+          "",
+          "Thi\u00ean ho\u00e0ng K\u014dkaku",
+          "Quang C\u00e1ch Thi\u00ean ho\u00e0ng",
+          "\u5149\u683c\u5929\u7687",
+          "Morohito",
+          "\u00c2m l\u1ecbch.[144]",
+        ],
+        [
+          "120",
+          "1817 - 1846",
+          "",
+          "Thi\u00ean ho\u00e0ng Nink\u014d",
+          "Nh\u00e2n Hi\u1ebfu Thi\u00ean ho\u00e0ng",
+          "\u4ec1\u5b5d\u5929\u7687",
+          "Ayahito",
+          "\u00c2m l\u1ecbch.[145]",
+        ],
+        [
+          "121",
+          "1846 - 1867",
+          "",
+          "Thi\u00ean ho\u00e0ng K\u014dmei",
+          "Hi\u1ebfu Minh Thi\u00ean ho\u00e0ng",
+          "\u5b5d\u660e\u5929\u7687",
+          "Osahito",
+          "",
+        ],
+        [
+          "Nh\u1eadt B\u1ea3n hi\u1ec7n \u0111\u1ea1i (1868-nay)",
+          "Nh\u1eadt B\u1ea3n hi\u1ec7n \u0111\u1ea1i (1868-nay)",
+          "Nh\u1eadt B\u1ea3n hi\u1ec7n \u0111\u1ea1i (1868-nay)",
+          "Nh\u1eadt B\u1ea3n hi\u1ec7n \u0111\u1ea1i (1868-nay)",
+          "Nh\u1eadt B\u1ea3n hi\u1ec7n \u0111\u1ea1i (1868-nay)",
+          "Nh\u1eadt B\u1ea3n hi\u1ec7n \u0111\u1ea1i (1868-nay)",
+          "Nh\u1eadt B\u1ea3n hi\u1ec7n \u0111\u1ea1i (1868-nay)",
+          "Nh\u1eadt B\u1ea3n hi\u1ec7n \u0111\u1ea1i (1868-nay)",
+        ],
+        [
+          "122",
+          "1867 - 1912",
+          "",
+          "Thi\u00ean ho\u00e0ng Meiji",
+          "Minh Tr\u1ecb Thi\u00ean ho\u00e0ng",
+          "\u660e\u6cbb\u5929\u7687",
+          "Mutsuhito",
+          "Thi\u00ean ho\u00e0ng \u0111\u1ea7u ti\u00ean th\u1eddi ch\u00ednh th\u1ec3 qu\u00e2n ch\u1ee7 l\u1eadp hi\u1ebfn",
+        ],
+        [
+          "123",
+          "1912 - 1926",
+          "",
+          "Thi\u00ean ho\u00e0ng Taish\u014d",
+          "\u0110\u1ea1i Ch\u00ednh Thi\u00ean ho\u00e0ng",
+          "\u5927\u6b63\u5929\u7687",
+          "Yoshihito",
+          "",
+        ],
+        [
+          "124",
+          "1926 - 1989",
+          "",
+          "Thi\u00ean ho\u00e0ng Sh\u014dwa",
+          "Chi\u00eau H\u00f2a Thi\u00ean ho\u00e0ng",
+          "\u662d\u548c\u5929\u7687",
+          "Hirohito",
+          "Thi\u00ean ho\u00e0ng cu\u1ed1i c\u00f9ng n\u1eafm gi\u1eef quy\u1ec1n l\u1ef1c ch\u00ednh tr\u1ecb",
+        ],
+        [
+          "125",
+          "1989 - 2019",
+          "",
+          "Thi\u00ean ho\u00e0ng Heisei",
+          "B\u00ecnh Th\u00e0nh Thi\u00ean ho\u00e0ng",
+          "\u4e0a\u7687",
+          "Akihito",
+          "Thi\u00ean ho\u00e0ng \u0111\u1ea7u ti\u00ean tho\u00e1i v\u1ecb sau 200 n\u0103m. Sau khi ch\u1ebft, \u00f4ng s\u1ebd \u0111\u01b0\u1ee3c \u0111\u1eb7t thu\u1ef5 hi\u1ec7u l\u00e0 Thi\u00ean ho\u00e0ng Heisei (B\u00ecnh Th\u00e0nh).",
+        ],
+        [
+          "126",
+          "2019 - nay",
+          "",
+          "Thi\u00ean ho\u00e0ng Reiwa",
+          "L\u1ec7nh H\u00f2a Thi\u00ean ho\u00e0ng",
+          "\u4eca\u4e0a\u5929\u7687",
+          "Naruhito",
+          "\u0110\u01b0\u1ee3c g\u1ecdi l\u00e0 Kim th\u01b0\u1ee3ng Thi\u00ean ho\u00e0ng (\u4eca\u4e0a\u5929\u7687/Kinj\u014d Tenn\u014d) hay Thi\u00ean ho\u00e0ng B\u1ec7 h\u1ea1 (\u5929\u7687\u965b\u4e0b/Tenn\u014d Heika) trong ti\u1ebfng Nh\u1eadt v\u00e0 Thi\u00ean ho\u00e0ng Naruhito trong ti\u1ebfng Vi\u1ec7t.",
+        ],
+      ],
+      table_html:
+        '<table border="1" class="wikitable sortable" style="border-collapse: collapse">\n<tbody><tr>\n<th width="2%">Th\u1ee9 t\u1ef1\n</th>\n<th width="15%">Nhi\u1ec7m k\u1ef3\n</th>\n<th width="0%">Ch\u00e2n dung\n</th>\n<th width="16%"><a href="/wiki/Th%E1%BB%A5y_hi%E1%BB%87u" title="Th\u1ee5y hi\u1ec7u">Th\u1ee5y hi\u1ec7u</a>\n</th>\n<th width="18%"><a href="/wiki/Phi%C3%AAn_%C3%A2m_H%C3%A1n-Vi%E1%BB%87t" title="Phi\u00ean \u00e2m H\u00e1n-Vi\u1ec7t">\u00c2m H\u00e1n Vi\u1ec7t</a>\n</th>\n<th width="10%">T\u00ean ti\u1ebfng Nh\u1eadt\n</th>\n<th width="15%">T\u00ean ri\u00eang (<i>imina</i>)\n</th>\n<th width="24%">Ch\u00fa th\u00edch\n</th></tr>\n<tr>\n<th colspan="8"><b><a href="/wiki/Th%E1%BB%83_lo%E1%BA%A1i:Thi%C3%AAn_ho%C3%A0ng_truy%E1%BB%81n_thuy%E1%BA%BFt" title="Th\u1ec3 lo\u1ea1i:Thi\u00ean ho\u00e0ng truy\u1ec1n thuy\u1ebft">Thi\u00ean ho\u00e0ng truy\u1ec1n thuy\u1ebft</a></b>\n</th></tr>\n<tr>\n<td>1\n</td>\n<td><a href="/wiki/660_TCN" title="660 TCN">660 TCN</a> - <a href="/wiki/585_TCN" title="585 TCN">585 TCN</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Tenn%C5%8D_Jimmu_detail_01.jpg"><img alt="" class="mw-file-element" data-file-height="1848" data-file-width="937" decoding="async" height="296" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Tenn%C5%8D_Jimmu_detail_01.jpg/150px-Tenn%C5%8D_Jimmu_detail_01.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Tenn%C5%8D_Jimmu_detail_01.jpg/225px-Tenn%C5%8D_Jimmu_detail_01.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Tenn%C5%8D_Jimmu_detail_01.jpg/300px-Tenn%C5%8D_Jimmu_detail_01.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Jimmu" title="Thi\u00ean ho\u00e0ng Jimmu">Thi\u00ean ho\u00e0ng Jinmu</a>\n</td>\n<td>Th\u1ea7n V\u0169 Thi\u00ean ho\u00e0ng\n</td>\n<td>\u795e\u6b66\u5929\u7687\n</td>\n<td>Kamuyamato Iwarebiko\n</td>\n<td>\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed; tuy\u00ean b\u1ed1 l\u00e0 h\u1eadu du\u1ec7 c\u1ee7a Thi\u00ean Chi\u1ebfu \u0110\u1ea1i Th\u1ea7n <a href="/wiki/Amaterasu" title="Amaterasu">Amaterasu</a><sup class="reference" id="cite_ref-22"><a href="#cite_note-22">[22]</a></sup>\n</td></tr>\n<tr>\n<td>2\n</td>\n<td><a href="/wiki/581_TCN" title="581 TCN">581 TCN</a> - <a href="/wiki/549_TCN" title="549 TCN">549 TCN</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Suizei_thumb_1.jpg"><img alt="" class="mw-file-element" data-file-height="720" data-file-width="600" decoding="async" height="180" src="//upload.wikimedia.org/wikipedia/commons/thumb/3/31/Suizei_thumb_1.jpg/150px-Suizei_thumb_1.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/3/31/Suizei_thumb_1.jpg/225px-Suizei_thumb_1.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/3/31/Suizei_thumb_1.jpg/300px-Suizei_thumb_1.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Suizei" title="Thi\u00ean ho\u00e0ng Suizei">Thi\u00ean ho\u00e0ng Suizei</a>\n</td>\n<td>Tuy T\u0129nh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u7d8f\u9756\u5929\u7687\n</td>\n<td>Kamu Nunagawamimi no Mikoto\n</td>\n<td>\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.<sup class="reference" id="cite_ref-23"><a href="#cite_note-23">[23]</a></sup>\n</td></tr>\n<tr>\n<td>3\n</td>\n<td><a href="/wiki/549_TCN" title="549 TCN">549 TCN</a> - <a href="/wiki/511_TCN" title="511 TCN">511 TCN</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Tenn%C5%8D_Annei_thumb.jpg"><img alt="" class="mw-file-element" data-file-height="620" data-file-width="600" decoding="async" height="155" src="//upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Tenn%C5%8D_Annei_thumb.jpg/150px-Tenn%C5%8D_Annei_thumb.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Tenn%C5%8D_Annei_thumb.jpg/225px-Tenn%C5%8D_Annei_thumb.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Tenn%C5%8D_Annei_thumb.jpg/300px-Tenn%C5%8D_Annei_thumb.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Annei" title="Thi\u00ean ho\u00e0ng Annei">Thi\u00ean ho\u00e0ng Annei</a>\n</td>\n<td>An Ninh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5b89\u5be7\u5929\u7687\n</td>\n<td>Shikitsuhiko Tamademi no Mikoto\n</td>\n<td>\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.<sup class="reference" id="cite_ref-Titsingh,_p._4_24-0"><a href="#cite_note-Titsingh,_p._4-24">[24]</a></sup>\n</td></tr>\n<tr>\n<td>4\n</td>\n<td><a href="/wiki/510_TCN" title="510 TCN">510 TCN</a> - <a href="/wiki/476_TCN" title="476 TCN">476 TCN</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Tenn%C5%8D_Itoku_thumb.jpg"><img class="mw-file-element" data-file-height="231" data-file-width="224" decoding="async" height="155" src="//upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Tenn%C5%8D_Itoku_thumb.jpg/150px-Tenn%C5%8D_Itoku_thumb.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/7/7a/Tenn%C5%8D_Itoku_thumb.jpg 1.5x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Itoku" title="Thi\u00ean ho\u00e0ng Itoku">Thi\u00ean ho\u00e0ng Itoku</a>\n</td>\n<td>\u00dd \u0110\u1ee9c Thi\u00ean ho\u00e0ng\n</td>\n<td>\u61ff\u5fb3\u5929\u7687\n</td>\n<td>Oho Yamatohiko Sukitomo no Mikoto\n</td>\n<td>\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.<sup class="reference" id="cite_ref-Titsingh,_p._4_24-1"><a href="#cite_note-Titsingh,_p._4-24">[24]</a></sup>\n</td></tr>\n<tr>\n<td>5\n</td>\n<td><a href="/wiki/475_TCN" title="475 TCN">475 TCN</a> - <a href="/wiki/393_TCN" title="393 TCN">393 TCN</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Tenn%C5%8D_K%C5%8Dsh%C5%8D_thumb.jpg"><img class="mw-file-element" data-file-height="226" data-file-width="223" decoding="async" height="152" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Tenn%C5%8D_K%C5%8Dsh%C5%8D_thumb.jpg/150px-Tenn%C5%8D_K%C5%8Dsh%C5%8D_thumb.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/d/d5/Tenn%C5%8D_K%C5%8Dsh%C5%8D_thumb.jpg 1.5x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_K%C5%8Dsh%C5%8D" title="Thi\u00ean ho\u00e0ng K\u014dsh\u014d">Thi\u00ean ho\u00e0ng K\u014dsh\u014d</a>\n</td>\n<td>Hi\u1ebfu Chi\u00eau Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5b5d\u662d\u5929\u7687\n</td>\n<td>Mimatsuhiko Kaesine no Mikoto\n</td>\n<td>\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.<sup class="reference" id="cite_ref-25"><a href="#cite_note-25">[25]</a></sup>\n</td></tr>\n<tr>\n<td>6\n</td>\n<td><a href="/wiki/392_TCN" title="392 TCN">392 TCN</a> - <a href="/wiki/291_TCN" title="291 TCN">291 TCN</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Tenn%C5%8D_K%C5%8Dan_thumb.jpg"><img class="mw-file-element" data-file-height="226" data-file-width="212" decoding="async" height="160" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Tenn%C5%8D_K%C5%8Dan_thumb.jpg/150px-Tenn%C5%8D_K%C5%8Dan_thumb.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/b/ba/Tenn%C5%8D_K%C5%8Dan_thumb.jpg 1.5x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_K%C5%8Dan" title="Thi\u00ean ho\u00e0ng K\u014dan">Thi\u00ean ho\u00e0ng K\u014dan</a>\n</td>\n<td>Hi\u1ebfu An Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5b5d\u5b89\u5929\u7687\n</td>\n<td>Oho Yamato Tarasihiko Kuniosi Hito no Mikoto\n</td>\n<td>\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.<sup class="reference" id="cite_ref-26"><a href="#cite_note-26">[26]</a></sup>\n</td></tr>\n<tr>\n<td>7\n</td>\n<td><a href="/wiki/290_TCN" title="290 TCN">290 TCN</a> - <a href="/wiki/215_TCN" title="215 TCN">215 TCN</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Tenn%C5%8D_K%C5%8Drei_thumb.jpg"><img class="mw-file-element" data-file-height="759" data-file-width="615" decoding="async" height="185" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Tenn%C5%8D_K%C5%8Drei_thumb.jpg/150px-Tenn%C5%8D_K%C5%8Drei_thumb.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Tenn%C5%8D_K%C5%8Drei_thumb.jpg/225px-Tenn%C5%8D_K%C5%8Drei_thumb.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Tenn%C5%8D_K%C5%8Drei_thumb.jpg/300px-Tenn%C5%8D_K%C5%8Drei_thumb.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_K%C5%8Drei" title="Thi\u00ean ho\u00e0ng K\u014drei">Thi\u00ean ho\u00e0ng K\u014drei</a>\n</td>\n<td>Hi\u1ebfu Linh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5b5d\u970a\u5929\u7687\n</td>\n<td>Oho Yamato Nekohiko Futoni no Mikoto\n</td>\n<td>\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.<sup class="reference" id="cite_ref-27"><a href="#cite_note-27">[27]</a></sup>\n</td></tr>\n<tr>\n<td>8\n</td>\n<td><a href="/wiki/214_TCN" title="214 TCN">214 TCN</a> - <a href="/wiki/158_TCN" title="158 TCN">158 TCN</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Tenn%C5%8D_K%C5%8Dgen_thumb.gif"><img class="mw-file-element" data-file-height="790" data-file-width="640" decoding="async" height="185" src="//upload.wikimedia.org/wikipedia/commons/thumb/3/32/Tenn%C5%8D_K%C5%8Dgen_thumb.gif/150px-Tenn%C5%8D_K%C5%8Dgen_thumb.gif" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/3/32/Tenn%C5%8D_K%C5%8Dgen_thumb.gif/225px-Tenn%C5%8D_K%C5%8Dgen_thumb.gif 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/3/32/Tenn%C5%8D_K%C5%8Dgen_thumb.gif/300px-Tenn%C5%8D_K%C5%8Dgen_thumb.gif 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_K%C5%8Dgen" title="Thi\u00ean ho\u00e0ng K\u014dgen">Thi\u00ean ho\u00e0ng K\u014dgen</a>\n</td>\n<td>Hi\u1ebfu Nguy\u00ean Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5b5d\u5143\u5929\u7687\n</td>\n<td>Oho Yamato Nekohiko Kuni Kuru no Mikoto\n</td>\n<td>\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.<sup class="reference" id="cite_ref-28"><a href="#cite_note-28">[28]</a></sup>\n</td></tr>\n<tr>\n<td>9\n</td>\n<td><a href="/wiki/157_TCN" title="157 TCN">157 TCN</a> - <a href="/wiki/98_TCN" title="98 TCN">98 TCN</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Tenn%C5%8D_Kaika_thumb.jpg"><img class="mw-file-element" data-file-height="225" data-file-width="210" decoding="async" height="161" src="//upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Tenn%C5%8D_Kaika_thumb.jpg/150px-Tenn%C5%8D_Kaika_thumb.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/c/c3/Tenn%C5%8D_Kaika_thumb.jpg 1.5x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Kaika" title="Thi\u00ean ho\u00e0ng Kaika">Thi\u00ean ho\u00e0ng Kaika</a>\n</td>\n<td>Khai H\u00f3a Thi\u00ean ho\u00e0ng\n</td>\n<td>\u958b\u5316\u5929\u7687\n</td>\n<td>Waka Yamato Nekohiko Oho Bibino no Mikoto\n</td>\n<td>\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.<sup class="reference" id="cite_ref-29"><a href="#cite_note-29">[29]</a></sup>\n</td></tr>\n<tr>\n<td>10\n</td>\n<td><a href="/wiki/97_TCN" title="97 TCN">97 TCN</a> - <a href="/wiki/30_TCN" title="30 TCN">30 TCN</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Sujin.jpg"><img class="mw-file-element" data-file-height="546" data-file-width="460" decoding="async" height="178" src="//upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Emperor_Sujin.jpg/150px-Emperor_Sujin.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Emperor_Sujin.jpg/225px-Emperor_Sujin.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Emperor_Sujin.jpg/300px-Emperor_Sujin.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Sujin" title="Thi\u00ean ho\u00e0ng Sujin">Thi\u00ean ho\u00e0ng Sujin</a>\n</td>\n<td>S\u00f9ng Th\u1ea7n Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5d07\u795e\u5929\u7687\n</td>\n<td>Mimaki Irihiko Inie no Mikoto\n</td>\n<td>\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.<sup class="reference" id="cite_ref-30"><a href="#cite_note-30">[30]</a></sup>\n</td></tr>\n<tr>\n<td>11\n</td>\n<td><a href="/wiki/29_TCN" title="29 TCN">29 TCN</a> - <a href="/wiki/70" title="70">70</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Suinin.jpg"><img class="mw-file-element" data-file-height="730" data-file-width="650" decoding="async" height="168" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Emperor_Suinin.jpg/150px-Emperor_Suinin.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Emperor_Suinin.jpg/224px-Emperor_Suinin.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Emperor_Suinin.jpg/299px-Emperor_Suinin.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Suinin" title="Thi\u00ean ho\u00e0ng Suinin">Thi\u00ean ho\u00e0ng Suinin</a>\n</td>\n<td>Th\u00f9y Nh\u00e2n Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5782\u4ec1\u5929\u7687\n</td>\n<td>Ikume Irihiko Isatsi no Mikoto\n</td>\n<td>\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.<sup class="reference" id="cite_ref-31"><a href="#cite_note-31">[31]</a></sup>\n</td></tr>\n<tr>\n<td>12\n</td>\n<td><a href="/wiki/71" title="71">71</a> - <a href="/wiki/130" title="130">130</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Keik%C5%8D.jpg"><img class="mw-file-element" data-file-height="715" data-file-width="650" decoding="async" height="165" src="//upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Emperor_Keik%C5%8D.jpg/150px-Emperor_Keik%C5%8D.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Emperor_Keik%C5%8D.jpg/225px-Emperor_Keik%C5%8D.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Emperor_Keik%C5%8D.jpg/300px-Emperor_Keik%C5%8D.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Keik%C5%8D" title="Thi\u00ean ho\u00e0ng Keik\u014d">Thi\u00ean ho\u00e0ng Keik\u014d</a>\n</td>\n<td>C\u1ea3nh H\u00e0nh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u666f\u884c\u5929\u7687\n</td>\n<td>Oho Tarasihiko Osirowake no Mikoto\n</td>\n<td>\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.<sup class="reference" id="cite_ref-32"><a href="#cite_note-32">[32]</a></sup>\n</td></tr>\n<tr>\n<td>13\n</td>\n<td><a href="/wiki/131" title="131">131</a> - <a href="/wiki/191" title="191">191</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Seimu.jpg"><img class="mw-file-element" data-file-height="755" data-file-width="607" decoding="async" height="187" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/07/Emperor_Seimu.jpg/150px-Emperor_Seimu.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/07/Emperor_Seimu.jpg/226px-Emperor_Seimu.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/07/Emperor_Seimu.jpg/301px-Emperor_Seimu.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Seimu" title="Thi\u00ean ho\u00e0ng Seimu">Thi\u00ean ho\u00e0ng Seimu</a>\n</td>\n<td>Th\u00e0nh V\u1ee5 Thi\u00ean ho\u00e0ng\n</td>\n<td>\u6210\u52d9\u5929\u7687\n</td>\n<td>Waka Tarsihiko\n</td>\n<td>\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.<sup class="reference" id="cite_ref-33"><a href="#cite_note-33">[33]</a></sup>\n</td></tr>\n<tr>\n<td>14\n</td>\n<td><a href="/wiki/192" title="192">192</a> - <a href="/wiki/200" title="200">200</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Tenn%C5%8D_Ch%C5%ABaii_thumb.gif"><img class="mw-file-element" data-file-height="2154" data-file-width="1881" decoding="async" height="171" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Tenn%C5%8D_Ch%C5%ABaii_thumb.gif/149px-Tenn%C5%8D_Ch%C5%ABaii_thumb.gif" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Tenn%C5%8D_Ch%C5%ABaii_thumb.gif/224px-Tenn%C5%8D_Ch%C5%ABaii_thumb.gif 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Tenn%C5%8D_Ch%C5%ABaii_thumb.gif/299px-Tenn%C5%8D_Ch%C5%ABaii_thumb.gif 2x" width="149"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Ch%C5%ABai" title="Thi\u00ean ho\u00e0ng Ch\u016bai">Thi\u00ean ho\u00e0ng Ch\u016bai</a>\n</td>\n<td>Tr\u1ecdng Ai Thi\u00ean ho\u00e0ng\n</td>\n<td>\u4ef2\u54c0\u5929\u7687\n</td>\n<td>Tarasi Nakatsuhiko no Mikoto\n</td>\n<td>\u0110\u01b0\u1ee3c cho l\u00e0 huy\u1ec1n s\u1eed.<sup class="reference" id="cite_ref-34"><a href="#cite_note-34">[34]</a></sup>\n</td></tr>\n<tr>\n<th colspan="8"><b><a href="/wiki/Th%E1%BB%9Di_k%E1%BB%B3_Yamato" title="Th\u1eddi k\u1ef3 Yamato">Th\u1eddi k\u1ef3 Yamato</a></b> (<a href="/wiki/Th%E1%BB%9Di_k%E1%BB%B3_Kofun" title="Th\u1eddi k\u1ef3 Kofun">Th\u1eddi k\u1ef3 Kofun</a>)\n</th></tr>\n<tr>\n<td>15\n</td>\n<td><a href="/wiki/270" title="270">270</a> - <a href="/wiki/310" title="310">310</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_%C5%8Cjin.jpg"><img class="mw-file-element" data-file-height="2400" data-file-width="2400" decoding="async" height="150" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/09/Emperor_%C5%8Cjin.jpg/150px-Emperor_%C5%8Cjin.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/09/Emperor_%C5%8Cjin.jpg/225px-Emperor_%C5%8Cjin.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/09/Emperor_%C5%8Cjin.jpg/300px-Emperor_%C5%8Cjin.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_%C5%8Cjin" title="Thi\u00ean ho\u00e0ng \u014cjin">Thi\u00ean ho\u00e0ng \u014cjin</a>\n</td>\n<td>\u1ee8ng Th\u1ea7n Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5fdc\u795e\u5929\u7687\n</td>\n<td>Fondano Miko no Mikoto / Otomowake no Mikoto / Humudawake no Mikoto\n</td>\n<td>Thi\u00ean ho\u00e0ng ti\u1ec1n l\u1ecbch s\u1eed cu\u1ed1i c\u00f9ng, \u0111\u01b0\u1ee3c t\u00f4n l\u00e0m <a href="/wiki/Hachiman" title="Hachiman">Hachiman</a>.<sup class="reference" id="cite_ref-35"><a href="#cite_note-35">[35]</a></sup>\n</td></tr>\n<tr>\n<td>16\n</td>\n<td><a href="/wiki/313" title="313">313</a> - <a href="/wiki/399" title="399">399</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Nintoku-tenn%C5%8D_detail.jpg"><img class="mw-file-element" data-file-height="532" data-file-width="272" decoding="async" height="293" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/87/Nintoku-tenn%C5%8D_detail.jpg/150px-Nintoku-tenn%C5%8D_detail.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/87/Nintoku-tenn%C5%8D_detail.jpg/225px-Nintoku-tenn%C5%8D_detail.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/8/87/Nintoku-tenn%C5%8D_detail.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Nintoku" title="Thi\u00ean ho\u00e0ng Nintoku">Thi\u00ean ho\u00e0ng Nintoku</a>\n</td>\n<td>Nh\u00e2n \u0110\u1ee9c Thi\u00ean ho\u00e0ng\n</td>\n<td>\u4ec1\u5fb3\u5929\u7687\n</td>\n<td>Oho Sazaki no Mikoto\n</td>\n<td>Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.<sup class="reference" id="cite_ref-36"><a href="#cite_note-36">[36]</a></sup>\n</td></tr>\n<tr>\n<td>17\n</td>\n<td><a href="/wiki/400" title="400">400</a> - <a href="/wiki/405" title="405">405</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Rich%C5%AB.jpg"><img class="mw-file-element" data-file-height="486" data-file-width="480" decoding="async" height="152" src="//upload.wikimedia.org/wikipedia/commons/thumb/7/76/Emperor_Rich%C5%AB.jpg/150px-Emperor_Rich%C5%AB.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/7/76/Emperor_Rich%C5%AB.jpg/225px-Emperor_Rich%C5%AB.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/7/76/Emperor_Rich%C5%AB.jpg/300px-Emperor_Rich%C5%AB.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Rich%C5%AB" title="Thi\u00ean ho\u00e0ng Rich\u016b">Thi\u00ean ho\u00e0ng Rich\u016b</a>\n</td>\n<td>L\u00fd Trung Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5c65\u4e2d\u5929\u7687\n</td>\n<td>Isaho Wake no Mikoto\n</td>\n<td>Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.<sup class="reference" id="cite_ref-37"><a href="#cite_note-37">[37]</a></sup>\n</td></tr>\n<tr>\n<td>18\n</td>\n<td><a href="/wiki/406" title="406">406</a> - <a href="/wiki/410" title="410">410</a>\n</td>\n<td>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Hanzei" title="Thi\u00ean ho\u00e0ng Hanzei">Thi\u00ean ho\u00e0ng Hanzei</a>\n</td>\n<td>Ph\u00e0n Ch\u00ednh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u53cd\u6b63\u5929\u7687\n</td>\n<td>Misu wa Wake no Mikoto\n</td>\n<td>Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.<sup class="reference" id="cite_ref-38"><a href="#cite_note-38">[38]</a></sup>\n</td></tr>\n<tr>\n<td>19\n</td>\n<td><a href="/wiki/411" title="411">411</a> - <a href="/wiki/453" title="453">453</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Ingy%C5%8D.jpg"><img class="mw-file-element" data-file-height="749" data-file-width="585" decoding="async" height="192" src="//upload.wikimedia.org/wikipedia/commons/thumb/7/77/Emperor_Ingy%C5%8D.jpg/150px-Emperor_Ingy%C5%8D.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/7/77/Emperor_Ingy%C5%8D.jpg/225px-Emperor_Ingy%C5%8D.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/7/77/Emperor_Ingy%C5%8D.jpg/300px-Emperor_Ingy%C5%8D.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Ingy%C5%8D" title="Thi\u00ean ho\u00e0ng Ingy\u014d">Thi\u00ean ho\u00e0ng Ingy\u014d</a>\n</td>\n<td>Du\u1eabn Cung Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5141\u606d\u5929\u7687\n</td>\n<td>Wo Asazuma Wakugo no Sukune\n</td>\n<td>Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.<sup class="reference" id="cite_ref-39"><a href="#cite_note-39">[39]</a></sup>\n</td></tr>\n<tr>\n<td>20\n</td>\n<td><a href="/wiki/453" title="453">453</a> - <a href="/wiki/456" title="456">456</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Ank%C5%8D.jpg"><img class="mw-file-element" data-file-height="766" data-file-width="664" decoding="async" height="173" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/22/Emperor_Ank%C5%8D.jpg/150px-Emperor_Ank%C5%8D.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/22/Emperor_Ank%C5%8D.jpg/225px-Emperor_Ank%C5%8D.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/22/Emperor_Ank%C5%8D.jpg/300px-Emperor_Ank%C5%8D.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Ank%C5%8D" title="Thi\u00ean ho\u00e0ng Ank\u014d">Thi\u00ean ho\u00e0ng Ank\u014d</a>\n</td>\n<td>An Khang Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5b89\u5eb7\u5929\u7687\n</td>\n<td>Anaho no Mikoto\n</td>\n<td>Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.<sup class="reference" id="cite_ref-40"><a href="#cite_note-40">[40]</a></sup>\n</td></tr>\n<tr>\n<td>21\n</td>\n<td><a href="/wiki/456" title="456">456</a> - <a href="/wiki/479" title="479">479</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Y%C5%ABryaku.jpg"><img alt="" class="mw-file-element" data-file-height="691" data-file-width="630" decoding="async" height="164" src="//upload.wikimedia.org/wikipedia/commons/thumb/5/54/Emperor_Y%C5%ABryaku.jpg/149px-Emperor_Y%C5%ABryaku.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/54/Emperor_Y%C5%ABryaku.jpg/224px-Emperor_Y%C5%ABryaku.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/5/54/Emperor_Y%C5%ABryaku.jpg/299px-Emperor_Y%C5%ABryaku.jpg 2x" width="149"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Y%C5%ABryaku" title="Thi\u00ean ho\u00e0ng Y\u016bryaku">Thi\u00ean ho\u00e0ng Y\u016bryaku</a>\n</td>\n<td>H\u00f9ng L\u01b0\u1ee3c Thi\u00ean ho\u00e0ng\n</td>\n<td>\u96c4\u7565\u5929\u7687\n</td>\n<td>Oho Hatsuneno no Mikoto\n</td>\n<td>Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.<sup class="reference" id="cite_ref-41"><a href="#cite_note-41">[41]</a></sup>\n</td></tr>\n<tr>\n<td>22\n</td>\n<td><a href="/wiki/480" title="480">480</a> - <a href="/wiki/484" title="484">484</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Orekidai_seinei.png"><img class="mw-file-element" data-file-height="229" data-file-width="206" decoding="async" height="167" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Orekidai_seinei.png/150px-Orekidai_seinei.png" srcset="//upload.wikimedia.org/wikipedia/commons/b/ba/Orekidai_seinei.png 1.5x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Seinei" title="Thi\u00ean ho\u00e0ng Seinei">Thi\u00ean ho\u00e0ng Seinei</a>\n</td>\n<td>Thanh Ninh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u6e05\u5be7\u5929\u7687\n</td>\n<td>Siraga Takehiro Kuni Osi Wakai Yamato Neko no Mikoto\n</td>\n<td>Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.<sup class="reference" id="cite_ref-42"><a href="#cite_note-42">[42]</a></sup>\n</td></tr>\n<tr>\n<td>23\n</td>\n<td><a href="/wiki/485" title="485">485</a> - <a href="/wiki/487" title="487">487</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Kenz%C5%8D.jpg"><img class="mw-file-element" data-file-height="780" data-file-width="620" decoding="async" height="189" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Emperor_Kenz%C5%8D.jpg/150px-Emperor_Kenz%C5%8D.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Emperor_Kenz%C5%8D.jpg/225px-Emperor_Kenz%C5%8D.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Emperor_Kenz%C5%8D.jpg/300px-Emperor_Kenz%C5%8D.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Kenz%C5%8D" title="Thi\u00ean ho\u00e0ng Kenz\u014d">Thi\u00ean ho\u00e0ng Kenz\u014d</a>\n</td>\n<td>Hi\u1ec3n T\u00f4ng Thi\u00ean ho\u00e0ng\n</td>\n<td>\u9855\u5b97\u5929\u7687\n</td>\n<td>Ohoke no Mikoto\n</td>\n<td>Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.<sup class="reference" id="cite_ref-43"><a href="#cite_note-43">[43]</a></sup>\n</td></tr>\n<tr>\n<td>24\n</td>\n<td><a href="/wiki/488" title="488">488</a> - <a href="/wiki/498" title="498">498</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Ninken.jpg"><img class="mw-file-element" data-file-height="778" data-file-width="654" decoding="async" height="178" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Emperor_Ninken.jpg/150px-Emperor_Ninken.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Emperor_Ninken.jpg/225px-Emperor_Ninken.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Emperor_Ninken.jpg/300px-Emperor_Ninken.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Ninken" title="Thi\u00ean ho\u00e0ng Ninken">Thi\u00ean ho\u00e0ng Ninken</a>\n</td>\n<td>Nh\u00e2n Hi\u1ec1n Thi\u00ean ho\u00e0ng\n</td>\n<td>\u4ec1\u8ce2\u5929\u7687\n</td>\n<td>Ohosi(Ohosu) no Mikoto/ Simano Iratsuko\n</td>\n<td>Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.<sup class="reference" id="cite_ref-44"><a href="#cite_note-44">[44]</a></sup>\n</td></tr>\n<tr>\n<td>25\n</td>\n<td><a href="/wiki/498" title="498">498</a> - <a href="/wiki/506" title="506">506</a>\n</td>\n<td>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Buretsu" title="Thi\u00ean ho\u00e0ng Buretsu">Thi\u00ean ho\u00e0ng Buretsu</a>\n</td>\n<td>V\u0169 Li\u1ec7t Thi\u00ean ho\u00e0ng\n</td>\n<td>\u6b66\u70c8\u5929\u7687\n</td>\n<td>Wohatsuse Wakasazaki\n</td>\n<td>Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.<sup class="reference" id="cite_ref-45"><a href="#cite_note-45">[45]</a></sup>\n</td></tr>\n<tr>\n<td>26\n</td>\n<td><a href="/wiki/507" title="507">507</a> - <a href="/wiki/531" title="531">531</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Statue_of_Emperor_Keitai.jpg"><img class="mw-file-element" data-file-height="1280" data-file-width="960" decoding="async" height="200" src="//upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Statue_of_Emperor_Keitai.jpg/150px-Statue_of_Emperor_Keitai.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Statue_of_Emperor_Keitai.jpg/225px-Statue_of_Emperor_Keitai.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Statue_of_Emperor_Keitai.jpg/300px-Statue_of_Emperor_Keitai.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Keitai" title="Thi\u00ean ho\u00e0ng Keitai">Thi\u00ean ho\u00e0ng Keitai</a>\n</td>\n<td>K\u1ebf Th\u1ec3 Thi\u00ean ho\u00e0ng\n</td>\n<td>\u7d99\u4f53\u5929\u7687\n</td>\n<td>\u014cto/Hikofuto (Hikofuto no Mikoto/\u014cdo no Sumera Mikoto)\n</td>\n<td>C\u00f3 th\u1ec3 l\u00e0 ng\u01b0\u1eddi s\u00e1ng l\u1eadp tri\u1ec1u \u0111\u1ea1i m\u1edbi.<sup class="reference" id="cite_ref-46"><a href="#cite_note-46">[46]</a></sup>\n</td></tr>\n<tr>\n<td>27\n</td>\n<td><a href="/wiki/531" title="531">531</a> - <a href="/wiki/535" title="535">535</a>\n</td>\n<td>\n</td>\n<td><a class="mw-redirect" href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Ankan" title="Thi\u00ean ho\u00e0ng Ankan">Thi\u00ean ho\u00e0ng Ankan</a>\n</td>\n<td>An Nh\u00e0n Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5b89\u9591\u5929\u7687\n</td>\n<td>Hirokuni Oshitake Kanahi no Mikoto\n</td>\n<td>Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.<sup class="reference" id="cite_ref-47"><a href="#cite_note-47">[47]</a></sup>\n</td></tr>\n<tr>\n<td>28\n</td>\n<td><a href="/wiki/535" title="535">535</a> - <a href="/wiki/539" title="539">539</a>\n</td>\n<td>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Senka" title="Thi\u00ean ho\u00e0ng Senka">Thi\u00ean ho\u00e0ng Senka</a>\n</td>\n<td>Tuy\u00ean H\u00f3a Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5ba3\u5316\u5929\u7687\n</td>\n<td>Takeo Hirokuni Oshitate no Mikoto\n</td>\n<td>Ng\u00e0y th\u00e1ng kh\u00f4ng ch\u00ednh x\u00e1c.<sup class="reference" id="cite_ref-48"><a href="#cite_note-48">[48]</a></sup>\n</td></tr>\n<tr>\n<th colspan="8"><b><a href="/wiki/Th%E1%BB%9Di_k%E1%BB%B3_Asuka" title="Th\u1eddi k\u1ef3 Asuka">Th\u1eddi k\u1ef3 Asuka</a></b> (592-710)\n</th></tr>\n<tr>\n<td>29\n</td>\n<td><a href="/wiki/539" title="539">539</a> - <a href="/wiki/571" title="571">571</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Kinmei.jpg"><img class="mw-file-element" data-file-height="750" data-file-width="620" decoding="async" height="181" src="//upload.wikimedia.org/wikipedia/commons/thumb/1/16/Emperor_Kinmei.jpg/150px-Emperor_Kinmei.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/1/16/Emperor_Kinmei.jpg/225px-Emperor_Kinmei.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/1/16/Emperor_Kinmei.jpg/300px-Emperor_Kinmei.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Kimmei" title="Thi\u00ean ho\u00e0ng Kimmei">Thi\u00ean ho\u00e0ng Kimmei</a>\n</td>\n<td>Kh\u00e2m Minh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u6b3d\u660e\u5929\u7687\n</td>\n<td>Amekuni Oshiharuki Hironiwa no Sumera Mikoto\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-49"><a href="#cite_note-49">[49]</a></sup>\n</td></tr>\n<tr>\n<td>30\n</td>\n<td><a href="/wiki/572" title="572">572</a> - <a href="/wiki/585" title="585">585</a>\n</td>\n<td>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Bidatsu" title="Thi\u00ean ho\u00e0ng Bidatsu">Thi\u00ean ho\u00e0ng Bidatsu</a>\n</td>\n<td>M\u1eabn \u0110\u1ea1t Thi\u00ean ho\u00e0ng\n</td>\n<td>\u654f\u9054\u5929\u7687\n</td>\n<td>Osada no Nunakura no Futotamashiki no Mikoto\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-50"><a href="#cite_note-50">[50]</a></sup>\n</td></tr>\n<tr>\n<td>31\n</td>\n<td><a href="/wiki/585" title="585">585</a> - <a href="/wiki/587" title="587">587</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Yomeitenno.jpg"><img class="mw-file-element" data-file-height="277" data-file-width="350" decoding="async" height="119" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Yomeitenno.jpg/150px-Yomeitenno.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Yomeitenno.jpg/225px-Yomeitenno.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Yomeitenno.jpg/300px-Yomeitenno.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Y%C5%8Dmei" title="Thi\u00ean ho\u00e0ng Y\u014dmei">Thi\u00ean ho\u00e0ng Y\u014dmei</a>\n</td>\n<td>D\u1ee5ng Minh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u7528\u660e\u5929\u7687\n</td>\n<td>Ooe/Tachibana no Toyohi no Sumera Mikoto\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-51"><a href="#cite_note-51">[51]</a></sup>\n</td></tr>\n<tr>\n<td>32\n</td>\n<td><a href="/wiki/587" title="587">587</a> - <a href="/wiki/592" title="592">592</a>\n</td>\n<td>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Sushun" title="Thi\u00ean ho\u00e0ng Sushun">Thi\u00ean ho\u00e0ng Sushun</a>\n</td>\n<td>S\u00f9ng Tu\u1ea5n Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5d07\u5cfb\u5929\u7687\n</td>\n<td>Hatsusebe no (Wakasasagi) Mikoto\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-52"><a href="#cite_note-52">[52]</a></sup>\n</td></tr>\n<tr>\n<td>33\n</td>\n<td><a href="/wiki/592" title="592">592</a> - <a href="/wiki/628" title="628">628</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Empress_Suiko_2.jpg"><img alt="" class="mw-file-element" data-file-height="1750" data-file-width="1750" decoding="async" height="150" src="//upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Empress_Suiko_2.jpg/150px-Empress_Suiko_2.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Empress_Suiko_2.jpg/225px-Empress_Suiko_2.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Empress_Suiko_2.jpg/300px-Empress_Suiko_2.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Suiko" title="Thi\u00ean ho\u00e0ng Suiko">Thi\u00ean ho\u00e0ng Suiko</a> (n\u1eef)\n</td>\n<td>Th\u00f4i C\u1ed5 Thi\u00ean ho\u00e0ng\n</td>\n<td>\u63a8\u53e4\u5929\u7687\n</td>\n<td>Nukatabe/Toyomike Kashikiyahime\n</td>\n<td>N\u1eef Thi\u00ean ho\u00e0ng kh\u00f4ng ph\u1ea3i huy\u1ec1n tho\u1ea1i \u0111\u1ea7u ti\u00ean (<a href="/wiki/Th%C3%A1nh_%C4%90%E1%BB%A9c_Th%C3%A1i_t%E1%BB%AD" title="Th\u00e1nh \u0110\u1ee9c Th\u00e1i t\u1eed">Th\u00e1nh \u0110\u1ee9c Th\u00e1i t\u1eed</a> l\u00e0m nhi\u1ebfp ch\u00ednh); \u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-53"><a href="#cite_note-53">[53]</a></sup>\n</td></tr>\n<tr>\n<td>34\n</td>\n<td><a href="/wiki/629" title="629">629</a> - <a href="/wiki/641" title="641">641</a>\n</td>\n<td>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Jomei" title="Thi\u00ean ho\u00e0ng Jomei">Thi\u00ean ho\u00e0ng Jomei</a>\n</td>\n<td>Th\u01b0 Minh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u8212\u660e\u5929\u7687\n</td>\n<td>Tamura (Oki Nagatarashihi Hironuka no Sumera Mikoto)\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-54"><a href="#cite_note-54">[54]</a></sup>\n</td></tr>\n<tr>\n<td>35\n</td>\n<td><a href="/wiki/642" title="642">642</a> - <a href="/wiki/645" title="645">645</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Empress_Kogyoku-Saimei.jpg"><img class="mw-file-element" data-file-height="775" data-file-width="610" decoding="async" height="191" src="//upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Empress_Kogyoku-Saimei.jpg/150px-Empress_Kogyoku-Saimei.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Empress_Kogyoku-Saimei.jpg/225px-Empress_Kogyoku-Saimei.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Empress_Kogyoku-Saimei.jpg/300px-Empress_Kogyoku-Saimei.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_K%C5%8Dgyoku" title="Thi\u00ean ho\u00e0ng K\u014dgyoku">Thi\u00ean ho\u00e0ng K\u014dgyoku</a> (n\u1eef)\n</td>\n<td>Ho\u00e0ng C\u1ef1c Thi\u00ean ho\u00e0ng\n</td>\n<td>\u7687\u6975\u5929\u7687\n</td>\n<td>Takara (Ame Toyotakaraikashi Hitarashi Hime no Sumera Mikoto)\n</td>\n<td>\u00c2m l\u1ecbch,<sup class="reference" id="cite_ref-55"><a href="#cite_note-55">[55]</a></sup> tr\u1ecb v\u00ec hai l\u1ea7n\n</td></tr>\n<tr>\n<td>36\n</td>\n<td><a href="/wiki/645" title="645">645</a> - <a href="/wiki/654" title="654">654</a>\n</td>\n<td>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_K%C5%8Dtoku" title="Thi\u00ean ho\u00e0ng K\u014dtoku">Thi\u00ean ho\u00e0ng K\u014dtoku</a>\n</td>\n<td>Hi\u1ebfu \u0110\u1ee9c Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5b5d\u5fb3\u5929\u7687\n</td>\n<td>Karu (Ame Yorozu Toyohi no Sumera Mikoto)\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-56"><a href="#cite_note-56">[56]</a></sup>\n</td></tr>\n<tr>\n<td>37\n</td>\n<td><a href="/wiki/655" title="655">655</a> - <a href="/wiki/661" title="661">661</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Empress_Kogyoku-Saimei.jpg"><img class="mw-file-element" data-file-height="775" data-file-width="610" decoding="async" height="191" src="//upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Empress_Kogyoku-Saimei.jpg/150px-Empress_Kogyoku-Saimei.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Empress_Kogyoku-Saimei.jpg/225px-Empress_Kogyoku-Saimei.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Empress_Kogyoku-Saimei.jpg/300px-Empress_Kogyoku-Saimei.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_K%C5%8Dgyoku" title="Thi\u00ean ho\u00e0ng K\u014dgyoku">Thi\u00ean ho\u00e0ng Saimei</a> (n\u1eef)\n</td>\n<td>T\u1ec1 Minh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u6589\u660e\u5929\u7687\n</td>\n<td><i>-- Xem <b>35</b> \u1edf tr\u00ean</i>\u2014\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-57"><a href="#cite_note-57">[57]</a></sup>\n</td></tr>\n<tr>\n<td>38\n</td>\n<td><a href="/wiki/661" title="661">661</a> - <a href="/wiki/672" title="672">672</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Tenji.jpg"><img alt="" class="mw-file-element" data-file-height="1070" data-file-width="820" decoding="async" height="195" src="//upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Emperor_Tenji.jpg/149px-Emperor_Tenji.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Emperor_Tenji.jpg/224px-Emperor_Tenji.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Emperor_Tenji.jpg/299px-Emperor_Tenji.jpg 2x" width="149"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Tenji" title="Thi\u00ean ho\u00e0ng Tenji">Thi\u00ean ho\u00e0ng Tenji</a>\n</td>\n<td>Thi\u00ean Tr\u00ed Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5929\u667a\u5929\u7687\n</td>\n<td>Katsuragi/Nakano-ooe (Ame Mikoto Hirakasuwake no Mikoto/Amatsu Mikoto Sakiwake no Mikoto)\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-58"><a href="#cite_note-58">[58]</a></sup>\n</td></tr>\n<tr>\n<td>39\n</td>\n<td><a href="/wiki/672" title="672">672</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Koubunn.jpg"><img alt="" class="mw-file-element" data-file-height="1641" data-file-width="1409" decoding="async" height="174" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Emperor_Koubunn.jpg/149px-Emperor_Koubunn.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Emperor_Koubunn.jpg/224px-Emperor_Koubunn.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Emperor_Koubunn.jpg/299px-Emperor_Koubunn.jpg 2x" width="149"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_K%C5%8Dbun" title="Thi\u00ean ho\u00e0ng K\u014dbun">Thi\u00ean ho\u00e0ng K\u014dbun</a>\n</td>\n<td>Ho\u1eb1ng V\u0103n Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f18\u6587\u5929\u7687\n</td>\n<td>\u014ctomo\n</td>\n<td>Truy phong (1870),<sup class="reference" id="cite_ref-59"><a href="#cite_note-59">[59]</a></sup> b\u1ecb <a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Tenmu" title="Thi\u00ean ho\u00e0ng Tenmu">Tenmu</a> ti\u1ebfm ng\u00f4i\n</td></tr>\n<tr>\n<td>40\n</td>\n<td><a href="/wiki/672" title="672">672</a> - <a href="/wiki/686" title="686">686</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Tenmu.jpg"><img class="mw-file-element" data-file-height="2600" data-file-width="2940" decoding="async" height="133" src="//upload.wikimedia.org/wikipedia/commons/thumb/3/34/Emperor_Tenmu.jpg/150px-Emperor_Tenmu.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/3/34/Emperor_Tenmu.jpg/225px-Emperor_Tenmu.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/3/34/Emperor_Tenmu.jpg/300px-Emperor_Tenmu.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Tenmu" title="Thi\u00ean ho\u00e0ng Tenmu">Thi\u00ean ho\u00e0ng Tenmu</a>\n</td>\n<td>Thi\u00ean V\u0169 Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5929\u6b66\u5929\u7687\n</td>\n<td>\u014cama/Ohoshiama/\u014csama (Ame no Nunahara Oki no Mahito no Sumera Mikoto)\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-60"><a href="#cite_note-60">[60]</a></sup>\n</td></tr>\n<tr>\n<td>41\n</td>\n<td><a href="/wiki/686" title="686">686</a> - <a href="/wiki/697" title="697">697</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Empress_Jito_by_Katsukawa_Shunsho.png"><img alt="" class="mw-file-element" data-file-height="1598" data-file-width="1162" decoding="async" height="218" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Empress_Jito_by_Katsukawa_Shunsho.png/158px-Empress_Jito_by_Katsukawa_Shunsho.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Empress_Jito_by_Katsukawa_Shunsho.png/238px-Empress_Jito_by_Katsukawa_Shunsho.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Empress_Jito_by_Katsukawa_Shunsho.png/317px-Empress_Jito_by_Katsukawa_Shunsho.png 2x" width="158"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Jit%C5%8D" title="Thi\u00ean ho\u00e0ng Jit\u014d">Thi\u00ean ho\u00e0ng Jit\u014d</a> (n\u1eef)\n</td>\n<td>Tr\u00ec Th\u1ed1ng Thi\u00ean ho\u00e0ng\n</td>\n<td>\u6301\u7d71\u5929\u7687\n</td>\n<td>Unonosarara (Takama no Harahiro no Hime no Sumera Mikoto)\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-61"><a href="#cite_note-61">[61]</a></sup>\n</td></tr>\n<tr>\n<td>42\n</td>\n<td><a href="/wiki/697" title="697">697</a> - <a href="/wiki/707" title="707">707</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Monmu_portrait.png"><img class="mw-file-element" data-file-height="1638" data-file-width="1485" decoding="async" height="165" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Emperor_Monmu_portrait.png/150px-Emperor_Monmu_portrait.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Emperor_Monmu_portrait.png/225px-Emperor_Monmu_portrait.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Emperor_Monmu_portrait.png/300px-Emperor_Monmu_portrait.png 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Monmu" title="Thi\u00ean ho\u00e0ng Monmu">Thi\u00ean ho\u00e0ng Monmu</a>\n</td>\n<td>V\u0103n V\u0169 Thi\u00ean ho\u00e0ng\n</td>\n<td>\u6587\u6b66\u5929\u7687\n</td>\n<td>Karu (Ame no Mamune Toyoohoji no Sumera Mikoto)\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-62"><a href="#cite_note-62">[62]</a></sup>\n</td></tr>\n<tr>\n<td>43\n</td>\n<td><a href="/wiki/707" title="707">707</a> - <a href="/wiki/715" title="715">715</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Empress_Gemmei.jpg"><img class="mw-file-element" data-file-height="789" data-file-width="580" decoding="async" height="204" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Empress_Gemmei.jpg/150px-Empress_Gemmei.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Empress_Gemmei.jpg/225px-Empress_Gemmei.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Empress_Gemmei.jpg/300px-Empress_Gemmei.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Gemmei" title="Thi\u00ean ho\u00e0ng Gemmei">Thi\u00ean ho\u00e0ng Gemmei</a> (n\u1eef)\n</td>\n<td>Nguy\u00ean Minh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5143\u660e\u5929\u7687\n</td>\n<td>Ahe (Yamatoneko Amatsu Mishiro Toyokuni Narihime no Sumera Mikoto)\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-63"><a href="#cite_note-63">[63]</a></sup>\n</td></tr>\n<tr>\n<th colspan="8"><b><a href="/wiki/Th%E1%BB%9Di_k%E1%BB%B3_Nara" title="Th\u1eddi k\u1ef3 Nara">Th\u1eddi k\u1ef3 Nara</a></b> (710-794)\n</th></tr>\n<tr>\n<td>44\n</td>\n<td><a href="/wiki/715" title="715">715</a> - <a href="/wiki/724" title="724">724</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Empress_Gensh%C5%8D_Tsubosaka-dera.jpg"><img class="mw-file-element" data-file-height="1729" data-file-width="1601" decoding="async" height="162" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/40/Empress_Gensh%C5%8D_Tsubosaka-dera.jpg/150px-Empress_Gensh%C5%8D_Tsubosaka-dera.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/4/40/Empress_Gensh%C5%8D_Tsubosaka-dera.jpg/225px-Empress_Gensh%C5%8D_Tsubosaka-dera.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/4/40/Empress_Gensh%C5%8D_Tsubosaka-dera.jpg/300px-Empress_Gensh%C5%8D_Tsubosaka-dera.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Gensh%C5%8D" title="Thi\u00ean ho\u00e0ng Gensh\u014d">Thi\u00ean ho\u00e0ng Gensh\u014d</a> (n\u1eef)\n</td>\n<td>Nguy\u00ean Ch\u00ednh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5143\u6b63\u5929\u7687\n</td>\n<td>Hidaka/Niinomi (Yamatoneko Takamizu Kiyotarashi Hime no Sumera Mikoto)\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-64"><a href="#cite_note-64">[64]</a></sup>\n</td></tr>\n<tr>\n<td>45\n</td>\n<td><a href="/wiki/724" title="724">724</a> - <a href="/wiki/749" title="749">749</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Shomu.jpg"><img class="mw-file-element" data-file-height="2132" data-file-width="1340" decoding="async" height="239" src="//upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Emperor_Shomu.jpg/150px-Emperor_Shomu.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Emperor_Shomu.jpg/225px-Emperor_Shomu.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Emperor_Shomu.jpg/300px-Emperor_Shomu.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Sh%C5%8Dmu" title="Thi\u00ean ho\u00e0ng Sh\u014dmu">Thi\u00ean ho\u00e0ng Sh\u014dmu</a>\n</td>\n<td>Th\u00e1nh V\u0169 Thi\u00ean ho\u00e0ng\n</td>\n<td>\u8056\u6b66\u5929\u7687\n</td>\n<td>Obito (Ameshirushi Kunioshiharuki Toyosakurahiko no Sumera Mikoto)\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-65"><a href="#cite_note-65">[65]</a></sup>\n</td></tr>\n<tr>\n<td>46\n</td>\n<td><a href="/wiki/749" title="749">749</a> - <a href="/wiki/758" title="758">758</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Empress_Koken.jpg"><img class="mw-file-element" data-file-height="320" data-file-width="274" decoding="async" height="175" src="//upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Empress_Koken.jpg/150px-Empress_Koken.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Empress_Koken.jpg/225px-Empress_Koken.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/c/cf/Empress_Koken.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_K%C5%8Dken" title="Thi\u00ean ho\u00e0ng K\u014dken">Thi\u00ean ho\u00e0ng K\u014dken</a> (n\u1eef)\n</td>\n<td>Hi\u1ebfu Khi\u00eam Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5b5d\u8b19\u5929\u7687\n</td>\n<td>Abe (Yamatoneko no Sumera Mikoto)\n</td>\n<td>\u00c2m l\u1ecbch,<sup class="reference" id="cite_ref-66"><a href="#cite_note-66">[66]</a></sup> tr\u1ecb v\u00ec hai l\u1ea7n.\n</td></tr>\n<tr>\n<td>47\n</td>\n<td><a href="/wiki/758" title="758">758</a> - <a href="/wiki/764" title="764">764</a>\n</td>\n<td>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Junnin" title="Thi\u00ean ho\u00e0ng Junnin">Thi\u00ean ho\u00e0ng Junnin</a>\n</td>\n<td>Thu\u1ea7n Nh\u00e2n Thi\u00ean ho\u00e0ng\n</td>\n<td>\u6df3\u4ec1\u5929\u7687\n</td>\n<td>\u014ci\n</td>\n<td>Truy phong (1870),<sup class="reference" id="cite_ref-67"><a href="#cite_note-67">[67]</a></sup> b\u1ecb tru\u1ea5t ng\u00f4i b\u1edfi <a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_K%C5%8Dken" title="Thi\u00ean ho\u00e0ng K\u014dken">Sh\u014dtoku</a>\n</td></tr>\n<tr>\n<td>48\n</td>\n<td><a href="/wiki/764" title="764">764</a> - <a href="/wiki/770" title="770">770</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Empress_Koken.jpg"><img class="mw-file-element" data-file-height="320" data-file-width="274" decoding="async" height="175" src="//upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Empress_Koken.jpg/150px-Empress_Koken.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Empress_Koken.jpg/225px-Empress_Koken.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/c/cf/Empress_Koken.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_K%C5%8Dken" title="Thi\u00ean ho\u00e0ng K\u014dken">Thi\u00ean ho\u00e0ng Sh\u014dtoku</a> (n\u1eef)\n</td>\n<td>X\u01b0ng \u0110\u1ee9c Thi\u00ean ho\u00e0ng\n</td>\n<td>\u79f0\u5fb3\u5929\u7687\n</td>\n<td><i>\u2014Xem <b>46</b> \u1edf tr\u00ean --</i>\n</td>\n<td>\u00c2m l\u1ecbch, tr\u1ecb v\u00ec l\u1ea7n hai.<sup class="reference" id="cite_ref-68"><a href="#cite_note-68">[68]</a></sup>\n</td></tr>\n<tr>\n<td>49\n</td>\n<td><a href="/wiki/770" title="770">770</a> - <a href="/wiki/781" title="781">781</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_K%C5%8Dnin.jpg"><img class="mw-file-element" data-file-height="259" data-file-width="300" decoding="async" height="130" src="//upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Emperor_K%C5%8Dnin.jpg/150px-Emperor_K%C5%8Dnin.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Emperor_K%C5%8Dnin.jpg/225px-Emperor_K%C5%8Dnin.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/3/3a/Emperor_K%C5%8Dnin.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_K%C5%8Dnin" title="Thi\u00ean ho\u00e0ng K\u014dnin">Thi\u00ean ho\u00e0ng K\u014dnin</a>\n</td>\n<td>Quang Nh\u00e2n Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5149\u4ec1\u5929\u7687\n</td>\n<td>Shirakabe (Amemune Takatsugi no Mikoto)\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-69"><a href="#cite_note-69">[69]</a></sup>\n</td></tr>\n<tr>\n<th colspan="8"><b><a href="/wiki/Th%E1%BB%9Di_k%E1%BB%B3_Heian" title="Th\u1eddi k\u1ef3 Heian">Th\u1eddi k\u1ef3 Heian</a></b> (794-1192)\n</th></tr>\n<tr>\n<td>50\n</td>\n<td><a href="/wiki/781" title="781">781</a> - <a href="/wiki/806" title="806">806</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Kammu_large.jpg"><img class="mw-file-element" data-file-height="2334" data-file-width="1557" decoding="async" height="225" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/40/Emperor_Kammu_large.jpg/150px-Emperor_Kammu_large.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/4/40/Emperor_Kammu_large.jpg/225px-Emperor_Kammu_large.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/4/40/Emperor_Kammu_large.jpg/300px-Emperor_Kammu_large.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Kanmu" title="Thi\u00ean ho\u00e0ng Kanmu">Thi\u00ean ho\u00e0ng Kanmu</a>\n</td>\n<td>Ho\u00e0n V\u0169 Thi\u00ean ho\u00e0ng\n</td>\n<td>\u6853\u6b66\u5929\u7687\n</td>\n<td>Yamabe (Yamatoneko Amatsu Hitsugi Iyaderi no Mikoto)\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-70"><a href="#cite_note-70">[70]</a></sup>\n</td></tr>\n<tr>\n<td>51\n</td>\n<td><a href="/wiki/806" title="806">806</a> - <a href="/wiki/809" title="809">809</a>\n</td>\n<td>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Heizei" title="Thi\u00ean ho\u00e0ng Heizei">Thi\u00ean ho\u00e0ng Heizei</a>\n</td>\n<td>B\u00ecnh Th\u00e0nh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5e73\u57ce\u5929\u7687\n</td>\n<td>Ate (Yamatoneko Ameoshikuni Takahiko no Mikoto)\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-71"><a href="#cite_note-71">[71]</a></sup>\n</td></tr>\n<tr>\n<td>52\n</td>\n<td><a href="/wiki/809" title="809">809</a> - <a href="/wiki/823" title="823">823</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Saga_large.jpg"><img class="mw-file-element" data-file-height="2600" data-file-width="1816" decoding="async" height="215" src="//upload.wikimedia.org/wikipedia/commons/thumb/3/35/Emperor_Saga_large.jpg/150px-Emperor_Saga_large.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/3/35/Emperor_Saga_large.jpg/225px-Emperor_Saga_large.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/3/35/Emperor_Saga_large.jpg/300px-Emperor_Saga_large.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Saga" title="Thi\u00ean ho\u00e0ng Saga">Thi\u00ean ho\u00e0ng Saga</a>\n</td>\n<td>Tha Nga Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5d6f\u5ce8\u5929\u7687\n</td>\n<td>Kamino\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-72"><a href="#cite_note-72">[72]</a></sup>\n</td></tr>\n<tr>\n<td>53\n</td>\n<td><a href="/wiki/823" title="823">823</a> - <a href="/wiki/833" title="833">833</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E6%B7%B3%E5%92%8C%E5%A4%A9%E7%9A%87.jpg"><img class="mw-file-element" data-file-height="200" data-file-width="200" decoding="async" height="150" src="//upload.wikimedia.org/wikipedia/commons/thumb/3/30/%E6%B7%B3%E5%92%8C%E5%A4%A9%E7%9A%87.jpg/150px-%E6%B7%B3%E5%92%8C%E5%A4%A9%E7%9A%87.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/3/30/%E6%B7%B3%E5%92%8C%E5%A4%A9%E7%9A%87.jpg 1.5x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Junna" title="Thi\u00ean ho\u00e0ng Junna">Thi\u00ean ho\u00e0ng Junna</a>\n</td>\n<td>Thu\u1ea7n H\u00f2a Thi\u00ean ho\u00e0ng\n</td>\n<td>\u6df3\u548c\u5929\u7687\n</td>\n<td>\u014ctomo\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-73"><a href="#cite_note-73">[73]</a></sup>\n</td></tr>\n<tr>\n<td>54\n</td>\n<td><a href="/wiki/833" title="833">833</a> - <a href="/wiki/850" title="850">850</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E4%BB%81%E6%98%8E%E5%A4%A9%E7%9A%87_%E6%97%A5%E6%9C%AC%E3%81%AE%E7%AC%AC54%E4%BB%A3%E5%A4%A9%E7%9A%87.jpg"><img class="mw-file-element" data-file-height="617" data-file-width="500" decoding="async" height="185" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/d1/%E4%BB%81%E6%98%8E%E5%A4%A9%E7%9A%87_%E6%97%A5%E6%9C%AC%E3%81%AE%E7%AC%AC54%E4%BB%A3%E5%A4%A9%E7%9A%87.jpg/150px-%E4%BB%81%E6%98%8E%E5%A4%A9%E7%9A%87_%E6%97%A5%E6%9C%AC%E3%81%AE%E7%AC%AC54%E4%BB%A3%E5%A4%A9%E7%9A%87.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/d1/%E4%BB%81%E6%98%8E%E5%A4%A9%E7%9A%87_%E6%97%A5%E6%9C%AC%E3%81%AE%E7%AC%AC54%E4%BB%A3%E5%A4%A9%E7%9A%87.jpg/225px-%E4%BB%81%E6%98%8E%E5%A4%A9%E7%9A%87_%E6%97%A5%E6%9C%AC%E3%81%AE%E7%AC%AC54%E4%BB%A3%E5%A4%A9%E7%9A%87.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/d1/%E4%BB%81%E6%98%8E%E5%A4%A9%E7%9A%87_%E6%97%A5%E6%9C%AC%E3%81%AE%E7%AC%AC54%E4%BB%A3%E5%A4%A9%E7%9A%87.jpg/300px-%E4%BB%81%E6%98%8E%E5%A4%A9%E7%9A%87_%E6%97%A5%E6%9C%AC%E3%81%AE%E7%AC%AC54%E4%BB%A3%E5%A4%A9%E7%9A%87.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Ninmy%C5%8D" title="Thi\u00ean ho\u00e0ng Ninmy\u014d">Thi\u00ean ho\u00e0ng Ninmy\u014d</a>\n</td>\n<td>Nh\u00e2n Minh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u4ec1\u660e\u5929\u7687\n</td>\n<td>Masara\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-74"><a href="#cite_note-74">[74]</a></sup>\n</td></tr>\n<tr>\n<td>55\n</td>\n<td><a href="/wiki/850" title="850">850</a> - <a href="/wiki/858" title="858">858</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Montoku.jpg"><img class="mw-file-element" data-file-height="1558" data-file-width="1566" decoding="async" height="149" src="//upload.wikimedia.org/wikipedia/commons/thumb/a/af/Emperor_Montoku.jpg/150px-Emperor_Montoku.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/a/af/Emperor_Montoku.jpg/225px-Emperor_Montoku.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/a/af/Emperor_Montoku.jpg/300px-Emperor_Montoku.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Montoku" title="Thi\u00ean ho\u00e0ng Montoku">Thi\u00ean ho\u00e0ng Montoku</a>\n</td>\n<td>V\u0103n \u0110\u1ee9c Thi\u00ean ho\u00e0ng\n</td>\n<td>\u6587\u5fb3\u5929\u7687\n</td>\n<td>Michiyasu\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-75"><a href="#cite_note-75">[75]</a></sup>\n</td></tr>\n<tr>\n<td>56\n</td>\n<td><a href="/wiki/858" title="858">858</a> - <a href="/wiki/876" title="876">876</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Seiwa.jpg"><img class="mw-file-element" data-file-height="5407" data-file-width="4191" decoding="async" height="194" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Emperor_Seiwa.jpg/150px-Emperor_Seiwa.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Emperor_Seiwa.jpg/225px-Emperor_Seiwa.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Emperor_Seiwa.jpg/300px-Emperor_Seiwa.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Seiwa" title="Thi\u00ean ho\u00e0ng Seiwa">Thi\u00ean ho\u00e0ng Seiwa</a>\n</td>\n<td>Thanh H\u00f2a Thi\u00ean ho\u00e0ng\n</td>\n<td>\u6e05\u548c\u5929\u7687\n</td>\n<td>Korehito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-76"><a href="#cite_note-76">[76]</a></sup>\n</td></tr>\n<tr>\n<td>57\n</td>\n<td><a href="/wiki/876" title="876">876</a> - <a href="/wiki/884" title="884">884</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Hyakuninisshu_013.jpg"><img class="mw-file-element" data-file-height="456" data-file-width="327" decoding="async" height="209" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/85/Hyakuninisshu_013.jpg/150px-Hyakuninisshu_013.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/85/Hyakuninisshu_013.jpg/225px-Hyakuninisshu_013.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/8/85/Hyakuninisshu_013.jpg/300px-Hyakuninisshu_013.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Y%C5%8Dzei" title="Thi\u00ean ho\u00e0ng Y\u014dzei">Thi\u00ean ho\u00e0ng Y\u014dzei</a>\n</td>\n<td>D\u01b0\u01a1ng Th\u00e0nh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u967d\u6210\u5929\u7687\n</td>\n<td>Sadaakira\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-77"><a href="#cite_note-77">[77]</a></sup>\n</td></tr>\n<tr>\n<td>58\n</td>\n<td><a href="/wiki/884" title="884">884</a> - <a href="/wiki/887" title="887">887</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Tenn%C5%8D_K%C5%8Dk%C5%8D.jpg"><img class="mw-file-element" data-file-height="1371" data-file-width="924" decoding="async" height="223" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/27/Tenn%C5%8D_K%C5%8Dk%C5%8D.jpg/150px-Tenn%C5%8D_K%C5%8Dk%C5%8D.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/27/Tenn%C5%8D_K%C5%8Dk%C5%8D.jpg/225px-Tenn%C5%8D_K%C5%8Dk%C5%8D.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/27/Tenn%C5%8D_K%C5%8Dk%C5%8D.jpg/300px-Tenn%C5%8D_K%C5%8Dk%C5%8D.jpg 2x" width="150"/></a></span>\n</td>\n<td><a class="mw-redirect" href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Koko" title="Thi\u00ean ho\u00e0ng Koko">Thi\u00ean ho\u00e0ng K\u014dk\u014d</a>\n</td>\n<td>Quang Hi\u1ebfu Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5149\u5b5d\u5929\u7687\n</td>\n<td>Tokiyasu\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-78"><a href="#cite_note-78">[78]</a></sup>\n</td></tr>\n<tr>\n<td>59\n</td>\n<td><a href="/wiki/887" title="887">887</a> - <a href="/wiki/897" title="897">897</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Uda_large.jpg"><img class="mw-file-element" data-file-height="2742" data-file-width="1438" decoding="async" height="286" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Emperor_Uda_large.jpg/150px-Emperor_Uda_large.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Emperor_Uda_large.jpg/225px-Emperor_Uda_large.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Emperor_Uda_large.jpg/300px-Emperor_Uda_large.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Uda" title="Thi\u00ean ho\u00e0ng Uda">Thi\u00ean ho\u00e0ng Uda</a>\n</td>\n<td>V\u0169 \u0110a Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5b87\u591a\u5929\u7687\n</td>\n<td>Sadami\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-79"><a href="#cite_note-79">[79]</a></sup>\n</td></tr>\n<tr>\n<td>60\n</td>\n<td><a href="/wiki/897" title="897">897</a> - <a href="/wiki/930" title="930">930</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Daigo.jpg"><img class="mw-file-element" data-file-height="2100" data-file-width="1050" decoding="async" height="300" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/45/Emperor_Daigo.jpg/150px-Emperor_Daigo.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/4/45/Emperor_Daigo.jpg/225px-Emperor_Daigo.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/4/45/Emperor_Daigo.jpg/300px-Emperor_Daigo.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Daigo" title="Thi\u00ean ho\u00e0ng Daigo">Thi\u00ean ho\u00e0ng Daigo</a>\n</td>\n<td>\u0110\u1ec1 H\u1ed3 Thi\u00ean ho\u00e0ng\n</td>\n<td>\u918d\u9190\u5929\u7687\n</td>\n<td>Atsuhito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-80"><a href="#cite_note-80">[80]</a></sup>\n</td></tr>\n<tr>\n<td>61\n</td>\n<td><a href="/wiki/930" title="930">930</a> - <a href="/wiki/946" title="946">946</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Tenn%C5%8D_Suzaku_detail.jpg"><img class="mw-file-element" data-file-height="385" data-file-width="247" decoding="async" height="234" src="//upload.wikimedia.org/wikipedia/commons/thumb/5/52/Taira_no_Masakado_detail.jpg/150px-Taira_no_Masakado_detail.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/52/Taira_no_Masakado_detail.jpg/225px-Taira_no_Masakado_detail.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/5/52/Taira_no_Masakado_detail.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Suzaku" title="Thi\u00ean ho\u00e0ng Suzaku">Thi\u00ean ho\u00e0ng Suzaku</a>\n</td>\n<td>Chu T\u01b0\u1edbc Thi\u00ean ho\u00e0ng\n</td>\n<td>\u6731\u96c0\u5929\u7687\n</td>\n<td>Yutaakira\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-81"><a href="#cite_note-81">[81]</a></sup>\n</td></tr>\n<tr>\n<td>62\n</td>\n<td><a href="/wiki/946" title="946">946</a> - <a href="/wiki/967" title="967">967</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Murakami.jpg"><img class="mw-file-element" data-file-height="2595" data-file-width="1570" decoding="async" height="248" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Emperor_Murakami.jpg/150px-Emperor_Murakami.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Emperor_Murakami.jpg/225px-Emperor_Murakami.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Emperor_Murakami.jpg/300px-Emperor_Murakami.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Murakami" title="Thi\u00ean ho\u00e0ng Murakami">Thi\u00ean ho\u00e0ng Murakami</a>\n</td>\n<td>Th\u00f4n Th\u01b0\u1ee3ng Thi\u00ean ho\u00e0ng\n</td>\n<td>\u6751\u4e0a\u5929\u7687\n</td>\n<td>Nariakira\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-82"><a href="#cite_note-82">[82]</a></sup>\n</td></tr>\n<tr>\n<td>63\n</td>\n<td><a href="/wiki/967" title="967">967</a> - <a href="/wiki/969" title="969">969</a>\n</td>\n<td>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Reizei" title="Thi\u00ean ho\u00e0ng Reizei">Thi\u00ean ho\u00e0ng Reizei</a>\n</td>\n<td>Linh Tuy\u1ec1n Thi\u00ean ho\u00e0ng\n</td>\n<td>\u51b7\u6cc9\u5929\u7687\n</td>\n<td>Norihira\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-83"><a href="#cite_note-83">[83]</a></sup>\n</td></tr>\n<tr>\n<td>64\n</td>\n<td><a href="/wiki/969" title="969">969</a> - <a href="/wiki/984" title="984">984</a>\n</td>\n<td>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_En%27y%C5%AB" title="Thi\u00ean ho\u00e0ng En\'y\u016b">Thi\u00ean ho\u00e0ng En\'y\u016b</a>\n</td>\n<td>Vi\u00ean Dung Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5186\u878d\u5929\u7687\n</td>\n<td>Morihira\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-84"><a href="#cite_note-84">[84]</a></sup>\n</td></tr>\n<tr>\n<td>65\n</td>\n<td><a href="/wiki/984" title="984">984</a> - <a href="/wiki/986" title="986">986</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Tenn%C5%8D_Kazan_thumb.jpg"><img alt="" class="mw-file-element" data-file-height="344" data-file-width="250" decoding="async" height="206" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/27/Tenn%C5%8D_Kazan_thumb.jpg/150px-Tenn%C5%8D_Kazan_thumb.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/27/Tenn%C5%8D_Kazan_thumb.jpg/224px-Tenn%C5%8D_Kazan_thumb.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/2/27/Tenn%C5%8D_Kazan_thumb.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Kazan" title="Thi\u00ean ho\u00e0ng Kazan">Thi\u00ean ho\u00e0ng Kazan</a>\n</td>\n<td>Hoa S\u01a1n Thi\u00ean ho\u00e0ng\n</td>\n<td>\u82b1\u5c71\u5929\u7687\n</td>\n<td>Morosada\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-85"><a href="#cite_note-85">[85]</a></sup>\n</td></tr>\n<tr>\n<td>66\n</td>\n<td><a href="/wiki/986" title="986">986</a> - <a href="/wiki/1011" title="1011">1011</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Ichij%C5%8D.jpg"><img alt="" class="mw-file-element" data-file-height="2240" data-file-width="1939" decoding="async" height="173" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Emperor_Ichij%C5%8D.jpg/150px-Emperor_Ichij%C5%8D.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Emperor_Ichij%C5%8D.jpg/225px-Emperor_Ichij%C5%8D.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Emperor_Ichij%C5%8D.jpg/299px-Emperor_Ichij%C5%8D.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Ichij%C5%8D" title="Thi\u00ean ho\u00e0ng Ichij\u014d">Thi\u00ean ho\u00e0ng Ichij\u014d</a>\n</td>\n<td>Nh\u1ea5t \u0110i\u1ec1u Thi\u00ean ho\u00e0ng\n</td>\n<td>\u4e00\u6761\u5929\u7687\n</td>\n<td>Yasuhito/Kanehito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-86"><a href="#cite_note-86">[86]</a></sup>\n</td></tr>\n<tr>\n<td>67\n</td>\n<td><a href="/wiki/1011" title="1011">1011</a> - <a href="/wiki/1016" title="1016">1016</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Sanj%C5%8D.jpg"><img alt="" class="mw-file-element" data-file-height="2710" data-file-width="2121" decoding="async" height="190" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Emperor_Sanj%C5%8D.jpg/149px-Emperor_Sanj%C5%8D.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Emperor_Sanj%C5%8D.jpg/223px-Emperor_Sanj%C5%8D.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Emperor_Sanj%C5%8D.jpg/297px-Emperor_Sanj%C5%8D.jpg 2x" width="149"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Sanj%C5%8D" title="Thi\u00ean ho\u00e0ng Sanj\u014d">Thi\u00ean ho\u00e0ng Sanj\u014d</a>\n</td>\n<td>Tam \u0110i\u1ec1u Thi\u00ean ho\u00e0ng\n</td>\n<td>\u4e09\u6761\u5929\u7687\n</td>\n<td>Okisada/Iyasada\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-87"><a href="#cite_note-87">[87]</a></sup>\n</td></tr>\n<tr>\n<td>68\n</td>\n<td><a href="/wiki/1016" title="1016">1016</a> - <a href="/wiki/1036" title="1036">1036</a>\n</td>\n<td>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Ichij%C5%8D" title="Thi\u00ean ho\u00e0ng Go-Ichij\u014d">Thi\u00ean ho\u00e0ng Go-Ichij\u014d</a>\n</td>\n<td>H\u1eadu Nh\u1ea5t \u0110i\u1ec1u Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u4e00\u6761\u5929\u7687\n</td>\n<td>Atsuhira\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-88"><a href="#cite_note-88">[88]</a></sup>\n</td></tr>\n<tr>\n<td>69\n</td>\n<td><a href="/wiki/1036" title="1036">1036</a> - <a href="/wiki/1045" title="1045">1045</a>\n</td>\n<td>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Suzaku" title="Thi\u00ean ho\u00e0ng Go-Suzaku">Thi\u00ean ho\u00e0ng Go-Suzaku</a>\n</td>\n<td>H\u1eadu Chu T\u01b0\u1edbc Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u6731\u96c0\u5929\u7687\n</td>\n<td>Atsunaga/Atsuyoshi\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-89"><a href="#cite_note-89">[89]</a></sup>\n</td></tr>\n<tr>\n<td>70\n</td>\n<td><a href="/wiki/1045" title="1045">1045</a> - <a href="/wiki/1068" title="1068">1068</a>\n</td>\n<td>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Reizei" title="Thi\u00ean ho\u00e0ng Go-Reizei">Thi\u00ean ho\u00e0ng Go-Reizei</a>\n</td>\n<td>H\u1eadu Linh Tuy\u1ec1n Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u51b7\u6cc9\u5929\u7687\n</td>\n<td>Chikahito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-90"><a href="#cite_note-90">[90]</a></sup>\n</td></tr>\n<tr>\n<td>71\n</td>\n<td><a href="/wiki/1068" title="1068">1068</a> - <a href="/wiki/1073" title="1073">1073</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Gosanj%C5%8D.jpg"><img alt="" class="mw-file-element" data-file-height="835" data-file-width="667" decoding="async" height="187" src="//upload.wikimedia.org/wikipedia/commons/thumb/5/56/Emperor_Gosanj%C5%8D.jpg/149px-Emperor_Gosanj%C5%8D.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/56/Emperor_Gosanj%C5%8D.jpg/224px-Emperor_Gosanj%C5%8D.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/5/56/Emperor_Gosanj%C5%8D.jpg/299px-Emperor_Gosanj%C5%8D.jpg 2x" width="149"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Sanj%C5%8D" title="Thi\u00ean ho\u00e0ng Go-Sanj\u014d">Thi\u00ean ho\u00e0ng Go-Sanj\u014d</a>\n</td>\n<td>H\u1eadu Tam \u0110i\u1ec1u Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u4e09\u6761\u5929\u7687\n</td>\n<td>Takahito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-91"><a href="#cite_note-91">[91]</a></sup>\n</td></tr>\n<tr>\n<td>72\n</td>\n<td><a href="/wiki/1073" title="1073">1073</a> - <a href="/wiki/1086" title="1086">1086</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Shirakawa.jpg"><img alt="" class="mw-file-element" data-file-height="3780" data-file-width="4100" decoding="async" height="138" src="//upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Emperor_Shirakawa.jpg/150px-Emperor_Shirakawa.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Emperor_Shirakawa.jpg/225px-Emperor_Shirakawa.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Emperor_Shirakawa.jpg/300px-Emperor_Shirakawa.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Shirakawa" title="Thi\u00ean ho\u00e0ng Shirakawa">Thi\u00ean ho\u00e0ng Shirakawa</a>\n</td>\n<td>B\u1ea1ch H\u00e0 Thi\u00ean ho\u00e0ng\n</td>\n<td>\u767d\u6cb3\u5929\u7687\n</td>\n<td>Sadahito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-92"><a href="#cite_note-92">[92]</a></sup>\n</td></tr>\n<tr>\n<td>73\n</td>\n<td><a href="/wiki/1087" title="1087">1087</a> - <a href="/wiki/1107" title="1107">1107</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E5%A0%80%E6%B2%B3%E5%A4%A9%E7%9A%87.jpg"><img alt="" class="mw-file-element" data-file-height="479" data-file-width="479" decoding="async" height="150" src="//upload.wikimedia.org/wikipedia/commons/thumb/3/3b/%E5%A0%80%E6%B2%B3%E5%A4%A9%E7%9A%87.jpg/150px-%E5%A0%80%E6%B2%B3%E5%A4%A9%E7%9A%87.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/3/3b/%E5%A0%80%E6%B2%B3%E5%A4%A9%E7%9A%87.jpg/225px-%E5%A0%80%E6%B2%B3%E5%A4%A9%E7%9A%87.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/3/3b/%E5%A0%80%E6%B2%B3%E5%A4%A9%E7%9A%87.jpg/300px-%E5%A0%80%E6%B2%B3%E5%A4%A9%E7%9A%87.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Horikawa" title="Thi\u00ean ho\u00e0ng Horikawa">Thi\u00ean ho\u00e0ng Horikawa</a>\n</td>\n<td>Qu\u1eadt H\u00e0 Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5800\u6cb3\u5929\u7687\n</td>\n<td>Taruhito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-93"><a href="#cite_note-93">[93]</a></sup>\n</td></tr>\n<tr>\n<td>74\n</td>\n<td><a href="/wiki/1107" title="1107">1107</a> - <a href="/wiki/1123" title="1123">1123</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Toba.jpg"><img alt="" class="mw-file-element" data-file-height="2451" data-file-width="2072" decoding="async" height="177" src="//upload.wikimedia.org/wikipedia/commons/thumb/3/33/Emperor_Toba.jpg/150px-Emperor_Toba.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/3/33/Emperor_Toba.jpg/225px-Emperor_Toba.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/3/33/Emperor_Toba.jpg/299px-Emperor_Toba.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Toba" title="Thi\u00ean ho\u00e0ng Toba">Thi\u00ean ho\u00e0ng Toba</a>\n</td>\n<td>\u0110i\u1ec3u V\u0169 Thi\u00ean ho\u00e0ng\n</td>\n<td>\u9ce5\u7fbd\u5929\u7687\n</td>\n<td>Munehito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-94"><a href="#cite_note-94">[94]</a></sup>\n</td></tr>\n<tr>\n<td>75\n</td>\n<td><a href="/wiki/1123" title="1123">1123</a> - <a href="/wiki/1142" title="1142">1142</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Sutoku2.jpg"><img alt="" class="mw-file-element" data-file-height="2680" data-file-width="2500" decoding="async" height="160" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/97/Emperor_Sutoku2.jpg/149px-Emperor_Sutoku2.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/97/Emperor_Sutoku2.jpg/224px-Emperor_Sutoku2.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/97/Emperor_Sutoku2.jpg/298px-Emperor_Sutoku2.jpg 2x" width="149"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Sutoku" title="Thi\u00ean ho\u00e0ng Sutoku">Thi\u00ean ho\u00e0ng Sutoku</a>\n</td>\n<td>S\u00f9ng \u0110\u1ee9c Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5d07\u5fb3\u5929\u7687\n</td>\n<td>Akihito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-95"><a href="#cite_note-95">[95]</a></sup>\n</td></tr>\n<tr>\n<td>76\n</td>\n<td><a href="/wiki/1142" title="1142">1142</a> - <a href="/wiki/1155" title="1155">1155</a>\n</td>\n<td>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Konoe" title="Thi\u00ean ho\u00e0ng Konoe">Thi\u00ean ho\u00e0ng Konoe</a>\n</td>\n<td>C\u1eadn V\u1ec7 Thi\u00ean ho\u00e0ng\n</td>\n<td>\u8fd1\u885b\u5929\u7687\n</td>\n<td>Narihito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-96"><a href="#cite_note-96">[96]</a></sup>\n</td></tr>\n<tr>\n<td>77\n</td>\n<td><a href="/wiki/1155" title="1155">1155</a> - <a href="/wiki/1158" title="1158">1158</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Go-Shirakawa2.jpg"><img alt="" class="mw-file-element" data-file-height="2680" data-file-width="2450" decoding="async" height="164" src="//upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Emperor_Go-Shirakawa2.jpg/150px-Emperor_Go-Shirakawa2.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Emperor_Go-Shirakawa2.jpg/225px-Emperor_Go-Shirakawa2.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Emperor_Go-Shirakawa2.jpg/300px-Emperor_Go-Shirakawa2.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Shirakawa" title="Thi\u00ean ho\u00e0ng Go-Shirakawa">Thi\u00ean ho\u00e0ng Go-Shirakawa</a>\n</td>\n<td>H\u1eadu B\u1ea1ch H\u00e0 Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u767d\u6cb3\u5929\u7687\n</td>\n<td>Masahito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-97"><a href="#cite_note-97">[97]</a></sup>\n</td></tr>\n<tr>\n<td>78\n</td>\n<td><a href="/wiki/1158" title="1158">1158</a> - <a href="/wiki/1165" title="1165">1165</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Nij%C5%8D.jpg"><img alt="" class="mw-file-element" data-file-height="2676" data-file-width="2130" decoding="async" height="188" src="//upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Emperor_Nij%C5%8D.jpg/150px-Emperor_Nij%C5%8D.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Emperor_Nij%C5%8D.jpg/224px-Emperor_Nij%C5%8D.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Emperor_Nij%C5%8D.jpg/299px-Emperor_Nij%C5%8D.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Nij%C5%8D" title="Thi\u00ean ho\u00e0ng Nij\u014d">Thi\u00ean ho\u00e0ng Nij\u014d</a>\n</td>\n<td>Nh\u1ecb \u0110i\u1ec1u Thi\u00ean ho\u00e0ng\n</td>\n<td>\u4e8c\u6761\u5929\u7687\n</td>\n<td>Morihito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-98"><a href="#cite_note-98">[98]</a></sup>\n</td></tr>\n<tr>\n<td>79\n</td>\n<td><a href="/wiki/1165" title="1165">1165</a> - <a href="/wiki/1168" title="1168">1168</a>\n</td>\n<td>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Rokuj%C5%8D" title="Thi\u00ean ho\u00e0ng Rokuj\u014d">Thi\u00ean ho\u00e0ng Rokuj\u014d</a>\n</td>\n<td>L\u1ee5c \u0110i\u1ec1u Thi\u00ean ho\u00e0ng\n</td>\n<td>\u516d\u6761\u5929\u7687\n</td>\n<td>Yorihito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-Titsingh,_pp._194_99-0"><a href="#cite_note-Titsingh,_pp._194-99">[99]</a></sup>\n</td></tr>\n<tr>\n<td>80\n</td>\n<td><a href="/wiki/1168" title="1168">1168</a> - <a href="/wiki/1180" title="1180">1180</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Takakura.jpg"><img alt="" class="mw-file-element" data-file-height="2678" data-file-width="2360" decoding="async" height="170" src="//upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Emperor_Takakura.jpg/150px-Emperor_Takakura.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Emperor_Takakura.jpg/225px-Emperor_Takakura.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Emperor_Takakura.jpg/300px-Emperor_Takakura.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Takakura" title="Thi\u00ean ho\u00e0ng Takakura">Thi\u00ean ho\u00e0ng Takakura</a>\n</td>\n<td>Cao Th\u01b0\u01a1ng Thi\u00ean ho\u00e0ng\n</td>\n<td>\u9ad8\u5009\u5929\u7687\n</td>\n<td>Norihito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-Titsingh,_pp._194_99-1"><a href="#cite_note-Titsingh,_pp._194-99">[99]</a></sup>\n</td></tr>\n<tr>\n<td>81\n</td>\n<td><a href="/wiki/1180" title="1180">1180</a> - <a href="/wiki/1185" title="1185">1185</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Antoku.jpg"><img class="mw-file-element" data-file-height="1204" data-file-width="1520" decoding="async" height="119" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/61/Emperor_Antoku.jpg/150px-Emperor_Antoku.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/61/Emperor_Antoku.jpg/225px-Emperor_Antoku.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/61/Emperor_Antoku.jpg/300px-Emperor_Antoku.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Antoku" title="Thi\u00ean ho\u00e0ng Antoku">Thi\u00ean ho\u00e0ng Antoku</a>\n</td>\n<td>An \u0110\u1ee9c Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5b89\u5fb3\u5929\u7687\n</td>\n<td>Tokihito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-100"><a href="#cite_note-100">[100]</a></sup>\n</td></tr>\n<tr>\n<td>82\n</td>\n<td><a href="/wiki/1183" title="1183">1183</a> - <a href="/wiki/1198" title="1198">1198</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Go-Toba.jpg"><img class="mw-file-element" data-file-height="2301" data-file-width="2268" decoding="async" height="152" src="//upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Emperor_Go-Toba.jpg/150px-Emperor_Go-Toba.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Emperor_Go-Toba.jpg/225px-Emperor_Go-Toba.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Emperor_Go-Toba.jpg/300px-Emperor_Go-Toba.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Toba" title="Thi\u00ean ho\u00e0ng Go-Toba">Thi\u00ean ho\u00e0ng Go-Toba</a>\n</td>\n<td>H\u1eadu \u0110i\u1ec3u V\u0169 Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u9ce5\u7fbd\u5929\u7687\n</td>\n<td>Takahira\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-101"><a href="#cite_note-101">[101]</a></sup>\n</td></tr>\n<tr>\n<th colspan="8"><b><a href="/wiki/Th%E1%BB%9Di_k%E1%BB%B3_Kamakura" title="Th\u1eddi k\u1ef3 Kamakura">Th\u1eddi k\u1ef3 Kamakura</a></b> (1192?,1198?-1333)\n</th></tr>\n<tr>\n<td>83\n</td>\n<td><a href="/wiki/1198" title="1198">1198</a> - <a href="/wiki/1210" title="1210">1210</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Tsuchimikado.jpg"><img class="mw-file-element" data-file-height="2667" data-file-width="2192" decoding="async" height="183" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Emperor_Tsuchimikado.jpg/150px-Emperor_Tsuchimikado.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Emperor_Tsuchimikado.jpg/225px-Emperor_Tsuchimikado.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Emperor_Tsuchimikado.jpg/300px-Emperor_Tsuchimikado.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Tsuchimikado" title="Thi\u00ean ho\u00e0ng Tsuchimikado">Thi\u00ean ho\u00e0ng Tsuchimikado</a>\n</td>\n<td>Th\u1ed5 Ng\u1ef1 M\u00f4n Thi\u00ean ho\u00e0ng\n</td>\n<td>\u571f\u5fa1\u9580\u5929\u7687\n</td>\n<td>Tamehito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-102"><a href="#cite_note-102">[102]</a></sup>\n</td></tr>\n<tr>\n<td>84\n</td>\n<td><a href="/wiki/1210" title="1210">1210</a> - <a href="/wiki/1221" title="1221">1221</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Juntoku_large.jpg"><img class="mw-file-element" data-file-height="2680" data-file-width="2208" decoding="async" height="182" src="//upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Emperor_Juntoku_large.jpg/150px-Emperor_Juntoku_large.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Emperor_Juntoku_large.jpg/225px-Emperor_Juntoku_large.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Emperor_Juntoku_large.jpg/300px-Emperor_Juntoku_large.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Juntoku" title="Thi\u00ean ho\u00e0ng Juntoku">Thi\u00ean ho\u00e0ng Juntoku</a>\n</td>\n<td>Thu\u1eadn \u0110\u1ee9c Thi\u00ean ho\u00e0ng\n</td>\n<td>\u9806\u5fb3\u5929\u7687\n</td>\n<td>Morihira/Morinari\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-103"><a href="#cite_note-103">[103]</a></sup>\n</td></tr>\n<tr>\n<td>85\n</td>\n<td><a href="/wiki/1221" title="1221">1221</a>\n</td>\n<td>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Ch%C5%ABky%C5%8D" title="Thi\u00ean ho\u00e0ng Ch\u016bky\u014d">Thi\u00ean ho\u00e0ng Ch\u016bky\u014d</a>\n</td>\n<td>Tr\u1ecdng Cung Thi\u00ean ho\u00e0ng\n</td>\n<td>\u4ef2\u606d\u5929\u7687\n</td>\n<td>Kanehira/Kanenari\n</td>\n<td>Truy phong (1870).<sup class="reference" id="cite_ref-104"><a href="#cite_note-104">[104]</a></sup> b\u1ecb tru\u1ea5t ng\u00f4i\n</td></tr>\n<tr>\n<td>86\n</td>\n<td><a href="/wiki/1221" title="1221">1221</a> - <a href="/wiki/1232" title="1232">1232</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Go-Horikawa.jpg"><img class="mw-file-element" data-file-height="2676" data-file-width="2400" decoding="async" height="167" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Emperor_Go-Horikawa.jpg/150px-Emperor_Go-Horikawa.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Emperor_Go-Horikawa.jpg/225px-Emperor_Go-Horikawa.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Emperor_Go-Horikawa.jpg/300px-Emperor_Go-Horikawa.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Horikawa" title="Thi\u00ean ho\u00e0ng Go-Horikawa">Thi\u00ean ho\u00e0ng Go-Horikawa</a>\n</td>\n<td>H\u1eadu Qu\u1eadt H\u00e0 Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u5800\u6cb3\u5929\u7687\n</td>\n<td>Yutahito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-105"><a href="#cite_note-105">[105]</a></sup>\n</td></tr>\n<tr>\n<td>87\n</td>\n<td><a href="/wiki/1232" title="1232">1232</a> - <a href="/wiki/1242" title="1242">1242</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Shij%C5%8D.jpg"><img class="mw-file-element" data-file-height="2677" data-file-width="2180" decoding="async" height="184" src="//upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Emperor_Shij%C5%8D.jpg/150px-Emperor_Shij%C5%8D.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Emperor_Shij%C5%8D.jpg/225px-Emperor_Shij%C5%8D.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Emperor_Shij%C5%8D.jpg/300px-Emperor_Shij%C5%8D.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Shij%C5%8D" title="Thi\u00ean ho\u00e0ng Shij\u014d">Thi\u00ean ho\u00e0ng Shij\u014d</a>\n</td>\n<td>T\u1ee9 \u0110i\u1ec1u Thi\u00ean ho\u00e0ng\n</td>\n<td>\u56db\u6761\u5929\u7687\n</td>\n<td>Mitsuhito/Hidehito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-106"><a href="#cite_note-106">[106]</a></sup>\n</td></tr>\n<tr>\n<td>88\n</td>\n<td><a href="/wiki/1242" title="1242">1242</a> - <a href="/wiki/1246" title="1246">1246</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Go-Saga.jpg"><img class="mw-file-element" data-file-height="2677" data-file-width="2520" decoding="async" height="159" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Emperor_Go-Saga.jpg/150px-Emperor_Go-Saga.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Emperor_Go-Saga.jpg/225px-Emperor_Go-Saga.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Emperor_Go-Saga.jpg/300px-Emperor_Go-Saga.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Saga" title="Thi\u00ean ho\u00e0ng Go-Saga">Thi\u00ean ho\u00e0ng Go-Saga</a>\n</td>\n<td>H\u1eadu Tha Nga Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u5d6f\u5ce8\u5929\u7687\n</td>\n<td>Kunihito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-107"><a href="#cite_note-107">[107]</a></sup>\n</td></tr>\n<tr>\n<td>89\n</td>\n<td><a href="/wiki/1246" title="1246">1246</a> - <a href="/wiki/1260" title="1260">1260</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Go-Fukakusa.jpg"><img class="mw-file-element" data-file-height="2678" data-file-width="2250" decoding="async" height="179" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Emperor_Go-Fukakusa.jpg/150px-Emperor_Go-Fukakusa.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Emperor_Go-Fukakusa.jpg/225px-Emperor_Go-Fukakusa.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Emperor_Go-Fukakusa.jpg/300px-Emperor_Go-Fukakusa.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Fukakusa" title="Thi\u00ean ho\u00e0ng Go-Fukakusa">Thi\u00ean ho\u00e0ng Go-Fukakusa</a>\n</td>\n<td>H\u1eadu Th\u00e2m Th\u1ea3o Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u6df1\u8349\u5929\u7687\n</td>\n<td>Hisahito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-108"><a href="#cite_note-108">[108]</a></sup>\n</td></tr>\n<tr>\n<td>90\n</td>\n<td><a href="/wiki/1260" title="1260">1260</a> - <a href="/wiki/1274" title="1274">1274</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Kameyama.jpg"><img class="mw-file-element" data-file-height="2677" data-file-width="2480" decoding="async" height="162" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Emperor_Kameyama.jpg/150px-Emperor_Kameyama.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Emperor_Kameyama.jpg/225px-Emperor_Kameyama.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Emperor_Kameyama.jpg/300px-Emperor_Kameyama.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Kameyama" title="Thi\u00ean ho\u00e0ng Kameyama">Thi\u00ean ho\u00e0ng Kameyama</a>\n</td>\n<td>Quy S\u01a1n Thi\u00ean ho\u00e0ng\n</td>\n<td>\u4e80\u5c71\u5929\u7687\n</td>\n<td>Tsunehito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-109"><a href="#cite_note-109">[109]</a></sup>\n</td></tr>\n<tr>\n<td>91\n</td>\n<td><a href="/wiki/1274" title="1274">1274</a> - <a href="/wiki/1287" title="1287">1287</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Go-Uda.jpg"><img class="mw-file-element" data-file-height="2682" data-file-width="2340" decoding="async" height="172" src="//upload.wikimedia.org/wikipedia/commons/thumb/5/56/Emperor_Go-Uda.jpg/150px-Emperor_Go-Uda.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/56/Emperor_Go-Uda.jpg/225px-Emperor_Go-Uda.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/5/56/Emperor_Go-Uda.jpg/300px-Emperor_Go-Uda.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Uda" title="Thi\u00ean ho\u00e0ng Go-Uda">Thi\u00ean ho\u00e0ng Go-Uda</a>\n</td>\n<td>H\u1eadu V\u0169 \u0110a Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u5b87\u591a\u5929\u7687\n</td>\n<td>Yohito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-110"><a href="#cite_note-110">[110]</a></sup>\n</td></tr>\n<tr>\n<td>92\n</td>\n<td><a href="/wiki/1287" title="1287">1287</a> - <a href="/wiki/1298" title="1298">1298</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Fushimi.jpg"><img class="mw-file-element" data-file-height="2677" data-file-width="2300" decoding="async" height="175" src="//upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Emperor_Fushimi.jpg/150px-Emperor_Fushimi.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Emperor_Fushimi.jpg/225px-Emperor_Fushimi.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Emperor_Fushimi.jpg/300px-Emperor_Fushimi.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Fushimi" title="Thi\u00ean ho\u00e0ng Fushimi">Thi\u00ean ho\u00e0ng Fushimi</a>\n</td>\n<td>Ph\u1ee5c Ki\u1ebfn Thi\u00ean ho\u00e0ng\n</td>\n<td>\u4f0f\u898b\u5929\u7687\n</td>\n<td>Hirohito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-111"><a href="#cite_note-111">[111]</a></sup>\n</td></tr>\n<tr>\n<td>93\n</td>\n<td><a href="/wiki/1298" title="1298">1298</a> - <a href="/wiki/1301" title="1301">1301</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Go-Fushimi.jpg"><img class="mw-file-element" data-file-height="2679" data-file-width="2260" decoding="async" height="178" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Emperor_Go-Fushimi.jpg/150px-Emperor_Go-Fushimi.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Emperor_Go-Fushimi.jpg/225px-Emperor_Go-Fushimi.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Emperor_Go-Fushimi.jpg/300px-Emperor_Go-Fushimi.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Fushimi" title="Thi\u00ean ho\u00e0ng Go-Fushimi">Thi\u00ean ho\u00e0ng Go-Fushimi</a>\n</td>\n<td>H\u1eadu Ph\u1ee5c Ki\u1ebfn Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u4f0f\u898b\u5929\u7687\n</td>\n<td>Tanehito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-112"><a href="#cite_note-112">[112]</a></sup>\n</td></tr>\n<tr>\n<td>94\n</td>\n<td><a href="/wiki/1301" title="1301">1301</a> - <a href="/wiki/1308" title="1308">1308</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Go-Nij%C5%8D.jpg"><img class="mw-file-element" data-file-height="2678" data-file-width="2550" decoding="async" height="158" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/43/Emperor_Go-Nij%C5%8D.jpg/150px-Emperor_Go-Nij%C5%8D.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/4/43/Emperor_Go-Nij%C5%8D.jpg/225px-Emperor_Go-Nij%C5%8D.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/4/43/Emperor_Go-Nij%C5%8D.jpg/300px-Emperor_Go-Nij%C5%8D.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Nij%C5%8D" title="Thi\u00ean ho\u00e0ng Go-Nij\u014d">Thi\u00ean ho\u00e0ng Go-Nij\u014d</a>\n</td>\n<td>H\u1eadu Nh\u1ecb \u0110i\u1ec1u Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u4e8c\u6761\u5929\u7687\n</td>\n<td>Kuniharu\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-113"><a href="#cite_note-113">[113]</a></sup>\n</td></tr>\n<tr>\n<td>95\n</td>\n<td><a href="/wiki/1308" title="1308">1308</a> - <a href="/wiki/1318" title="1318">1318</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Tenn%C5%8D_Hanazono_detail.jpg"><img class="mw-file-element" data-file-height="683" data-file-width="528" decoding="async" height="194" src="//upload.wikimedia.org/wikipedia/commons/thumb/5/56/Tenn%C5%8D_Hanazono_detail.jpg/150px-Tenn%C5%8D_Hanazono_detail.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/56/Tenn%C5%8D_Hanazono_detail.jpg/225px-Tenn%C5%8D_Hanazono_detail.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/5/56/Tenn%C5%8D_Hanazono_detail.jpg/300px-Tenn%C5%8D_Hanazono_detail.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Hanazono" title="Thi\u00ean ho\u00e0ng Hanazono">Thi\u00ean ho\u00e0ng Hanazono</a>\n</td>\n<td>Hoa Vi\u00ean Thi\u00ean ho\u00e0ng\n</td>\n<td>\u82b1\u5712\u5929\u7687\n</td>\n<td>Tomihito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-114"><a href="#cite_note-114">[114]</a></sup>\n</td></tr>\n<tr>\n<td>96\n</td>\n<td><a href="/wiki/1318" title="1318">1318</a> - <a href="/wiki/1339" title="1339">1339</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Godaigo.jpg"><img class="mw-file-element" data-file-height="1860" data-file-width="1863" decoding="async" height="150" src="//upload.wikimedia.org/wikipedia/commons/thumb/5/59/Emperor_Godaigo.jpg/150px-Emperor_Godaigo.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/59/Emperor_Godaigo.jpg/225px-Emperor_Godaigo.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/5/59/Emperor_Godaigo.jpg/300px-Emperor_Godaigo.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Daigo" title="Thi\u00ean ho\u00e0ng Go-Daigo">Thi\u00ean ho\u00e0ng Go-Daigo</a>\n</td>\n<td>H\u1eadu \u0110\u1ec1 H\u1ed3 Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u918d\u9190\u5929\u7687\n</td>\n<td>Takaharu\n</td>\n<td>\u00c2m l\u1ecbch;<sup class="reference" id="cite_ref-115"><a href="#cite_note-115">[115]</a></sup> Nam tri\u1ec1u\n</td></tr>\n<tr>\n<th colspan="8"><b><a class="mw-redirect" href="/wiki/Nam-B%E1%BA%AFc_tri%E1%BB%81u_(Nh%E1%BA%ADt_B%E1%BA%A3n)" title="Nam-B\u1eafc tri\u1ec1u (Nh\u1eadt B\u1ea3n)">B\u1eafc tri\u1ec1u</a></b>\n</th></tr>\n<tr>\n<td>\n</td>\n<td><a href="/wiki/1331" title="1331">1331</a> - <a href="/wiki/1333" title="1333">1333</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_K%C5%8Dgon.jpg"><img class="mw-file-element" data-file-height="2202" data-file-width="1157" decoding="async" height="285" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/25/Emperor_K%C5%8Dgon.jpg/150px-Emperor_K%C5%8Dgon.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/25/Emperor_K%C5%8Dgon.jpg/225px-Emperor_K%C5%8Dgon.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/25/Emperor_K%C5%8Dgon.jpg/300px-Emperor_K%C5%8Dgon.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_K%C5%8Dgon" title="Thi\u00ean ho\u00e0ng K\u014dgon">Thi\u00ean ho\u00e0ng K\u014dgon</a>\n</td>\n<td>Quang Nghi\u00eam Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5149\u53b3\u5929\u7687\n</td>\n<td>Kazuhito\n</td>\n<td><sup class="reference" id="cite_ref-116"><a href="#cite_note-116">[116]</a></sup>\n</td></tr>\n<tr>\n<td>\n</td>\n<td><a href="/wiki/1336" title="1336">1336</a> - <a href="/wiki/1348" title="1348">1348</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_K%C5%8Dmy%C5%8D.jpg"><img class="mw-file-element" data-file-height="2400" data-file-width="1628" decoding="async" height="221" src="//upload.wikimedia.org/wikipedia/commons/thumb/a/af/Emperor_K%C5%8Dmy%C5%8D.jpg/150px-Emperor_K%C5%8Dmy%C5%8D.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/a/af/Emperor_K%C5%8Dmy%C5%8D.jpg/225px-Emperor_K%C5%8Dmy%C5%8D.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/a/af/Emperor_K%C5%8Dmy%C5%8D.jpg/300px-Emperor_K%C5%8Dmy%C5%8D.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_K%C5%8Dmy%C5%8D" title="Thi\u00ean ho\u00e0ng K\u014dmy\u014d">Thi\u00ean ho\u00e0ng K\u014dmy\u014d</a>\n</td>\n<td>Quang Minh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5149\u660e\u5929\u7687\n</td>\n<td>Yutahito\n</td>\n<td><sup class="reference" id="cite_ref-117"><a href="#cite_note-117">[117]</a></sup>\n</td></tr>\n<tr>\n<td>\n</td>\n<td><a href="/wiki/1348" title="1348">1348</a> - <a href="/wiki/1351" title="1351">1351</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Suk%C5%8D.jpg"><img class="mw-file-element" data-file-height="173" data-file-width="130" decoding="async" height="200" src="//upload.wikimedia.org/wikipedia/commons/9/90/Emperor_Suk%C5%8D.jpg" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Suk%C5%8D" title="Thi\u00ean ho\u00e0ng Suk\u014d">Thi\u00ean ho\u00e0ng Suk\u014d</a>\n</td>\n<td>S\u00f9ng Quang Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5d07\u5149\u5929\u7687\n</td>\n<td>Okihito\n</td>\n<td><sup class="reference" id="cite_ref-118"><a href="#cite_note-118">[118]</a></sup>\n</td></tr>\n<tr>\n<td>\n</td>\n<td><a href="/wiki/1352" title="1352">1352</a> - <a href="/wiki/1371" title="1371">1371</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Go-K%C5%8Dgon.jpg"><img class="mw-file-element" data-file-height="2677" data-file-width="3350" decoding="async" height="120" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Emperor_Go-K%C5%8Dgon.jpg/150px-Emperor_Go-K%C5%8Dgon.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Emperor_Go-K%C5%8Dgon.jpg/225px-Emperor_Go-K%C5%8Dgon.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Emperor_Go-K%C5%8Dgon.jpg/300px-Emperor_Go-K%C5%8Dgon.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-K%C5%8Dgon" title="Thi\u00ean ho\u00e0ng Go-K\u014dgon">Thi\u00ean ho\u00e0ng Go-K\u014dgon</a>\n</td>\n<td>H\u1eadu Quang Nghi\u00eam Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u5149\u53b3\u5929\u7687\n</td>\n<td>Iyahito\n</td>\n<td><sup class="reference" id="cite_ref-119"><a href="#cite_note-119">[119]</a></sup>\n</td></tr>\n<tr>\n<td>\n</td>\n<td><a href="/wiki/1371" title="1371">1371</a> - <a href="/wiki/1382" title="1382">1382</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Go-En%27y%C5%AB_detail.jpg"><img class="mw-file-element" data-file-height="2381" data-file-width="1888" decoding="async" height="189" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Emperor_Go-En%27y%C5%AB_detail.jpg/150px-Emperor_Go-En%27y%C5%AB_detail.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Emperor_Go-En%27y%C5%AB_detail.jpg/225px-Emperor_Go-En%27y%C5%AB_detail.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Emperor_Go-En%27y%C5%AB_detail.jpg/300px-Emperor_Go-En%27y%C5%AB_detail.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-En%27y%C5%AB" title="Thi\u00ean ho\u00e0ng Go-En\'y\u016b">Thi\u00ean ho\u00e0ng Go-En\'y\u016b</a>\n</td>\n<td>H\u1eadu Vi\u00ean Dung Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u5186\u878d\u5929\u7687\n</td>\n<td>Ohito\n</td>\n<td><sup class="reference" id="cite_ref-120"><a href="#cite_note-120">[120]</a></sup>\n</td></tr>\n<tr>\n<td>\n</td>\n<td><a href="/wiki/1382" title="1382">1382</a> - <a href="/wiki/1392" title="1392">1392</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Go-Komatsu.jpg"><img class="mw-file-element" data-file-height="1975" data-file-width="2190" decoding="async" height="135" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Emperor_Go-Komatsu.jpg/150px-Emperor_Go-Komatsu.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Emperor_Go-Komatsu.jpg/225px-Emperor_Go-Komatsu.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Emperor_Go-Komatsu.jpg/300px-Emperor_Go-Komatsu.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Komatsu" title="Thi\u00ean ho\u00e0ng Go-Komatsu">Thi\u00ean ho\u00e0ng Go-Komatsu</a>\n</td>\n<td>H\u1eadu Ti\u1ec3u T\u00f9ng Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u5c0f\u677e\u5929\u7687\n</td>\n<td><i>-- Xem <b>100</b> \u1edf d\u01b0\u1edbi --</i>\n</td>\n<td>2 tri\u1ec1u th\u1ed1ng nh\u1ea5t n\u0103m <a href="/wiki/1392" title="1392">1392</a> <sup class="reference" id="cite_ref-121"><a href="#cite_note-121">[121]</a></sup>\n</td></tr>\n<tr>\n<th colspan="8"><b><a href="/wiki/Th%E1%BB%9Di_k%E1%BB%B3_Muromachi" title="Th\u1eddi k\u1ef3 Muromachi">Th\u1eddi k\u1ef3 Muromachi</a></b> (1392-1573)\n</th></tr>\n<tr>\n<td>97\n</td>\n<td><a href="/wiki/1339" title="1339">1339</a> - <a href="/wiki/1368" title="1368">1368</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Go-Murakami.jpg"><img class="mw-file-element" data-file-height="2928" data-file-width="1537" decoding="async" height="286" src="//upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Emperor_Go-Murakami.jpg/150px-Emperor_Go-Murakami.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Emperor_Go-Murakami.jpg/225px-Emperor_Go-Murakami.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Emperor_Go-Murakami.jpg/300px-Emperor_Go-Murakami.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Murakami" title="Thi\u00ean ho\u00e0ng Go-Murakami">Thi\u00ean ho\u00e0ng Go-Murakami</a>\n</td>\n<td>H\u1eadu Th\u00f4n Th\u01b0\u1ee3ng Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u6751\u4e0a\u5929\u7687\n</td>\n<td>Norinaga/Noriyoshi\n</td>\n<td><sup class="reference" id="cite_ref-122"><a href="#cite_note-122">[122]</a></sup> Nam tri\u1ec1u\n</td></tr>\n<tr>\n<td>98\n</td>\n<td><a href="/wiki/1368" title="1368">1368</a> - <a href="/wiki/1383" title="1383">1383</a>\n</td>\n<td>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Ch%C5%8Dkei" title="Thi\u00ean ho\u00e0ng Ch\u014dkei">Thi\u00ean ho\u00e0ng Ch\u014dkei</a>\n</td>\n<td>Tr\u01b0\u1edfng Kh\u00e1nh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u9577\u6176\u5929\u7687\n</td>\n<td>Yutanari\n</td>\n<td><sup class="reference" id="cite_ref-123"><a href="#cite_note-123">[123]</a></sup> Nam tri\u1ec1u\n</td></tr>\n<tr>\n<td>99\n</td>\n<td><a href="/wiki/1383" title="1383">1383</a> - <a href="/wiki/1392" title="1392">1392</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Go-Kameyama.jpg"><img class="mw-file-element" data-file-height="2816" data-file-width="1700" decoding="async" height="248" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/96/Emperor_Go-Kameyama.jpg/150px-Emperor_Go-Kameyama.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/96/Emperor_Go-Kameyama.jpg/225px-Emperor_Go-Kameyama.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/96/Emperor_Go-Kameyama.jpg/300px-Emperor_Go-Kameyama.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Kameyama" title="Thi\u00ean ho\u00e0ng Go-Kameyama">Thi\u00ean ho\u00e0ng Go-Kameyama</a>\n</td>\n<td>H\u1eadu Quy S\u01a1n Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u4e80\u5c71\u5929\u7687\n</td>\n<td>Hironari\n</td>\n<td><sup class="reference" id="cite_ref-124"><a href="#cite_note-124">[124]</a></sup> Nam tri\u1ec1u\n</td></tr>\n<tr>\n<td>100\n</td>\n<td><a href="/wiki/1392" title="1392">1392</a> - <a href="/wiki/1412" title="1412">1412</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Go-Komatsu.jpg"><img class="mw-file-element" data-file-height="1975" data-file-width="2190" decoding="async" height="135" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Emperor_Go-Komatsu.jpg/150px-Emperor_Go-Komatsu.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Emperor_Go-Komatsu.jpg/225px-Emperor_Go-Komatsu.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Emperor_Go-Komatsu.jpg/300px-Emperor_Go-Komatsu.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Komatsu" title="Thi\u00ean ho\u00e0ng Go-Komatsu">Thi\u00ean ho\u00e0ng Go-Komatsu</a>\n</td>\n<td>H\u1eadu Ti\u1ec3u T\u00f9ng Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u5c0f\u677e\u5929\u7687\n</td>\n<td>Motohito\n</td>\n<td><sup class="reference" id="cite_ref-125"><a href="#cite_note-125">[125]</a></sup>\n</td></tr>\n<tr>\n<td>101\n</td>\n<td><a href="/wiki/1412" title="1412">1412</a> - <a href="/wiki/1428" title="1428">1428</a>\n</td>\n<td>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Sh%C5%8Dk%C5%8D" title="Thi\u00ean ho\u00e0ng Sh\u014dk\u014d">Thi\u00ean ho\u00e0ng Sh\u014dk\u014d</a>\n</td>\n<td>X\u01b0ng Quang Thi\u00ean ho\u00e0ng\n</td>\n<td>\u79f0\u5149\u5929\u7687\n</td>\n<td>Mihito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-126"><a href="#cite_note-126">[126]</a></sup>\n</td></tr>\n<tr>\n<td>102\n</td>\n<td><a href="/wiki/1428" title="1428">1428</a> - <a href="/wiki/1464" title="1464">1464</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Go-Hanazono.jpg"><img class="mw-file-element" data-file-height="2980" data-file-width="1430" decoding="async" height="313" src="//upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Emperor_Go-Hanazono.jpg/150px-Emperor_Go-Hanazono.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Emperor_Go-Hanazono.jpg/225px-Emperor_Go-Hanazono.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Emperor_Go-Hanazono.jpg/300px-Emperor_Go-Hanazono.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Hanazono" title="Thi\u00ean ho\u00e0ng Go-Hanazono">Thi\u00ean ho\u00e0ng Go-Hanazono</a>\n</td>\n<td>H\u1eadu Hoa Vi\u00ean Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u82b1\u5712\u5929\u7687\n</td>\n<td>Hikohito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-127"><a href="#cite_note-127">[127]</a></sup>\n</td></tr>\n<tr>\n<td>103\n</td>\n<td><a href="/wiki/1464" title="1464">1464</a> - <a href="/wiki/1500" title="1500">1500</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Go-Tsuchimikado.jpg"><img class="mw-file-element" data-file-height="3490" data-file-width="2390" decoding="async" height="219" src="//upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Emperor_Go-Tsuchimikado.jpg/150px-Emperor_Go-Tsuchimikado.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Emperor_Go-Tsuchimikado.jpg/225px-Emperor_Go-Tsuchimikado.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Emperor_Go-Tsuchimikado.jpg/300px-Emperor_Go-Tsuchimikado.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Tsuchimikado" title="Thi\u00ean ho\u00e0ng Go-Tsuchimikado">Thi\u00ean ho\u00e0ng Go-Tsuchimikado</a>\n</td>\n<td>H\u1eadu Th\u1ed5 Ng\u1ef1 M\u00f4n Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u571f\u5fa1\u9580\u5929\u7687\n</td>\n<td>Fusahito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-128"><a href="#cite_note-128">[128]</a></sup>\n</td></tr>\n<tr>\n<td>104\n</td>\n<td><a href="/wiki/1500" title="1500">1500</a> - <a href="/wiki/1526" title="1526">1526</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Go-Kashiwabara.jpg"><img class="mw-file-element" data-file-height="3500" data-file-width="2350" decoding="async" height="241" src="//upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Emperor_Go-Kashiwabara.jpg/162px-Emperor_Go-Kashiwabara.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Emperor_Go-Kashiwabara.jpg/243px-Emperor_Go-Kashiwabara.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Emperor_Go-Kashiwabara.jpg/323px-Emperor_Go-Kashiwabara.jpg 2x" width="162"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Kashiwabara" title="Thi\u00ean ho\u00e0ng Go-Kashiwabara">Thi\u00ean ho\u00e0ng Go-Kashiwabara</a>\n</td>\n<td>H\u1eadu B\u00e1ch Nguy\u00ean Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u67cf\u539f\u5929\u7687\n</td>\n<td>Katsuhito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-129"><a href="#cite_note-129">[129]</a></sup>\n</td></tr>\n<tr>\n<td>105\n</td>\n<td><a href="/wiki/1526" title="1526">1526</a> - <a href="/wiki/1557" title="1557">1557</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Go-Nara.jpg"><img class="mw-file-element" data-file-height="1650" data-file-width="2030" decoding="async" height="122" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/21/Emperor_Go-Nara.jpg/150px-Emperor_Go-Nara.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/21/Emperor_Go-Nara.jpg/225px-Emperor_Go-Nara.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/21/Emperor_Go-Nara.jpg/300px-Emperor_Go-Nara.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Nara" title="Thi\u00ean ho\u00e0ng Go-Nara">Thi\u00ean ho\u00e0ng Go-Nara</a>\n</td>\n<td>H\u1eadu N\u1ea1i L\u01b0\u01a1ng Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u5948\u826f\u5929\u7687\n</td>\n<td>Tomohito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-130"><a href="#cite_note-130">[130]</a></sup>\n</td></tr>\n<tr>\n<td>106\n</td>\n<td><a href="/wiki/1557" title="1557">1557</a> - <a href="/wiki/1586" title="1586">1586</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Ogimachi2.jpg"><img class="mw-file-element" data-file-height="2946" data-file-width="1541" decoding="async" height="287" src="//upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Emperor_Ogimachi2.jpg/150px-Emperor_Ogimachi2.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Emperor_Ogimachi2.jpg/225px-Emperor_Ogimachi2.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Emperor_Ogimachi2.jpg/300px-Emperor_Ogimachi2.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_%C5%8Cgimachi" title="Thi\u00ean ho\u00e0ng \u014cgimachi">Thi\u00ean ho\u00e0ng \u014cgimachi</a>\n</td>\n<td>Ch\u00ednh Th\u00e2n \u0110inh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u6b63\u89aa\u753a\u5929\u7687\n</td>\n<td>Michihito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-131"><a href="#cite_note-131">[131]</a></sup>\n</td></tr>\n<tr>\n<td>107\n</td>\n<td><a href="/wiki/1586" title="1586">1586</a> - <a href="/wiki/1611" title="1611">1611</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Go-Y%C5%8Dzei2.jpg"><img class="mw-file-element" data-file-height="2569" data-file-width="1426" decoding="async" height="270" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Emperor_Go-Y%C5%8Dzei2.jpg/150px-Emperor_Go-Y%C5%8Dzei2.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Emperor_Go-Y%C5%8Dzei2.jpg/225px-Emperor_Go-Y%C5%8Dzei2.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Emperor_Go-Y%C5%8Dzei2.jpg/300px-Emperor_Go-Y%C5%8Dzei2.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Y%C5%8Dzei" title="Thi\u00ean ho\u00e0ng Go-Y\u014dzei">Thi\u00ean ho\u00e0ng Go-Y\u014dzei</a>\n</td>\n<td>H\u1eadu D\u01b0\u01a1ng Th\u00e0nh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u967d\u6210\u5929\u7687\n</td>\n<td>Kazuhito/Katahito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-132"><a href="#cite_note-132">[132]</a></sup>\n</td></tr>\n<tr>\n<th colspan="8"><b><a href="/wiki/Th%E1%BB%9Di_k%E1%BB%B3_Edo" title="Th\u1eddi k\u1ef3 Edo">Th\u1eddi k\u1ef3 Edo</a></b> (1603-1867)\n</th></tr>\n<tr>\n<td>108\n</td>\n<td><a href="/wiki/1611" title="1611">1611</a> - <a href="/wiki/1629" title="1629">1629</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Go-Mizunoo2.jpg"><img class="mw-file-element" data-file-height="3038" data-file-width="1619" decoding="async" height="281" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Emperor_Go-Mizunoo2.jpg/150px-Emperor_Go-Mizunoo2.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Emperor_Go-Mizunoo2.jpg/225px-Emperor_Go-Mizunoo2.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Emperor_Go-Mizunoo2.jpg/300px-Emperor_Go-Mizunoo2.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Mizunoo" title="Thi\u00ean ho\u00e0ng Go-Mizunoo">Thi\u00ean ho\u00e0ng Go-Mizunoo</a> (c\u00f2n g\u1ecdi l\u00e0 Thi\u00ean ho\u00e0ng Go-Minoo)\n</td>\n<td>H\u1eadu Th\u1ee7y V\u0129 Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u6c34\u5c3e\u5929\u7687\n</td>\n<td>Kotohito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-133"><a href="#cite_note-133">[133]</a></sup>\n</td></tr>\n<tr>\n<td>109\n</td>\n<td><a href="/wiki/1629" title="1629">1629</a> - <a href="/wiki/1643" title="1643">1643</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Meisho_of_Japan.jpg"><img class="mw-file-element" data-file-height="845" data-file-width="647" decoding="async" height="196" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/df/Meisho_of_Japan.jpg/150px-Meisho_of_Japan.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/df/Meisho_of_Japan.jpg/225px-Meisho_of_Japan.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/df/Meisho_of_Japan.jpg/300px-Meisho_of_Japan.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Meish%C5%8D" title="Thi\u00ean ho\u00e0ng Meish\u014d">Thi\u00ean ho\u00e0ng Meish\u014d</a> (n\u1eef)\n</td>\n<td>Minh Ch\u00ednh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u660e\u6b63\u5929\u7687\n</td>\n<td>Okiko\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-134"><a href="#cite_note-134">[134]</a></sup>\n</td></tr>\n<tr>\n<td>110\n</td>\n<td><a href="/wiki/1643" title="1643">1643</a> - <a href="/wiki/1654" title="1654">1654</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Go-K%C5%8Dmy%C5%8D.jpg"><img class="mw-file-element" data-file-height="1610" data-file-width="1755" decoding="async" height="138" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/02/Emperor_Go-K%C5%8Dmy%C5%8D.jpg/150px-Emperor_Go-K%C5%8Dmy%C5%8D.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/02/Emperor_Go-K%C5%8Dmy%C5%8D.jpg/225px-Emperor_Go-K%C5%8Dmy%C5%8D.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/02/Emperor_Go-K%C5%8Dmy%C5%8D.jpg/300px-Emperor_Go-K%C5%8Dmy%C5%8D.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-K%C5%8Dmy%C5%8D" title="Thi\u00ean ho\u00e0ng Go-K\u014dmy\u014d">Thi\u00ean ho\u00e0ng Go-K\u014dmy\u014d</a>\n</td>\n<td>H\u1eadu Quang Minh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u5149\u660e\u5929\u7687\n</td>\n<td>Tsuguhito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-135"><a href="#cite_note-135">[135]</a></sup>\n</td></tr>\n<tr>\n<td>111\n</td>\n<td><a href="/wiki/1655" title="1655">1655</a> - <a href="/wiki/1663" title="1663">1663</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Go-Sai.jpg"><img class="mw-file-element" data-file-height="1615" data-file-width="1680" decoding="async" height="144" src="//upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Emperor_Go-Sai.jpg/150px-Emperor_Go-Sai.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Emperor_Go-Sai.jpg/225px-Emperor_Go-Sai.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Emperor_Go-Sai.jpg/300px-Emperor_Go-Sai.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Sai" title="Thi\u00ean ho\u00e0ng Go-Sai">Thi\u00ean ho\u00e0ng Go-Sai</a>\n</td>\n<td>H\u1eadu T\u00e2y Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u897f\u5929\u7687\n</td>\n<td>Nagahito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-136"><a href="#cite_note-136">[136]</a></sup>\n</td></tr>\n<tr>\n<td>112\n</td>\n<td><a href="/wiki/1663" title="1663">1663</a> - <a href="/wiki/1687" title="1687">1687</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Reigen.jpg"><img class="mw-file-element" data-file-height="1620" data-file-width="1680" decoding="async" height="145" src="//upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Emperor_Reigen.jpg/150px-Emperor_Reigen.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Emperor_Reigen.jpg/225px-Emperor_Reigen.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Emperor_Reigen.jpg/300px-Emperor_Reigen.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Reigen" title="Thi\u00ean ho\u00e0ng Reigen">Thi\u00ean ho\u00e0ng Reigen</a>\n</td>\n<td>Linh Nguy\u00ean Thi\u00ean ho\u00e0ng\n</td>\n<td>\u970a\u5143\u5929\u7687\n</td>\n<td>Satohito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-137"><a href="#cite_note-137">[137]</a></sup>\n</td></tr>\n<tr>\n<td>113\n</td>\n<td><a href="/wiki/1687" title="1687">1687</a> - <a href="/wiki/1709" title="1709">1709</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Higashiyama.jpg"><img class="mw-file-element" data-file-height="2235" data-file-width="1453" decoding="async" height="231" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/81/Emperor_Higashiyama.jpg/150px-Emperor_Higashiyama.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/81/Emperor_Higashiyama.jpg/225px-Emperor_Higashiyama.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/8/81/Emperor_Higashiyama.jpg/300px-Emperor_Higashiyama.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Higashiyama" title="Thi\u00ean ho\u00e0ng Higashiyama">Thi\u00ean ho\u00e0ng Higashiyama</a>\n</td>\n<td>\u0110\u00f4ng S\u01a1n Thi\u00ean ho\u00e0ng\n</td>\n<td>\u6771\u5c71\u5929\u7687\n</td>\n<td>Asahito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-138"><a href="#cite_note-138">[138]</a></sup>\n</td></tr>\n<tr>\n<td>114\n</td>\n<td><a href="/wiki/1709" title="1709">1709</a> - <a href="/wiki/1735" title="1735">1735</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Nakamikado.jpg"><img class="mw-file-element" data-file-height="1500" data-file-width="1305" decoding="async" height="172" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Emperor_Nakamikado.jpg/150px-Emperor_Nakamikado.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Emperor_Nakamikado.jpg/225px-Emperor_Nakamikado.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Emperor_Nakamikado.jpg/300px-Emperor_Nakamikado.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Nakamikado" title="Thi\u00ean ho\u00e0ng Nakamikado">Thi\u00ean ho\u00e0ng Nakamikado</a>\n</td>\n<td>Trung Ng\u1ef1 M\u00f4n Thi\u00ean ho\u00e0ng\n</td>\n<td>\u4e2d\u5fa1\u9580\u5929\u7687\n</td>\n<td>Yasuhito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-139"><a href="#cite_note-139">[139]</a></sup>\n</td></tr>\n<tr>\n<td>115\n</td>\n<td><a href="/wiki/1735" title="1735">1735</a> - <a href="/wiki/1747" title="1747">1747</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Sakuramachi.jpg"><img class="mw-file-element" data-file-height="1822" data-file-width="1706" decoding="async" height="160" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Emperor_Sakuramachi.jpg/150px-Emperor_Sakuramachi.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Emperor_Sakuramachi.jpg/225px-Emperor_Sakuramachi.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Emperor_Sakuramachi.jpg/300px-Emperor_Sakuramachi.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Sakuramachi" title="Thi\u00ean ho\u00e0ng Sakuramachi">Thi\u00ean ho\u00e0ng Sakuramachi</a>\n</td>\n<td>Anh \u0110inh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u685c\u753a\u5929\u7687\n</td>\n<td>Teruhito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-140"><a href="#cite_note-140">[140]</a></sup>\n</td></tr>\n<tr>\n<td>116\n</td>\n<td><a href="/wiki/1747" title="1747">1747</a> - <a href="/wiki/1762" title="1762">1762</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Momozono.jpg"><img class="mw-file-element" data-file-height="1822" data-file-width="1790" decoding="async" height="153" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Emperor_Momozono.jpg/150px-Emperor_Momozono.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Emperor_Momozono.jpg/225px-Emperor_Momozono.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Emperor_Momozono.jpg/300px-Emperor_Momozono.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Momozono" title="Thi\u00ean ho\u00e0ng Momozono">Thi\u00ean ho\u00e0ng Momozono</a>\n</td>\n<td>\u0110\u00e0o Vi\u00ean Thi\u00ean ho\u00e0ng\n</td>\n<td>\u6843\u5712\u5929\u7687\n</td>\n<td>Toohito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-141"><a href="#cite_note-141">[141]</a></sup>\n</td></tr>\n<tr>\n<td>117\n</td>\n<td><a href="/wiki/1762" title="1762">1762</a> - <a href="/wiki/1771" title="1771">1771</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Empress_Go-Sakuramachi.jpg"><img class="mw-file-element" data-file-height="829" data-file-width="609" decoding="async" height="204" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/88/Empress_Go-Sakuramachi.jpg/150px-Empress_Go-Sakuramachi.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/88/Empress_Go-Sakuramachi.jpg/225px-Empress_Go-Sakuramachi.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/8/88/Empress_Go-Sakuramachi.jpg/300px-Empress_Go-Sakuramachi.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Sakuramachi" title="Thi\u00ean ho\u00e0ng Go-Sakuramachi">Thi\u00ean ho\u00e0ng Go-Sakuramachi</a> (n\u1eef)\n</td>\n<td>H\u1eadu Anh \u0110inh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u685c\u753a\u5929\u7687\n</td>\n<td>Toshiko\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-142"><a href="#cite_note-142">[142]</a></sup>\n</td></tr>\n<tr>\n<td>118\n</td>\n<td><a href="/wiki/1771" title="1771">1771</a> - <a href="/wiki/1779" title="1779">1779</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Go-Momozono.jpg"><img class="mw-file-element" data-file-height="2647" data-file-width="1885" decoding="async" height="211" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Emperor_Go-Momozono.jpg/150px-Emperor_Go-Momozono.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Emperor_Go-Momozono.jpg/225px-Emperor_Go-Momozono.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Emperor_Go-Momozono.jpg/300px-Emperor_Go-Momozono.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Go-Momozono" title="Thi\u00ean ho\u00e0ng Go-Momozono">Thi\u00ean ho\u00e0ng Go-Momozono</a>\n</td>\n<td>H\u1eadu \u0110\u00e0o Vi\u00ean Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5f8c\u6843\u5712\u5929\u7687\n</td>\n<td>Hidehito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-143"><a href="#cite_note-143">[143]</a></sup>\n</td></tr>\n<tr>\n<td>119\n</td>\n<td><a href="/wiki/1780" title="1780">1780</a> - <a href="/wiki/1817" title="1817">1817</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_K%C5%8Dkaku.jpg"><img class="mw-file-element" data-file-height="4708" data-file-width="5432" decoding="async" height="130" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/48/Emperor_K%C5%8Dkaku.jpg/150px-Emperor_K%C5%8Dkaku.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/4/48/Emperor_K%C5%8Dkaku.jpg/225px-Emperor_K%C5%8Dkaku.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/4/48/Emperor_K%C5%8Dkaku.jpg/300px-Emperor_K%C5%8Dkaku.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_K%C5%8Dkaku" title="Thi\u00ean ho\u00e0ng K\u014dkaku">Thi\u00ean ho\u00e0ng K\u014dkaku</a>\n</td>\n<td>Quang C\u00e1ch Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5149\u683c\u5929\u7687\n</td>\n<td>Morohito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-144"><a href="#cite_note-144">[144]</a></sup>\n</td></tr>\n<tr>\n<td>120\n</td>\n<td><a href="/wiki/1817" title="1817">1817</a> - <a href="/wiki/1846" title="1846">1846</a>\n</td>\n<td><span typeof="mw:File"><a href="https://en.wikipedia.org/wiki/File:Emperor_Nink%C5%8D.jpg"><img class="mw-file-element" data-file-height="1588" data-file-width="1555" decoding="async" height="153" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/26/Emperor_Nink%C5%8D.jpg/150px-Emperor_Nink%C5%8D.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/26/Emperor_Nink%C5%8D.jpg/225px-Emperor_Nink%C5%8D.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/26/Emperor_Nink%C5%8D.jpg/300px-Emperor_Nink%C5%8D.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Nink%C5%8D" title="Thi\u00ean ho\u00e0ng Nink\u014d">Thi\u00ean ho\u00e0ng Nink\u014d</a>\n</td>\n<td>Nh\u00e2n Hi\u1ebfu Thi\u00ean ho\u00e0ng\n</td>\n<td>\u4ec1\u5b5d\u5929\u7687\n</td>\n<td>Ayahito\n</td>\n<td>\u00c2m l\u1ecbch.<sup class="reference" id="cite_ref-145"><a href="#cite_note-145">[145]</a></sup>\n</td></tr>\n<tr>\n<td>121\n</td>\n<td><a href="/wiki/1846" title="1846">1846</a> - <a href="/wiki/1867" title="1867">1867</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Komei_Portrait_by_Koyama_Shotaro_1902.png"><img alt="" class="mw-file-element" data-file-height="1051" data-file-width="641" decoding="async" height="246" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/00/Emperor_Komei_Portrait_by_Koyama_Shotaro_1902.png/150px-Emperor_Komei_Portrait_by_Koyama_Shotaro_1902.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/00/Emperor_Komei_Portrait_by_Koyama_Shotaro_1902.png/225px-Emperor_Komei_Portrait_by_Koyama_Shotaro_1902.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/00/Emperor_Komei_Portrait_by_Koyama_Shotaro_1902.png/300px-Emperor_Komei_Portrait_by_Koyama_Shotaro_1902.png 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_K%C5%8Dmei" title="Thi\u00ean ho\u00e0ng K\u014dmei">Thi\u00ean ho\u00e0ng K\u014dmei</a>\n</td>\n<td>Hi\u1ebfu Minh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5b5d\u660e\u5929\u7687\n</td>\n<td>Osahito\n</td>\n<td>\n</td></tr>\n<tr>\n<th colspan="8"><b><a href="/wiki/L%E1%BB%8Bch_s%E1%BB%AD_Nh%E1%BA%ADt_B%E1%BA%A3n#\u0110\u1ebf_qu\u1ed1c_Nh\u1eadt_B\u1ea3n_(1868\u20131945)" title="L\u1ecbch s\u1eed Nh\u1eadt B\u1ea3n">Nh\u1eadt B\u1ea3n hi\u1ec7n \u0111\u1ea1i</a></b> (1868-nay)\n</th></tr>\n<tr>\n<td>122\n</td>\n<td><a href="/wiki/1867" title="1867">1867</a> - <a href="/wiki/1912" title="1912">1912</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Meiji_tenno3.jpg"><img class="mw-file-element" data-file-height="1374" data-file-width="936" decoding="async" height="220" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Meiji_tenno3.jpg/150px-Meiji_tenno3.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Meiji_tenno3.jpg/225px-Meiji_tenno3.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Meiji_tenno3.jpg/300px-Meiji_tenno3.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Minh_Tr%E1%BB%8B" title="Thi\u00ean ho\u00e0ng Minh Tr\u1ecb">Thi\u00ean ho\u00e0ng Meiji</a>\n</td>\n<td>Minh Tr\u1ecb Thi\u00ean ho\u00e0ng\n</td>\n<td>\u660e\u6cbb\u5929\u7687\n</td>\n<td>Mutsuhito\n</td>\n<td>Thi\u00ean ho\u00e0ng \u0111\u1ea7u ti\u00ean th\u1eddi ch\u00ednh th\u1ec3 <a href="/wiki/Qu%C3%A2n_ch%E1%BB%A7_l%E1%BA%ADp_hi%E1%BA%BFn" title="Qu\u00e2n ch\u1ee7 l\u1eadp hi\u1ebfn">qu\u00e2n ch\u1ee7 l\u1eadp hi\u1ebfn</a>\n</td></tr>\n<tr>\n<td>123\n</td>\n<td><a href="/wiki/1912" title="1912">1912</a> - <a href="/wiki/1926" title="1926">1926</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Taisho_of_Japan.jpg"><img class="mw-file-element" data-file-height="936" data-file-width="751" decoding="async" height="187" src="//upload.wikimedia.org/wikipedia/commons/thumb/5/52/Emperor_Taisho_of_Japan.jpg/150px-Emperor_Taisho_of_Japan.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/52/Emperor_Taisho_of_Japan.jpg/225px-Emperor_Taisho_of_Japan.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/5/52/Emperor_Taisho_of_Japan.jpg/300px-Emperor_Taisho_of_Japan.jpg 2x" width="150"/></a></span>\n</td>\n<td><a class="mw-redirect" href="/wiki/Thi%C3%AAn_ho%C3%A0ng_%C4%90%E1%BA%A1i_Ch%C3%ADnh" title="Thi\u00ean ho\u00e0ng \u0110\u1ea1i Ch\u00ednh">Thi\u00ean ho\u00e0ng Taish\u014d</a>\n</td>\n<td>\u0110\u1ea1i Ch\u00ednh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u5927\u6b63\u5929\u7687\n</td>\n<td>Yoshihito\n</td>\n<td>\n</td></tr>\n<tr>\n<td>124\n</td>\n<td><a href="/wiki/1926" title="1926">1926</a> - <a href="/wiki/1989" title="1989">1989</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Showa.jpg"><img class="mw-file-element" data-file-height="1212" data-file-width="933" decoding="async" height="195" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Emperor_Showa.jpg/150px-Emperor_Showa.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Emperor_Showa.jpg/225px-Emperor_Showa.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Emperor_Showa.jpg/300px-Emperor_Showa.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Hirohito" title="Hirohito">Thi\u00ean ho\u00e0ng Sh\u014dwa</a>\n</td>\n<td>Chi\u00eau H\u00f2a Thi\u00ean ho\u00e0ng\n</td>\n<td>\u662d\u548c\u5929\u7687\n</td>\n<td>Hirohito\n</td>\n<td>Thi\u00ean ho\u00e0ng cu\u1ed1i c\u00f9ng n\u1eafm gi\u1eef quy\u1ec1n l\u1ef1c ch\u00ednh tr\u1ecb\n</td></tr>\n<tr>\n<td>125\n</td>\n<td><a href="/wiki/1989" title="1989">1989</a> - <a href="/wiki/2019" title="2019">2019</a>\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Akihito_199011_1.jpg"><img class="mw-file-element" data-file-height="616" data-file-width="440" decoding="async" height="210" src="//upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Emperor_Akihito_199011_1.jpg/150px-Emperor_Akihito_199011_1.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Emperor_Akihito_199011_1.jpg/225px-Emperor_Akihito_199011_1.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Emperor_Akihito_199011_1.jpg/300px-Emperor_Akihito_199011_1.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Akihito" title="Akihito">Thi\u00ean ho\u00e0ng Heisei</a>\n</td>\n<td>B\u00ecnh Th\u00e0nh Thi\u00ean ho\u00e0ng\n</td>\n<td>\u4e0a\u7687\n</td>\n<td><a href="/wiki/Akihito" title="Akihito">Akihito</a>\n</td>\n<td>Thi\u00ean ho\u00e0ng \u0111\u1ea7u ti\u00ean tho\u00e1i v\u1ecb sau 200 n\u0103m. Sau khi ch\u1ebft, \u00f4ng s\u1ebd \u0111\u01b0\u1ee3c \u0111\u1eb7t thu\u1ef5 hi\u1ec7u l\u00e0 <a href="/wiki/Akihito" title="Akihito">Thi\u00ean ho\u00e0ng Heisei</a> (B\u00ecnh Th\u00e0nh).\n</td></tr>\n<tr>\n<td>126\n</td>\n<td><a href="/wiki/2019" title="2019">2019</a> - nay\n</td>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Emperor_Naruhito_wearing_the_sokutai.jpg"><img class="mw-file-element" data-file-height="1372" data-file-width="960" decoding="async" height="214" src="//upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Emperor_Naruhito_wearing_the_sokutai.jpg/150px-Emperor_Naruhito_wearing_the_sokutai.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Emperor_Naruhito_wearing_the_sokutai.jpg/225px-Emperor_Naruhito_wearing_the_sokutai.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Emperor_Naruhito_wearing_the_sokutai.jpg/300px-Emperor_Naruhito_wearing_the_sokutai.jpg 2x" width="150"/></a></span>\n</td>\n<td><a href="/wiki/Naruhito" title="Naruhito">Thi\u00ean ho\u00e0ng Reiwa</a>\n</td>\n<td>L\u1ec7nh H\u00f2a Thi\u00ean ho\u00e0ng\n</td>\n<td>\u4eca\u4e0a\u5929\u7687\n</td>\n<td><a href="/wiki/Naruhito" title="Naruhito">Naruhito</a>\n</td>\n<td>\u0110\u01b0\u1ee3c g\u1ecdi l\u00e0 Kim th\u01b0\u1ee3ng Thi\u00ean ho\u00e0ng (\u4eca\u4e0a\u5929\u7687/Kinj\u014d Tenn\u014d) hay Thi\u00ean ho\u00e0ng B\u1ec7 h\u1ea1 (\u5929\u7687\u965b\u4e0b/Tenn\u014d Heika) trong ti\u1ebfng Nh\u1eadt v\u00e0 <a class="mw-redirect" href="/wiki/Thi%C3%AAn_ho%C3%A0ng_Naruhito" title="Thi\u00ean ho\u00e0ng Naruhito">Thi\u00ean ho\u00e0ng Naruhito</a> trong ti\u1ebfng Vi\u1ec7t.\n</td></tr></tbody></table>',
+    },
+    {
+      id: "Danh s\u00e1ch thi\u1ebft b\u1ecb Windows Phone 8_0",
+      table_json: [
+        [
+          "S\u1ea3n ph\u1ea9m",
+          "Ng\u00e0y ph\u00e1t h\u00e0nh",
+          "CPU",
+          "RAM",
+          "B\u1ed9 nh\u1edb",
+          "M\u00e0n h\u00ecnh",
+          "M\u00e1y \u1ea3nh",
+          "M\u00e1y \u1ea3nh",
+          "NFC",
+          "MicroSD",
+        ],
+        [
+          "S\u1ea3n ph\u1ea9m",
+          "Ng\u00e0y ph\u00e1t h\u00e0nh",
+          "CPU",
+          "RAM",
+          "B\u1ed9 nh\u1edb",
+          "M\u00e0n h\u00ecnh",
+          "Sau",
+          "Tr\u01b0\u1edbc",
+          "NFC",
+          "MicroSD",
+        ],
+        [
+          "Nokia Lumia 520 (521)",
+          "03-2013",
+          "1,0\u00a0GHzL\u00f5i k\u00e9p",
+          "512 MB",
+          "8 GB",
+          '4,0" IPS LCD480 x 800 px',
+          "5 MP",
+          "\u2014",
+          "Kh\u00f4ng",
+          "C\u00f3",
+        ],
+        [
+          "Nokia Lumia 525",
+          "12-2013",
+          "1,0\u00a0GHzL\u00f5i k\u00e9p",
+          "1 GB",
+          "8 GB",
+          '4,0" IPS LCD480 x 800 px',
+          "5 MP",
+          "\u2014",
+          "Kh\u00f4ng",
+          "C\u00f3",
+        ],
+        [
+          "Nokia Lumia 620",
+          "01-2013",
+          "1,0\u00a0GHzL\u00f5i k\u00e9p",
+          "512 MB",
+          "8 GB",
+          '3,8" ClearBlack LCD480 x 800 px',
+          "5 MP",
+          "0,3 MP",
+          "C\u00f3",
+          "C\u00f3",
+        ],
+        [
+          "Nokia Lumia 625",
+          "08-2013",
+          "1,2\u00a0GHzL\u00f5i k\u00e9p",
+          "512 MB",
+          "8 GB",
+          '4,7" IPS LCD480 x 800 px',
+          "5 MP",
+          "0,3 MP",
+          "Kh\u00f4ng",
+          "C\u00f3",
+        ],
+        [
+          "Nokia Lumia 720",
+          "03-2013",
+          "1,0\u00a0GHzL\u00f5i k\u00e9p",
+          "512 MB",
+          "8 GB",
+          '4,3" ClearBlack IPS LCD480 x 800 px',
+          "6,7 MP",
+          "1,3 MP",
+          "C\u00f3",
+          "C\u00f3",
+        ],
+        [
+          "Nokia Lumia 810",
+          "11-2012",
+          "1,5\u00a0GHzL\u00f5i k\u00e9p",
+          "1 GB",
+          "8 GB",
+          '4,3" ClearBlack AMOLED480 x 800 px',
+          "8 MP",
+          "1,2 MP",
+          "C\u00f3",
+          "C\u00f3",
+        ],
+        [
+          "Nokia Lumia 820",
+          "11-2012",
+          "1,5\u00a0GHzL\u00f5i k\u00e9p",
+          "1 GB",
+          "8 GB",
+          '4,3" ClearBlack AMOLED480 x 800 px',
+          "8 MP",
+          "0.3 MP",
+          "C\u00f3",
+          "C\u00f3",
+        ],
+        [
+          "Nokia Lumia 822",
+          "11-2012",
+          "1.5\u00a0GHzL\u00f5i k\u00e9p",
+          "1 GB",
+          "16 GB",
+          '4,3" ClearBlack AMOLED480 x 800 px',
+          "8 MP",
+          "1,2 MP",
+          "C\u00f3",
+          "C\u00f3",
+        ],
+        [
+          "Nokia Lumia 920",
+          "11-2012",
+          "1,5\u00a0GHzL\u00f5i k\u00e9p",
+          "1 GB",
+          "32 GB",
+          '4,5" ClearBlack IPS LCD768 x 1.280 px',
+          "8,7 MP",
+          "1,3 MP",
+          "C\u00f3",
+          "Kh\u00f4ng",
+        ],
+        [
+          "Nokia Lumia 925",
+          "06-2013",
+          "1,5\u00a0GHzL\u00f5i k\u00e9p",
+          "1 GB",
+          "16 GB32 GB",
+          '4,5" ClearBlack AMOLED768 x 1.280 px',
+          "8,7 MP",
+          "1,2 MP",
+          "C\u00f3",
+          "Kh\u00f4ng",
+        ],
+        [
+          "Nokia Lumia 928",
+          "05-2013",
+          "1,5\u00a0GHzL\u00f5i k\u00e9p",
+          "1 GB",
+          "32 GB",
+          '4.5" ClearBlack AMOLED768 x 1.280 px',
+          "8,7 MP",
+          "1,3 MP",
+          "C\u00f3",
+          "Kh\u00f4ng",
+        ],
+        [
+          "Nokia Lumia 929 (Icon)",
+          "01-2014",
+          "2,2\u00a0GHzL\u00f5i t\u1ee9",
+          "2 GB",
+          "32 GB",
+          '5" ClearBlack AMOLED1.080 x 1.920 px',
+          "20 MP",
+          "1,2 MP",
+          "C\u00f3",
+          "Kh\u00f4ng",
+        ],
+        [
+          "Nokia Lumia 1020",
+          "07-2013",
+          "1,5\u00a0GHzL\u00f5i k\u00e9p",
+          "2 GB",
+          "32 GB64 GB",
+          '4,5" ClearBlack AMOLED768 x 1.280 px',
+          "41 MP",
+          "1,2 MP",
+          "C\u00f3",
+          "Kh\u00f4ng",
+        ],
+        [
+          "Nokia Lumia 1320",
+          "12-2013",
+          "1,7\u00a0GHzL\u00f5i k\u00e9p",
+          "1 GB",
+          "8 GB",
+          '6,0" ClearBlack IPS LCD720 x 1.280 px',
+          "5 MP",
+          "0,3 MP",
+          "Kh\u00f4ng",
+          "C\u00f3",
+        ],
+        [
+          "Nokia Lumia 1520",
+          "11-2012",
+          "2,2\u00a0GHzL\u00f5i t\u1ee9",
+          "2 GB",
+          "16 GB32 GB",
+          '6,0" ClearBlack IPS LCD1.080 x 1.920 px',
+          "20 MP",
+          "1,2 MP",
+          "C\u00f3",
+          "C\u00f3",
+        ],
+      ],
+      table_html:
+        '<table class="wikitable sortable" style="font-size: small; text-align: center; width: 100%;">\n<tbody><tr>\n<th rowspan="2">S\u1ea3n ph\u1ea9m\n</th>\n<th rowspan="2">Ng\u00e0y ph\u00e1t h\u00e0nh\n</th>\n<th rowspan="2">CPU\n</th>\n<th rowspan="2">RAM\n</th>\n<th rowspan="2">B\u1ed9 nh\u1edb\n</th>\n<th rowspan="2">M\u00e0n h\u00ecnh\n</th>\n<th colspan="2">M\u00e1y \u1ea3nh\n</th>\n<th rowspan="2">NFC\n</th>\n<th rowspan="2"><a href="/wiki/MicroSD" title="MicroSD">MicroSD</a>\n</th></tr>\n<tr>\n<th>Sau\n</th>\n<th>Tr\u01b0\u1edbc\n</th></tr>\n<tr>\n<td><a href="/wiki/Nokia_Lumia_520" title="Nokia Lumia 520">Nokia Lumia 520</a> (521)\n</td>\n<td>03-2013\n</td>\n<td>1,0\u00a0GHz<br/>L\u00f5i k\u00e9p\n</td>\n<td>512 MB\n</td>\n<td>8 GB\n</td>\n<td>4,0" IPS LCD<br/>480 x 800 px\n</td>\n<td>5 MP\n</td>\n<td class="table-na" data-sort-value="" style="background: #ececec; color: #2C2C2C; vertical-align: middle; text-align: center;">\u2014\n</td>\n<td class="table-no" style="background:#FFC7C7;vertical-align:middle;text-align:center;">Kh\u00f4ng\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td></tr>\n<tr>\n<td><a class="mw-redirect" href="/wiki/Nokia_Lumia_525" title="Nokia Lumia 525">Nokia Lumia 525</a>\n</td>\n<td>12-2013\n</td>\n<td>1,0\u00a0GHz<br/>L\u00f5i k\u00e9p\n</td>\n<td>1 GB\n</td>\n<td>8 GB\n</td>\n<td>4,0" IPS LCD<br/>480 x 800 px\n</td>\n<td>5 MP\n</td>\n<td class="table-na" data-sort-value="" style="background: #ececec; color: #2C2C2C; vertical-align: middle; text-align: center;">\u2014\n</td>\n<td class="table-no" style="background:#FFC7C7;vertical-align:middle;text-align:center;">Kh\u00f4ng\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td></tr>\n<tr>\n<td><a class="new" href="/w/index.php?title=Nokia_Lumia_620&amp;action=edit&amp;redlink=1" title="Nokia Lumia 620 (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Nokia Lumia 620</a>\n</td>\n<td>01-2013\n</td>\n<td>1,0\u00a0GHz<br/>L\u00f5i k\u00e9p\n</td>\n<td>512 MB\n</td>\n<td>8 GB\n</td>\n<td>3,8" ClearBlack LCD<br/>480 x 800 px\n</td>\n<td>5 MP\n</td>\n<td>0,3 MP\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td></tr>\n<tr>\n<td><a href="/wiki/Nokia_Lumia_625" title="Nokia Lumia 625">Nokia Lumia 625</a>\n</td>\n<td>08-2013\n</td>\n<td>1,2\u00a0GHz<br/>L\u00f5i k\u00e9p\n</td>\n<td>512 MB\n</td>\n<td>8 GB\n</td>\n<td>4,7" IPS LCD<br/>480 x 800 px\n</td>\n<td>5 MP\n</td>\n<td>0,3 MP\n</td>\n<td class="table-no" style="background:#FFC7C7;vertical-align:middle;text-align:center;">Kh\u00f4ng\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td></tr>\n<tr>\n<td><a href="/wiki/Nokia_Lumia_720" title="Nokia Lumia 720">Nokia Lumia 720</a>\n</td>\n<td>03-2013\n</td>\n<td>1,0\u00a0GHz<br/>L\u00f5i k\u00e9p\n</td>\n<td>512 MB\n</td>\n<td>8 GB\n</td>\n<td>4,3" ClearBlack IPS LCD<br/>480 x 800 px\n</td>\n<td>6,7 MP\n</td>\n<td>1,3 MP\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td></tr>\n<tr>\n<td><a class="new" href="/w/index.php?title=Nokia_Lumia_810&amp;action=edit&amp;redlink=1" title="Nokia Lumia 810 (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Nokia Lumia 810</a>\n</td>\n<td>11-2012\n</td>\n<td>1,5\u00a0GHz<br/>L\u00f5i k\u00e9p\n</td>\n<td>1 GB\n</td>\n<td>8 GB\n</td>\n<td>4,3" <a class="new" href="/w/index.php?title=Active-matrix_OLED&amp;action=edit&amp;redlink=1" title="Active-matrix OLED (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">ClearBlack AMOLED</a><br/>480 x 800 px\n</td>\n<td>8 MP\n</td>\n<td>1,2 MP\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td></tr>\n<tr>\n<td><a class="new" href="/w/index.php?title=Nokia_Lumia_820&amp;action=edit&amp;redlink=1" title="Nokia Lumia 820 (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Nokia Lumia 820</a>\n</td>\n<td>11-2012\n</td>\n<td>1,5\u00a0GHz<br/>L\u00f5i k\u00e9p\n</td>\n<td>1 GB\n</td>\n<td>8 GB\n</td>\n<td>4,3" <a class="new" href="/w/index.php?title=Active-matrix_OLED&amp;action=edit&amp;redlink=1" title="Active-matrix OLED (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">ClearBlack AMOLED</a><br/>480 x 800 px\n</td>\n<td>8 MP\n</td>\n<td>0.3 MP\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td></tr>\n<tr>\n<td><a class="new" href="/w/index.php?title=Nokia_Lumia_822&amp;action=edit&amp;redlink=1" title="Nokia Lumia 822 (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Nokia Lumia 822</a>\n</td>\n<td>11-2012\n</td>\n<td>1.5\u00a0GHz<br/>L\u00f5i k\u00e9p\n</td>\n<td>1 GB\n</td>\n<td>16 GB\n</td>\n<td>4,3" <a class="new" href="/w/index.php?title=Active-matrix_OLED&amp;action=edit&amp;redlink=1" title="Active-matrix OLED (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">ClearBlack AMOLED</a><br/>480 x 800 px\n</td>\n<td>8 MP\n</td>\n<td>1,2 MP\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td></tr>\n<tr>\n<td><a class="new" href="/w/index.php?title=Nokia_Lumia_920&amp;action=edit&amp;redlink=1" title="Nokia Lumia 920 (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Nokia Lumia 920</a>\n</td>\n<td>11-2012\n</td>\n<td>1,5\u00a0GHz<br/>L\u00f5i k\u00e9p\n</td>\n<td>1 GB\n</td>\n<td>32 GB\n</td>\n<td>4,5" ClearBlack IPS LCD<br/>768 x 1.280 px\n</td>\n<td>8,7 MP\n</td>\n<td>1,3 MP\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td>\n<td class="table-no" style="background:#FFC7C7;vertical-align:middle;text-align:center;">Kh\u00f4ng\n</td></tr>\n<tr>\n<td><a href="/wiki/Nokia_Lumia_925" title="Nokia Lumia 925">Nokia Lumia 925</a>\n</td>\n<td>06-2013\n</td>\n<td>1,5\u00a0GHz<br/>L\u00f5i k\u00e9p\n</td>\n<td>1 GB\n</td>\n<td>16 GB<br/>32 GB\n</td>\n<td>4,5" <a class="new" href="/w/index.php?title=Active-matrix_OLED&amp;action=edit&amp;redlink=1" title="Active-matrix OLED (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">ClearBlack AMOLED</a><br/>768 x 1.280 px\n</td>\n<td>8,7 MP\n</td>\n<td>1,2 MP\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td>\n<td class="table-no" style="background:#FFC7C7;vertical-align:middle;text-align:center;">Kh\u00f4ng\n</td></tr>\n<tr>\n<td><a class="new" href="/w/index.php?title=Nokia_Lumia_928&amp;action=edit&amp;redlink=1" title="Nokia Lumia 928 (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Nokia Lumia 928</a>\n</td>\n<td>05-2013\n</td>\n<td>1,5\u00a0GHz<br/>L\u00f5i k\u00e9p\n</td>\n<td>1 GB\n</td>\n<td>32 GB\n</td>\n<td>4.5" <a class="new" href="/w/index.php?title=Active-matrix_OLED&amp;action=edit&amp;redlink=1" title="Active-matrix OLED (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">ClearBlack AMOLED</a><br/>768 x 1.280 px\n</td>\n<td>8,7 MP\n</td>\n<td>1,3 MP\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td>\n<td class="table-no" style="background:#FFC7C7;vertical-align:middle;text-align:center;">Kh\u00f4ng\n</td></tr>\n<tr>\n<td><a class="new" href="/w/index.php?title=Nokia_Lumia_929&amp;action=edit&amp;redlink=1" title="Nokia Lumia 929 (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Nokia Lumia 929</a> (Icon)\n</td>\n<td>01-2014\n</td>\n<td>2,2\u00a0GHz<br/>L\u00f5i t\u1ee9\n</td>\n<td>2 GB\n</td>\n<td>32 GB\n</td>\n<td>5" <a class="new" href="/w/index.php?title=Active-matrix_OLED&amp;action=edit&amp;redlink=1" title="Active-matrix OLED (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">ClearBlack AMOLED</a><br/>1.080 x 1.920 px\n</td>\n<td>20 MP\n</td>\n<td>1,2 MP\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td>\n<td class="table-no" style="background:#FFC7C7;vertical-align:middle;text-align:center;">Kh\u00f4ng\n</td></tr>\n<tr>\n<td><a class="new" href="/w/index.php?title=Nokia_Lumia_1020&amp;action=edit&amp;redlink=1" title="Nokia Lumia 1020 (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Nokia Lumia 1020</a>\n</td>\n<td>07-2013\n</td>\n<td>1,5\u00a0GHz<br/>L\u00f5i k\u00e9p\n</td>\n<td>2 GB\n</td>\n<td>32 GB<br/>64 GB\n</td>\n<td>4,5" <a class="new" href="/w/index.php?title=Active-matrix_OLED&amp;action=edit&amp;redlink=1" title="Active-matrix OLED (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">ClearBlack AMOLED</a><br/>768 x 1.280 px\n</td>\n<td>41 MP\n</td>\n<td>1,2 MP\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td>\n<td class="table-no" style="background:#FFC7C7;vertical-align:middle;text-align:center;">Kh\u00f4ng\n</td></tr>\n<tr>\n<td><a href="/wiki/Nokia_Lumia_1320" title="Nokia Lumia 1320">Nokia Lumia 1320</a>\n</td>\n<td>12-2013\n</td>\n<td>1,7\u00a0GHz<br/>L\u00f5i k\u00e9p\n</td>\n<td>1 GB\n</td>\n<td>8 GB\n</td>\n<td>6,0" ClearBlack IPS LCD<br/>720 x 1.280 px\n</td>\n<td>5 MP\n</td>\n<td>0,3 MP\n</td>\n<td class="table-no" style="background:#FFC7C7;vertical-align:middle;text-align:center;">Kh\u00f4ng\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td></tr>\n<tr>\n<td><a href="/wiki/Nokia_Lumia_1520" title="Nokia Lumia 1520">Nokia Lumia 1520</a>\n</td>\n<td>11-2012\n</td>\n<td>2,2\u00a0GHz<br/>L\u00f5i t\u1ee9\n</td>\n<td>2 GB\n</td>\n<td>16 GB<br/>32 GB\n</td>\n<td>6,0" ClearBlack IPS LCD<br/>1.080 x 1.920 px\n</td>\n<td>20 MP\n</td>\n<td>1,2 MP\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td></tr></tbody></table>',
+    },
+    {
+      id: "Danh s\u00e1ch thi\u1ebft b\u1ecb Windows Phone 8_1",
+      table_json: [
+        [
+          "S\u1ea3n ph\u1ea9m",
+          "Ng\u00e0y ph\u00e1t h\u00e0nh",
+          "CPU",
+          "RAM",
+          "B\u1ed9 nh\u1edb",
+          "M\u00e0n h\u00ecnh",
+          "M\u00e1y \u1ea3nh",
+          "M\u00e1y \u1ea3nh",
+          "NFC",
+          "MicroSD",
+        ],
+        [
+          "S\u1ea3n ph\u1ea9m",
+          "Ng\u00e0y ph\u00e1t h\u00e0nh",
+          "CPU",
+          "RAM",
+          "B\u1ed9 nh\u1edb",
+          "M\u00e0n h\u00ecnh",
+          "Sau",
+          "Tr\u01b0\u1edbc",
+          "NFC",
+          "MicroSD",
+        ],
+        [
+          "HTC 8S",
+          "12-2012",
+          "1,0\u00a0GHzL\u00f5i k\u00e9p",
+          "512 MB",
+          "4 GB",
+          '4,0" Super LCD480 x 800 px',
+          "5 MP",
+          "\u2014",
+          "Kh\u00f4ng",
+          "C\u00f3",
+        ],
+        [
+          "HTC 8X",
+          "11-2012",
+          "1,5\u00a0GHzL\u00f5i k\u00e9p",
+          "1 GB",
+          "8 GB16 GB",
+          '4,3" Super LCD 2720 x 1.280 px',
+          "8 MP",
+          "2,1 MP",
+          "C\u00f3",
+          "Kh\u00f4ng",
+        ],
+        [
+          "HTC 8XT",
+          "07-2013",
+          "1,4\u00a0GHzL\u00f5i k\u00e9p",
+          "1 GB",
+          "8 GB",
+          '4,3" Super LCD 2480 x 800 px',
+          "8 MP",
+          "1,6 MP",
+          "C\u00f3",
+          "C\u00f3",
+        ],
+        [
+          "Huawei Ascend W1",
+          "01-2013",
+          "1,2\u00a0GHzL\u00f5i k\u00e9p",
+          "512 MB",
+          "4 GB",
+          '4,0" IPS LCD480 x 800 px',
+          "5 MP",
+          "0,3 MP",
+          "Kh\u00f4ng",
+          "C\u00f3",
+        ],
+        [
+          "Huawei Ascend W2",
+          "08-2013",
+          "1,4\u00a0GHzL\u00f5i k\u00e9p",
+          "512 MB",
+          "8 GB",
+          '4,3" IPS LCD480 x 800 px',
+          "8 MP",
+          "\u2014",
+          "Kh\u00f4ng",
+          "Kh\u00f4ng",
+        ],
+        [
+          "Samsung ATIV S",
+          "12-2012",
+          "1,5\u00a0GHzL\u00f5i k\u00e9p",
+          "1 GB",
+          "16 GB32 GB",
+          '4,8" HD Super AMOLED720 x 1.280 px',
+          "8 MP",
+          "1,9 MP",
+          "C\u00f3",
+          "C\u00f3",
+        ],
+        [
+          "Samsung ATIV S Neo",
+          "08-2013",
+          "1.4\u00a0GHzL\u00f5i k\u00e9p",
+          "1 GB",
+          "16 GB",
+          '4,8" HD Super AMOLED720 x 1.280 px',
+          "8 MP",
+          "1,9 MP",
+          "C\u00f3",
+          "C\u00f3",
+        ],
+        [
+          "Samsung ATIV Odyssey",
+          "01-2013",
+          "1,5\u00a0GHzL\u00f5i k\u00e9p",
+          "1 GB",
+          "8 GB",
+          '4,0" Super AMOLED480 x 800 px',
+          "5 MP",
+          "1,2 MP",
+          "C\u00f3",
+          "C\u00f3",
+        ],
+      ],
+      table_html:
+        '<table class="wikitable sortable" style="font-size: small; text-align: center; width: 100%;">\n<tbody><tr>\n<th rowspan="2">S\u1ea3n ph\u1ea9m\n</th>\n<th rowspan="2">Ng\u00e0y ph\u00e1t h\u00e0nh\n</th>\n<th rowspan="2">CPU\n</th>\n<th rowspan="2">RAM\n</th>\n<th rowspan="2">B\u1ed9 nh\u1edb\n</th>\n<th rowspan="2">M\u00e0n h\u00ecnh\n</th>\n<th colspan="2">M\u00e1y \u1ea3nh\n</th>\n<th rowspan="2">NFC\n</th>\n<th rowspan="2"><a href="/wiki/MicroSD" title="MicroSD">MicroSD</a>\n</th></tr>\n<tr>\n<th>Sau\n</th>\n<th>Tr\u01b0\u1edbc\n</th></tr>\n<tr>\n<td><a class="new" href="/w/index.php?title=HTC_Windows_Phone_8S&amp;action=edit&amp;redlink=1" title="HTC Windows Phone 8S (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">HTC 8S</a>\n</td>\n<td>12-2012\n</td>\n<td>1,0\u00a0GHz<br/>L\u00f5i k\u00e9p\n</td>\n<td>512 MB\n</td>\n<td>4 GB\n</td>\n<td>4,0" <a class="new" href="/w/index.php?title=S-LCD&amp;action=edit&amp;redlink=1" title="S-LCD (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Super LCD</a><br/>480 x 800 px\n</td>\n<td>5 MP\n</td>\n<td class="table-na" data-sort-value="" style="background: #ececec; color: #2C2C2C; vertical-align: middle; text-align: center;">\u2014\n</td>\n<td class="table-no" style="background:#FFC7C7;vertical-align:middle;text-align:center;">Kh\u00f4ng\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td></tr>\n<tr>\n<td><a class="new" href="/w/index.php?title=HTC_Windows_Phone_8X&amp;action=edit&amp;redlink=1" title="HTC Windows Phone 8X (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">HTC 8X</a>\n</td>\n<td>11-2012\n</td>\n<td>1,5\u00a0GHz<br/>L\u00f5i k\u00e9p\n</td>\n<td>1 GB\n</td>\n<td>8 GB<br/>16 GB\n</td>\n<td>4,3" Super LCD 2<br/>720 x 1.280 px\n</td>\n<td>8 MP\n</td>\n<td>2,1 MP\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td>\n<td class="table-no" style="background:#FFC7C7;vertical-align:middle;text-align:center;">Kh\u00f4ng\n</td></tr>\n<tr>\n<td><a class="new" href="/w/index.php?title=HTC_8X&amp;action=edit&amp;redlink=1" title="HTC 8X (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">HTC 8XT</a>\n</td>\n<td>07-2013\n</td>\n<td>1,4\u00a0GHz<br/>L\u00f5i k\u00e9p\n</td>\n<td>1 GB\n</td>\n<td>8 GB\n</td>\n<td>4,3" Super LCD 2<br/>480 x 800 px\n</td>\n<td>8 MP\n</td>\n<td>1,6 MP\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td></tr>\n<tr>\n<td><a class="new" href="/w/index.php?title=Huawei_Ascend_W1&amp;action=edit&amp;redlink=1" title="Huawei Ascend W1 (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Huawei Ascend W1</a>\n</td>\n<td>01-2013\n</td>\n<td>1,2\u00a0GHz<br/>L\u00f5i k\u00e9p\n</td>\n<td>512 MB\n</td>\n<td>4 GB\n</td>\n<td>4,0" IPS LCD<br/>480 x 800 px\n</td>\n<td>5 MP\n</td>\n<td>0,3 MP\n</td>\n<td class="table-no" style="background:#FFC7C7;vertical-align:middle;text-align:center;">Kh\u00f4ng\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td></tr>\n<tr>\n<td><a class="new" href="/w/index.php?title=Huawei_Ascend_W2&amp;action=edit&amp;redlink=1" title="Huawei Ascend W2 (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Huawei Ascend W2</a>\n</td>\n<td>08-2013\n</td>\n<td>1,4\u00a0GHz<br/>L\u00f5i k\u00e9p\n</td>\n<td>512 MB\n</td>\n<td>8 GB\n</td>\n<td>4,3" IPS LCD<br/>480 x 800 px\n</td>\n<td>8 MP\n</td>\n<td class="table-na" data-sort-value="" style="background: #ececec; color: #2C2C2C; vertical-align: middle; text-align: center;">\u2014\n</td>\n<td class="table-no" style="background:#FFC7C7;vertical-align:middle;text-align:center;">Kh\u00f4ng\n</td>\n<td class="table-no" style="background:#FFC7C7;vertical-align:middle;text-align:center;">Kh\u00f4ng\n</td></tr>\n<tr>\n<td><a href="/wiki/Samsung_Ativ_S" title="Samsung Ativ S">Samsung ATIV S</a>\n</td>\n<td>12-2012\n</td>\n<td>1,5\u00a0GHz<br/>L\u00f5i k\u00e9p\n</td>\n<td>1 GB\n</td>\n<td>16 GB<br/>32 GB\n</td>\n<td>4,8" <a class="mw-redirect" href="/wiki/HD_Super_AMOLED" title="HD Super AMOLED">HD Super AMOLED</a><br/>720 x 1.280 px\n</td>\n<td>8 MP\n</td>\n<td>1,9 MP\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td></tr>\n<tr>\n<td><a class="new" href="/w/index.php?title=Samsung_ATIV_S_Neo&amp;action=edit&amp;redlink=1" title="Samsung ATIV S Neo (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Samsung ATIV S Neo</a>\n</td>\n<td>08-2013\n</td>\n<td>1.4\u00a0GHz<br/>L\u00f5i k\u00e9p\n</td>\n<td>1 GB\n</td>\n<td>16 GB\n</td>\n<td>4,8" <a class="mw-redirect" href="/wiki/HD_Super_AMOLED" title="HD Super AMOLED">HD Super AMOLED</a><br/>720 x 1.280 px\n</td>\n<td>8 MP\n</td>\n<td>1,9 MP\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td></tr>\n<tr>\n<td><a href="/wiki/Samsung_Ativ_Odyssey" title="Samsung Ativ Odyssey">Samsung ATIV Odyssey</a>\n</td>\n<td>01-2013\n</td>\n<td>1,5\u00a0GHz<br/>L\u00f5i k\u00e9p\n</td>\n<td>1 GB\n</td>\n<td>8 GB\n</td>\n<td>4,0" <a class="mw-redirect" href="/wiki/Super_AMOLED" title="Super AMOLED">Super AMOLED</a><br/>480 x 800 px\n</td>\n<td>5 MP\n</td>\n<td>1,2 MP\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td>\n<td class="table-yes" style="background:#9F9;vertical-align:middle;text-align:center;">C\u00f3\n</td></tr>\n</tbody></table>',
+    },
+    {
+      id: "Danh s\u00e1ch Th\u1ed1ng \u0111\u1ed1c Nh\u1eadt B\u1ea3n_0",
+      table_json: [
+        [
+          "\u0110\u00f4 \u0110\u1ea1o Ph\u1ee7 Huy\u1ec7n",
+          "Th\u1ed1ng \u0111\u1ed1c",
+          "Th\u1ed1ng \u0111\u1ed1c",
+          "B\u1eaft \u0111\u1ea7u",
+          "K\u1ebft th\u00fac (d\u1ef1 ki\u1ebfn)",
+          "Nhi\u1ec7m k\u1ef3 th\u1ee9",
+          "\u0110\u1ea3ng",
+        ],
+        ["", "", "", "", "", "", "\u0110\u1ea3ng"],
+        [
+          "Hokkaid\u014d",
+          "",
+          "Suzuki Naomichi",
+          "23 th\u00e1ng 4 n\u0103m 2019",
+          "22 th\u00e1ng 4 n\u0103m 2023",
+          "1",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Aomori",
+          "",
+          "Mimura Shingo",
+          "29 th\u00e1ng 6 n\u0103m 2003",
+          "28 th\u00e1ng 6 n\u0103m 2023",
+          "5",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Iwate",
+          "",
+          "Tasso Takuya",
+          "30 th\u00e1ng 4 n\u0103m 2007",
+          "10 th\u00e1ng 9 n\u0103m 2023",
+          "4",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Miyagi",
+          "",
+          "Murai Yoshihiro",
+          "21 th\u00e1ng 11 n\u0103m 2005",
+          "20 th\u00e1ng 11 n\u0103m 2025",
+          "5",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Akita",
+          "",
+          "Satake Norihisa",
+          "20 th\u00e1ng 4 n\u0103m 2009",
+          "19 th\u00e1ng 4 n\u0103m 2025",
+          "4",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Yamagata",
+          "",
+          "Yoshimura Mieko",
+          "14 th\u00e1ng 2 n\u0103m 2009",
+          "13 th\u00e1ng 2 n\u0103m 2025",
+          "4",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Fukushima",
+          "",
+          "Uchibori Masao",
+          "12 th\u00e1ng 11 n\u0103m 2014",
+          "11 th\u00e1ng 11 n\u0103m 2026",
+          "3",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Ibaraki",
+          "",
+          "\u014cigawa Kazuhiko",
+          "26 th\u00e1ng 9 n\u0103m 2017",
+          "25 th\u00e1ng 9 n\u0103m 2025",
+          "2",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Tochigi",
+          "",
+          "Fukuda Tomikazu",
+          "9 th\u00e1ng 12 n\u0103m 2004",
+          "8 th\u00e1ng 12 n\u0103m 2024",
+          "5",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Gunma",
+          "",
+          "Yamamoto Ichita",
+          "28 th\u00e1ng 7 n\u0103m 2019",
+          "27 th\u00e1ng 7 n\u0103m 2023",
+          "1",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Saitama",
+          "",
+          "\u014cno Motohiro",
+          "31 th\u00e1ng 8 n\u0103m 2019",
+          "30 th\u00e1ng 8 n\u0103m 2023",
+          "1",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Chiba",
+          "",
+          "Kumagai Toshihito",
+          "5 th\u00e1ng 4 n\u0103m 2021",
+          "4 th\u00e1ng 4 n\u0103m 2025",
+          "1",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "T\u014dky\u014d",
+          "",
+          "Koike Yuriko",
+          "2 th\u00e1ng 8 n\u0103m 2016",
+          "30 th\u00e1ng 7 n\u0103m 2024",
+          "2",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Kanagawa",
+          "",
+          "Kuroiwa Y\u016bji",
+          "23 th\u00e1ng 4 n\u0103m 2011",
+          "22 th\u00e1ng 4 n\u0103m 2023",
+          "3",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Niigata",
+          "",
+          "Hanazumi Hideyo",
+          "12 th\u00e1ng 6 n\u0103m 2018",
+          "9 th\u00e1ng 6 n\u0103m 2026",
+          "2",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Toyama",
+          "",
+          "Nitta Hachir\u014d",
+          "9 th\u00e1ng 11 n\u0103m 2020",
+          "8 th\u00e1ng 11 n\u0103m 2024",
+          "1",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Ishikawa",
+          "",
+          "Hase Hiroshi",
+          "26 th\u00e1ng 3 n\u0103m 2022",
+          "26 th\u00e1ng 3 n\u0103m 2026",
+          "1",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Fukui",
+          "",
+          "Sugimoto Tatsuji",
+          "23 th\u00e1ng 4 n\u0103m 2019",
+          "22 th\u00e1ng 4 n\u0103m 2023",
+          "1",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Yamanashi",
+          "",
+          "Nagasaki K\u014dtar\u014d",
+          "17 th\u00e1ng 2 n\u0103m 2019",
+          "16 th\u00e1ng 2 n\u0103m 2027",
+          "2",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Nagano",
+          "",
+          "Abe Shuichi",
+          "1 th\u00e1ng 9 n\u0103m 2010",
+          "31 th\u00e1ng 8 n\u0103m 2022",
+          "4",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Gifu",
+          "",
+          "Furuta Hajime",
+          "6 th\u00e1ng 2 n\u0103m 2005",
+          "5 th\u00e1ng 2 n\u0103m 2025",
+          "5",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Shizuoka",
+          "",
+          "Kawakatsu Heita",
+          "7 th\u00e1ng 7 n\u0103m 2009",
+          "4 th\u00e1ng 7 n\u0103m 2025",
+          "4",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Aichi",
+          "",
+          "\u014cmura Hideaki",
+          "15 th\u00e1ng 2 n\u0103m 2011",
+          "14 th\u00e1ng 2 n\u0103m 2027",
+          "4",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Mie",
+          "",
+          "Ichimi Katsuyuki",
+          "14 th\u00e1ng 9 n\u0103m 2021",
+          "13 th\u00e1ng 9 n\u0103m 2025",
+          "1",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Shiga",
+          "",
+          "Mikazuki Taiz\u014d",
+          "20 th\u00e1ng 7 n\u0103m 2014",
+          "19 th\u00e1ng 7 n\u0103m 2026",
+          "3",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Ky\u014dto",
+          "",
+          "Nishiwaki Takatoshi",
+          "16 th\u00e1ng 4 n\u0103m 2018",
+          "15 th\u00e1ng 4 n\u0103m 2026",
+          "2",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "\u014csaka",
+          "",
+          "Yoshimura Hirofumi",
+          "8 th\u00e1ng 4 n\u0103m 2019",
+          "6 th\u00e1ng 4 n\u0103m 2023",
+          "2",
+          "H\u1ed9i Duy t\u00e2n \u014csaka",
+        ],
+        [
+          "Hy\u014dgo",
+          "",
+          "Sait\u014d Motohiko",
+          "1 th\u00e1ng 8 n\u0103m 2021",
+          "31 th\u00e1ng 7 n\u0103m 2025",
+          "1",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Nara",
+          "",
+          "Arai Sh\u014dgo",
+          "3 th\u00e1ng 5 n\u0103m 2007",
+          "2 th\u00e1ng 5 n\u0103m 2023",
+          "4",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Wakayama",
+          "",
+          "Kishimoto Sh\u016bhei",
+          "17 th\u00e1ng 12 n\u0103m 2022",
+          "16 th\u00e1ng 12 n\u0103m 2026",
+          "1",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Tottori",
+          "",
+          "Hirai Shinji",
+          "13 th\u00e1ng 4 n\u0103m 2007",
+          "12 th\u00e1ng 4 n\u0103m 2023",
+          "5",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Shimane",
+          "",
+          "Maruyama Tatsuya",
+          "30 th\u00e1ng 4 n\u0103m 2019",
+          "29 th\u00e1ng 4 n\u0103m 2023",
+          "1",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Okayama",
+          "",
+          "Ibaragi Ry\u016bta",
+          "12 th\u00e1ng 11 n\u0103m 2012",
+          "11 th\u00e1ng 11 n\u0103m 2024",
+          "3",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Hiroshima",
+          "",
+          "Yuzaki Hidehiko",
+          "29 th\u00e1ng 11 n\u0103m 2009",
+          "28 th\u00e1ng 11 n\u0103m 2025",
+          "4",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Yamaguchi",
+          "",
+          "Muraoka Tsugumasa",
+          "25 th\u00e1ng 2 n\u0103m 2014",
+          "22 th\u00e1ng 2 n\u0103m 2026",
+          "3",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Tokushima",
+          "",
+          "Iizumi Kamon",
+          "18 th\u00e1ng 5 n\u0103m 2003",
+          "17 th\u00e1ng 5 n\u0103m 2023",
+          "5",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Kagawa",
+          "",
+          "Hamada Keiz\u014d",
+          "5 th\u00e1ng 9 n\u0103m 2022",
+          "4 th\u00e1ng 9 n\u0103m 2026",
+          "1",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Ehime",
+          "",
+          "Nakamura Tokihiro",
+          "1 th\u00e1ng 12 n\u0103m 2010",
+          "30 th\u00e1ng 11 n\u0103m 2026",
+          "4",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "K\u014dchi",
+          "",
+          "Hamada Seiji",
+          "7 th\u00e1ng 12 n\u0103m 2019",
+          "6 th\u00e1ng 12 n\u0103m 2023",
+          "1",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Fukuoka",
+          "",
+          "Hattori Seitar\u014d",
+          "14 th\u00e1ng 4 n\u0103m 2021",
+          "10 th\u00e1ng 4 n\u0103m 2025",
+          "1",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Saga",
+          "",
+          "Yamaguchi Yoshinori",
+          "14 th\u00e1ng 1 n\u0103m 2015",
+          "10 th\u00e1ng 1 n\u0103m 2027",
+          "3",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Nagasaki",
+          "",
+          "\u014cishi Kengo",
+          "2 th\u00e1ng 3 n\u0103m 2022",
+          "1 th\u00e1ng 3 n\u0103m 2026",
+          "1",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Kumamoto",
+          "",
+          "Kabashima Ikuo",
+          "16 th\u00e1ng 4 n\u0103m 2008",
+          "15 th\u00e1ng 4 n\u0103m 2024",
+          "4",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "\u014cita",
+          "",
+          "Hirose Katsusada",
+          "28 th\u00e1ng 4 n\u0103m 2003",
+          "27 th\u00e1ng 4 n\u0103m 2023",
+          "5",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Miyazaki",
+          "",
+          "K\u014dno Shunji",
+          "21 th\u00e1ng 1 n\u0103m 2011",
+          "20 th\u00e1ng 1 n\u0103m 2027",
+          "4",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Kagoshima",
+          "",
+          "Shiota K\u014dichi",
+          "28 th\u00e1ng 7 n\u0103m 2020",
+          "27 th\u00e1ng 7 n\u0103m 2024",
+          "1",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+        [
+          "Okinawa",
+          "",
+          "Tamaki Den\u012b\n(Tamaki Denny)\n(Tamaki Yashiro)",
+          "4 th\u00e1ng 10 n\u0103m 2018",
+          "29 th\u00e1ng 9 n\u0103m 2026",
+          "2",
+          "\u0110\u1ed9c l\u1eadp",
+        ],
+      ],
+      table_html:
+        '<table class="sortable wikitable" style="font-size:85%; line-height:1.4em; margin-right:0px">\n<tbody><tr>\n<th style="white-space:nowrap;">\u0110\u00f4 \u0110\u1ea1o Ph\u1ee7 Huy\u1ec7n\n</th>\n<th colspan="2" style="border-right-style:none">Th\u1ed1ng \u0111\u1ed1c\n</th>\n<th>B\u1eaft \u0111\u1ea7u\n</th>\n<th>K\u1ebft th\u00fac (d\u1ef1 ki\u1ebfn)\n</th>\n<th>Nhi\u1ec7m k\u1ef3 th\u1ee9\n</th>\n<th class="unsortable" rowspan="2">\u0110\u1ea3ng\n</th></tr>\n<tr style="line-height:1em">\n<th style="border-top:hidden; font-size:50%;">\u00a0\n</th>\n<th class="unsortable" style="border-right:hidden; border-top:hidden">\n</th>\n<th style="border-top:hidden">\n</th>\n<th style="border-top:hidden">\n</th>\n<th style="border-top:hidden">\n</th>\n<th style="border-top:hidden; padding-right:0px; padding-left:0px">\n</th></tr>\n<tr>\n<th><a href="/wiki/Hokkaid%C5%8D" title="Hokkaid\u014d">Hokkaid\u014d</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E5%8C%97%E6%B5%B7%E9%81%93_%E7%9F%A5%E4%BA%8B_%E9%88%B4%E6%9C%A8%E7%9B%B4%E9%81%93.jpg"><img class="mw-file-element" data-file-height="2048" data-file-width="1596" decoding="async" height="76" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/8b/%E5%8C%97%E6%B5%B7%E9%81%93_%E7%9F%A5%E4%BA%8B_%E9%88%B4%E6%9C%A8%E7%9B%B4%E9%81%93.jpg/59px-%E5%8C%97%E6%B5%B7%E9%81%93_%E7%9F%A5%E4%BA%8B_%E9%88%B4%E6%9C%A8%E7%9B%B4%E9%81%93.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/8b/%E5%8C%97%E6%B5%B7%E9%81%93_%E7%9F%A5%E4%BA%8B_%E9%88%B4%E6%9C%A8%E7%9B%B4%E9%81%93.jpg/89px-%E5%8C%97%E6%B5%B7%E9%81%93_%E7%9F%A5%E4%BA%8B_%E9%88%B4%E6%9C%A8%E7%9B%B4%E9%81%93.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/8/8b/%E5%8C%97%E6%B5%B7%E9%81%93_%E7%9F%A5%E4%BA%8B_%E9%88%B4%E6%9C%A8%E7%9B%B4%E9%81%93.jpg/118px-%E5%8C%97%E6%B5%B7%E9%81%93_%E7%9F%A5%E4%BA%8B_%E9%88%B4%E6%9C%A8%E7%9B%B4%E9%81%93.jpg 2x" width="59"/></a></span>\n</td>\n<td><a href="/wiki/Suzuki_Naomichi" title="Suzuki Naomichi">Suzuki Naomichi</a>\n</td>\n<td>23 th\u00e1ng 4 n\u0103m 2019\n</td>\n<td>22 th\u00e1ng 4 n\u0103m 2023\n</td>\n<td style="text-align:center">1\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Aomori" title="Aomori">Aomori</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E9%9D%92%E6%A3%AE%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%89%E6%9D%91%E7%94%B3%E5%90%BE.jpg"><img class="mw-file-element" data-file-height="2363" data-file-width="1890" decoding="async" height="73" src="//upload.wikimedia.org/wikipedia/commons/thumb/1/1a/%E9%9D%92%E6%A3%AE%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%89%E6%9D%91%E7%94%B3%E5%90%BE.jpg/58px-%E9%9D%92%E6%A3%AE%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%89%E6%9D%91%E7%94%B3%E5%90%BE.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/1/1a/%E9%9D%92%E6%A3%AE%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%89%E6%9D%91%E7%94%B3%E5%90%BE.jpg/88px-%E9%9D%92%E6%A3%AE%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%89%E6%9D%91%E7%94%B3%E5%90%BE.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/1/1a/%E9%9D%92%E6%A3%AE%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%89%E6%9D%91%E7%94%B3%E5%90%BE.jpg/117px-%E9%9D%92%E6%A3%AE%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%89%E6%9D%91%E7%94%B3%E5%90%BE.jpg 2x" width="58"/></a></span>\n</td>\n<td><a href="/wiki/Mimura_Shingo" title="Mimura Shingo">Mimura Shingo</a>\n</td>\n<td>29 th\u00e1ng 6 n\u0103m 2003\n</td>\n<td>28 th\u00e1ng 6 n\u0103m 2023\n</td>\n<td style="text-align:center">5\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Iwate" title="Iwate">Iwate</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Tasso_Takuya_(2010).JPG"><img class="mw-file-element" data-file-height="1600" data-file-width="1200" decoding="async" height="80" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Tasso_Takuya_%282010%29.JPG/60px-Tasso_Takuya_%282010%29.JPG" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Tasso_Takuya_%282010%29.JPG/90px-Tasso_Takuya_%282010%29.JPG 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Tasso_Takuya_%282010%29.JPG/120px-Tasso_Takuya_%282010%29.JPG 2x" width="60"/></a></span>\n</td>\n<td><a href="/wiki/Tasso_Takuya" title="Tasso Takuya">Tasso Takuya</a>\n</td>\n<td>30 th\u00e1ng 4 n\u0103m 2007\n</td>\n<td>10 th\u00e1ng 9 n\u0103m 2023\n</td>\n<td style="text-align:center">4\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Miyagi" title="Miyagi">Miyagi</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E5%AE%AE%E5%9F%8E%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9D%91%E4%BA%95%E5%98%89%E6%B5%A9.jpg"><img class="mw-file-element" data-file-height="2326" data-file-width="1550" decoding="async" height="90" src="//upload.wikimedia.org/wikipedia/commons/thumb/e/e8/%E5%AE%AE%E5%9F%8E%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9D%91%E4%BA%95%E5%98%89%E6%B5%A9.jpg/60px-%E5%AE%AE%E5%9F%8E%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9D%91%E4%BA%95%E5%98%89%E6%B5%A9.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/e/e8/%E5%AE%AE%E5%9F%8E%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9D%91%E4%BA%95%E5%98%89%E6%B5%A9.jpg/90px-%E5%AE%AE%E5%9F%8E%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9D%91%E4%BA%95%E5%98%89%E6%B5%A9.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/e/e8/%E5%AE%AE%E5%9F%8E%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9D%91%E4%BA%95%E5%98%89%E6%B5%A9.jpg/120px-%E5%AE%AE%E5%9F%8E%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9D%91%E4%BA%95%E5%98%89%E6%B5%A9.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Murai_Yoshihiro&amp;action=edit&amp;redlink=1" title="Murai Yoshihiro (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Murai Yoshihiro</a>\n</td>\n<td>21 th\u00e1ng 11 n\u0103m 2005\n</td>\n<td style="white-space:nowrap">20 th\u00e1ng 11 n\u0103m 2025\n</td>\n<td style="text-align:center">5\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><b><a href="/wiki/Akita" title="Akita">Akita</a></b>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E7%A7%8B%E7%94%B0%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%BD%90%E7%AB%B9%E6%95%AC%E4%B9%85.jpg"><img class="mw-file-element" data-file-height="1227" data-file-width="1000" decoding="async" height="73" src="//upload.wikimedia.org/wikipedia/commons/thumb/5/53/%E7%A7%8B%E7%94%B0%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%BD%90%E7%AB%B9%E6%95%AC%E4%B9%85.jpg/59px-%E7%A7%8B%E7%94%B0%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%BD%90%E7%AB%B9%E6%95%AC%E4%B9%85.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/53/%E7%A7%8B%E7%94%B0%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%BD%90%E7%AB%B9%E6%95%AC%E4%B9%85.jpg/90px-%E7%A7%8B%E7%94%B0%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%BD%90%E7%AB%B9%E6%95%AC%E4%B9%85.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/5/53/%E7%A7%8B%E7%94%B0%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%BD%90%E7%AB%B9%E6%95%AC%E4%B9%85.jpg/119px-%E7%A7%8B%E7%94%B0%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%BD%90%E7%AB%B9%E6%95%AC%E4%B9%85.jpg 2x" width="59"/></a></span>\n</td>\n<td><a href="/wiki/Satake_Norihisa" title="Satake Norihisa">Satake Norihisa</a>\n</td>\n<td>20 th\u00e1ng 4 n\u0103m 2009\n</td>\n<td>19 th\u00e1ng 4 n\u0103m 2025\n</td>\n<td style="text-align:center">4\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Yamagata" title="Yamagata">Yamagata</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Mieko_Yoshimura_20220616cherry02.jpg"><img class="mw-file-element" data-file-height="1187" data-file-width="890" decoding="async" height="80" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/49/Mieko_Yoshimura_20220616cherry02.jpg/60px-Mieko_Yoshimura_20220616cherry02.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/4/49/Mieko_Yoshimura_20220616cherry02.jpg/90px-Mieko_Yoshimura_20220616cherry02.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/4/49/Mieko_Yoshimura_20220616cherry02.jpg/120px-Mieko_Yoshimura_20220616cherry02.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Yoshimura_Mieko&amp;action=edit&amp;redlink=1" title="Yoshimura Mieko (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Yoshimura Mieko</a>\n</td>\n<td>14 th\u00e1ng 2 n\u0103m 2009\n</td>\n<td>13 th\u00e1ng 2 n\u0103m 2025\n</td>\n<td style="text-align:center">4\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Fukushima" title="Fukushima">Fukushima</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E7%A6%8F%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%86%85%E5%A0%80%E9%9B%85%E9%9B%84.jpg"><img class="mw-file-element" data-file-height="1500" data-file-width="1000" decoding="async" height="90" src="//upload.wikimedia.org/wikipedia/commons/thumb/7/78/%E7%A6%8F%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%86%85%E5%A0%80%E9%9B%85%E9%9B%84.jpg/60px-%E7%A6%8F%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%86%85%E5%A0%80%E9%9B%85%E9%9B%84.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/7/78/%E7%A6%8F%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%86%85%E5%A0%80%E9%9B%85%E9%9B%84.jpg/90px-%E7%A6%8F%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%86%85%E5%A0%80%E9%9B%85%E9%9B%84.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/7/78/%E7%A6%8F%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%86%85%E5%A0%80%E9%9B%85%E9%9B%84.jpg/120px-%E7%A6%8F%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%86%85%E5%A0%80%E9%9B%85%E9%9B%84.jpg 2x" width="60"/></a></span>\n</td>\n<td><a href="/wiki/Masao_Uchibori" title="Masao Uchibori">Uchibori Masao</a>\n</td>\n<td>12 th\u00e1ng 11 n\u0103m 2014\n</td>\n<td>11 th\u00e1ng 11 n\u0103m 2026\n</td>\n<td style="text-align:center">3\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Ibaraki" title="Ibaraki">Ibaraki</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Kazuhiko_%C5%8Cigawa_20171005_(cropped).jpg"><img class="mw-file-element" data-file-height="1120" data-file-width="840" decoding="async" height="80" src="//upload.wikimedia.org/wikipedia/commons/thumb/5/52/Kazuhiko_%C5%8Cigawa_20171005_%28cropped%29.jpg/60px-Kazuhiko_%C5%8Cigawa_20171005_%28cropped%29.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/52/Kazuhiko_%C5%8Cigawa_20171005_%28cropped%29.jpg/90px-Kazuhiko_%C5%8Cigawa_20171005_%28cropped%29.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/5/52/Kazuhiko_%C5%8Cigawa_20171005_%28cropped%29.jpg/120px-Kazuhiko_%C5%8Cigawa_20171005_%28cropped%29.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=%C5%8Cigawa_Kazuhiko&amp;action=edit&amp;redlink=1" title="\u014cigawa Kazuhiko (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">\u014cigawa Kazuhiko</a>\n</td>\n<td>26 th\u00e1ng 9 n\u0103m 2017\n</td>\n<td>25 th\u00e1ng 9 n\u0103m 2025\n</td>\n<td style="text-align:center">2\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Tochigi" title="Tochigi">Tochigi</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E6%A0%83%E6%9C%A8%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E7%A6%8F%E7%94%B0%E5%AF%8C%E4%B8%80.JPG"><img class="mw-file-element" data-file-height="1500" data-file-width="1000" decoding="async" height="90" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/0a/%E6%A0%83%E6%9C%A8%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E7%A6%8F%E7%94%B0%E5%AF%8C%E4%B8%80.JPG/60px-%E6%A0%83%E6%9C%A8%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E7%A6%8F%E7%94%B0%E5%AF%8C%E4%B8%80.JPG" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/0a/%E6%A0%83%E6%9C%A8%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E7%A6%8F%E7%94%B0%E5%AF%8C%E4%B8%80.JPG/90px-%E6%A0%83%E6%9C%A8%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E7%A6%8F%E7%94%B0%E5%AF%8C%E4%B8%80.JPG 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/0a/%E6%A0%83%E6%9C%A8%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E7%A6%8F%E7%94%B0%E5%AF%8C%E4%B8%80.JPG/120px-%E6%A0%83%E6%9C%A8%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E7%A6%8F%E7%94%B0%E5%AF%8C%E4%B8%80.JPG 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Fukuda_Tomikazu&amp;action=edit&amp;redlink=1" title="Fukuda Tomikazu (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Fukuda Tomikazu</a>\n</td>\n<td>9 th\u00e1ng 12 n\u0103m 2004\n</td>\n<td>8 th\u00e1ng 12 n\u0103m 2024\n</td>\n<td style="text-align:center">5\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Gunma" title="Gunma">Gunma</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E7%BE%A4%E9%A6%AC%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B1%B1%E6%9C%AC%E4%B8%80%E5%A4%AA.jpg"><img class="mw-file-element" data-file-height="2351" data-file-width="1763" decoding="async" height="80" src="//upload.wikimedia.org/wikipedia/commons/thumb/7/7c/%E7%BE%A4%E9%A6%AC%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B1%B1%E6%9C%AC%E4%B8%80%E5%A4%AA.jpg/60px-%E7%BE%A4%E9%A6%AC%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B1%B1%E6%9C%AC%E4%B8%80%E5%A4%AA.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/7/7c/%E7%BE%A4%E9%A6%AC%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B1%B1%E6%9C%AC%E4%B8%80%E5%A4%AA.jpg/90px-%E7%BE%A4%E9%A6%AC%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B1%B1%E6%9C%AC%E4%B8%80%E5%A4%AA.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/7/7c/%E7%BE%A4%E9%A6%AC%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B1%B1%E6%9C%AC%E4%B8%80%E5%A4%AA.jpg/120px-%E7%BE%A4%E9%A6%AC%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B1%B1%E6%9C%AC%E4%B8%80%E5%A4%AA.jpg 2x" width="60"/></a></span>\n</td>\n<td><a href="/wiki/Yamamoto_Ichita" title="Yamamoto Ichita">Yamamoto Ichita</a>\n</td>\n<td>28 th\u00e1ng 7 n\u0103m 2019\n</td>\n<td>27 th\u00e1ng 7 n\u0103m 2023\n</td>\n<td style="text-align:center">1\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Saitama" title="Saitama">Saitama</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E5%9F%BC%E7%8E%89%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%A4%A7%E9%87%8E%E5%85%83%E8%A3%95.jpg"><img class="mw-file-element" data-file-height="1500" data-file-width="1000" decoding="async" height="90" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/9e/%E5%9F%BC%E7%8E%89%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%A4%A7%E9%87%8E%E5%85%83%E8%A3%95.jpg/60px-%E5%9F%BC%E7%8E%89%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%A4%A7%E9%87%8E%E5%85%83%E8%A3%95.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/9e/%E5%9F%BC%E7%8E%89%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%A4%A7%E9%87%8E%E5%85%83%E8%A3%95.jpg/90px-%E5%9F%BC%E7%8E%89%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%A4%A7%E9%87%8E%E5%85%83%E8%A3%95.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/9e/%E5%9F%BC%E7%8E%89%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%A4%A7%E9%87%8E%E5%85%83%E8%A3%95.jpg/120px-%E5%9F%BC%E7%8E%89%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%A4%A7%E9%87%8E%E5%85%83%E8%A3%95.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=%C5%8Cno_Motohiro&amp;action=edit&amp;redlink=1" title="\u014cno Motohiro (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">\u014cno Motohiro</a>\n</td>\n<td>31 th\u00e1ng 8 n\u0103m 2019\n</td>\n<td>30 th\u00e1ng 8 n\u0103m 2023\n</td>\n<td style="text-align:center">1\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Chiba" title="Chiba">Chiba</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E5%8D%83%E8%91%89%E7%9C%8C%E5%8D%83%E8%91%89%E5%B8%82_%E5%B8%82%E9%95%B7_%E7%86%8A%E8%B0%B7%E4%BF%8A%E4%BA%BA.jpg"><img class="mw-file-element" data-file-height="1500" data-file-width="1000" decoding="async" height="90" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/b5/%E5%8D%83%E8%91%89%E7%9C%8C%E5%8D%83%E8%91%89%E5%B8%82_%E5%B8%82%E9%95%B7_%E7%86%8A%E8%B0%B7%E4%BF%8A%E4%BA%BA.jpg/60px-%E5%8D%83%E8%91%89%E7%9C%8C%E5%8D%83%E8%91%89%E5%B8%82_%E5%B8%82%E9%95%B7_%E7%86%8A%E8%B0%B7%E4%BF%8A%E4%BA%BA.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/b5/%E5%8D%83%E8%91%89%E7%9C%8C%E5%8D%83%E8%91%89%E5%B8%82_%E5%B8%82%E9%95%B7_%E7%86%8A%E8%B0%B7%E4%BF%8A%E4%BA%BA.jpg/90px-%E5%8D%83%E8%91%89%E7%9C%8C%E5%8D%83%E8%91%89%E5%B8%82_%E5%B8%82%E9%95%B7_%E7%86%8A%E8%B0%B7%E4%BF%8A%E4%BA%BA.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/b5/%E5%8D%83%E8%91%89%E7%9C%8C%E5%8D%83%E8%91%89%E5%B8%82_%E5%B8%82%E9%95%B7_%E7%86%8A%E8%B0%B7%E4%BF%8A%E4%BA%BA.jpg/120px-%E5%8D%83%E8%91%89%E7%9C%8C%E5%8D%83%E8%91%89%E5%B8%82_%E5%B8%82%E9%95%B7_%E7%86%8A%E8%B0%B7%E4%BF%8A%E4%BA%BA.jpg 2x" width="60"/></a></span>\n</td>\n<td><a href="/wiki/Kumagai_Toshihito" title="Kumagai Toshihito">Kumagai Toshihito</a>\n</td>\n<td>5 th\u00e1ng 4 n\u0103m 2021\n</td>\n<td>4 th\u00e1ng 4 n\u0103m 2025\n</td>\n<td style="text-align:center">1\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Tokyo" title="Tokyo">T\u014dky\u014d</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Yuriko_Koike_official_portrait_(cropped).jpg"><img class="mw-file-element" data-file-height="2800" data-file-width="2100" decoding="async" height="78" src="//upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Yuriko_Koike_official_portrait_%28cropped%29.jpg/58px-Yuriko_Koike_official_portrait_%28cropped%29.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Yuriko_Koike_official_portrait_%28cropped%29.jpg/88px-Yuriko_Koike_official_portrait_%28cropped%29.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Yuriko_Koike_official_portrait_%28cropped%29.jpg/117px-Yuriko_Koike_official_portrait_%28cropped%29.jpg 2x" width="58"/></a></span>\n</td>\n<td><a href="/wiki/Koike_Yuriko" title="Koike Yuriko">Koike Yuriko</a>\n</td>\n<td>2 th\u00e1ng 8 n\u0103m 2016\n</td>\n<td>30 th\u00e1ng 7 n\u0103m 2024\n</td>\n<td style="text-align:center">2\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Kanagawa" title="Kanagawa">Kanagawa</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E7%A5%9E%E5%A5%88%E5%B7%9D%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%BB%92%E5%B2%A9%E7%A5%90%E6%B2%BB.JPG"><img class="mw-file-element" data-file-height="2300" data-file-width="1725" decoding="async" height="80" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/85/%E7%A5%9E%E5%A5%88%E5%B7%9D%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%BB%92%E5%B2%A9%E7%A5%90%E6%B2%BB.JPG/60px-%E7%A5%9E%E5%A5%88%E5%B7%9D%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%BB%92%E5%B2%A9%E7%A5%90%E6%B2%BB.JPG" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/85/%E7%A5%9E%E5%A5%88%E5%B7%9D%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%BB%92%E5%B2%A9%E7%A5%90%E6%B2%BB.JPG/90px-%E7%A5%9E%E5%A5%88%E5%B7%9D%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%BB%92%E5%B2%A9%E7%A5%90%E6%B2%BB.JPG 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/8/85/%E7%A5%9E%E5%A5%88%E5%B7%9D%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%BB%92%E5%B2%A9%E7%A5%90%E6%B2%BB.JPG/120px-%E7%A5%9E%E5%A5%88%E5%B7%9D%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%BB%92%E5%B2%A9%E7%A5%90%E6%B2%BB.JPG 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Kuroiwa_Y%C5%ABji&amp;action=edit&amp;redlink=1" title="Kuroiwa Y\u016bji (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Kuroiwa Y\u016bji</a>\n</td>\n<td>23 th\u00e1ng 4 n\u0103m 2011\n</td>\n<td>22 th\u00e1ng 4 n\u0103m 2023\n</td>\n<td style="text-align:center">3\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Niigata" title="Niigata">Niigata</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E6%96%B0%E6%BD%9F%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E8%8A%B1%E8%A7%92%E8%8B%B1%E4%B8%96.jpg"><img class="mw-file-element" data-file-height="1500" data-file-width="1000" decoding="async" height="90" src="//upload.wikimedia.org/wikipedia/commons/thumb/c/cc/%E6%96%B0%E6%BD%9F%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E8%8A%B1%E8%A7%92%E8%8B%B1%E4%B8%96.jpg/60px-%E6%96%B0%E6%BD%9F%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E8%8A%B1%E8%A7%92%E8%8B%B1%E4%B8%96.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/c/cc/%E6%96%B0%E6%BD%9F%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E8%8A%B1%E8%A7%92%E8%8B%B1%E4%B8%96.jpg/90px-%E6%96%B0%E6%BD%9F%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E8%8A%B1%E8%A7%92%E8%8B%B1%E4%B8%96.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/c/cc/%E6%96%B0%E6%BD%9F%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E8%8A%B1%E8%A7%92%E8%8B%B1%E4%B8%96.jpg/120px-%E6%96%B0%E6%BD%9F%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E8%8A%B1%E8%A7%92%E8%8B%B1%E4%B8%96.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Hanazumi_Hideyo&amp;action=edit&amp;redlink=1" title="Hanazumi Hideyo (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Hanazumi Hideyo</a>\n</td>\n<td>12 th\u00e1ng 6 n\u0103m 2018\n</td>\n<td>9 th\u00e1ng 6 n\u0103m 2026\n</td>\n<td style="text-align:center">2\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Toyama" title="Toyama">Toyama</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E5%AF%8C%E5%B1%B1%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%96%B0%E7%94%B0%E5%85%AB%E6%9C%97.jpg"><img class="mw-file-element" data-file-height="1500" data-file-width="1000" decoding="async" height="90" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/db/%E5%AF%8C%E5%B1%B1%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%96%B0%E7%94%B0%E5%85%AB%E6%9C%97.jpg/60px-%E5%AF%8C%E5%B1%B1%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%96%B0%E7%94%B0%E5%85%AB%E6%9C%97.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/db/%E5%AF%8C%E5%B1%B1%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%96%B0%E7%94%B0%E5%85%AB%E6%9C%97.jpg/90px-%E5%AF%8C%E5%B1%B1%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%96%B0%E7%94%B0%E5%85%AB%E6%9C%97.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/db/%E5%AF%8C%E5%B1%B1%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%96%B0%E7%94%B0%E5%85%AB%E6%9C%97.jpg/120px-%E5%AF%8C%E5%B1%B1%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%96%B0%E7%94%B0%E5%85%AB%E6%9C%97.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Nitta_Hachir%C5%8D&amp;action=edit&amp;redlink=1" title="Nitta Hachir\u014d (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Nitta Hachir\u014d</a>\n</td>\n<td>9 th\u00e1ng 11 n\u0103m 2020\n</td>\n<td>8 th\u00e1ng 11 n\u0103m 2024\n</td>\n<td style="text-align:center">1\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Ishikawa" title="Ishikawa">Ishikawa</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E7%9F%B3%E5%B7%9D%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%A6%B3%E6%B5%A9.jpg"><img class="mw-file-element" data-file-height="1428" data-file-width="1000" decoding="async" height="86" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/91/%E7%9F%B3%E5%B7%9D%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%A6%B3%E6%B5%A9.jpg/60px-%E7%9F%B3%E5%B7%9D%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%A6%B3%E6%B5%A9.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/91/%E7%9F%B3%E5%B7%9D%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%A6%B3%E6%B5%A9.jpg/90px-%E7%9F%B3%E5%B7%9D%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%A6%B3%E6%B5%A9.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/91/%E7%9F%B3%E5%B7%9D%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%A6%B3%E6%B5%A9.jpg/120px-%E7%9F%B3%E5%B7%9D%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%A6%B3%E6%B5%A9.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Hase_Hiroshi&amp;action=edit&amp;redlink=1" title="Hase Hiroshi (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Hase Hiroshi</a>\n</td>\n<td>26 th\u00e1ng 3 n\u0103m 2022\n</td>\n<td>26 th\u00e1ng 3 n\u0103m 2026\n</td>\n<td style="text-align:center">1\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Fukui" title="Fukui">Fukui</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E7%A6%8F%E4%BA%95%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9D%89%E6%9C%AC%E9%81%94%E6%B2%BB.jpg"><img class="mw-file-element" data-file-height="1500" data-file-width="1000" decoding="async" height="90" src="//upload.wikimedia.org/wikipedia/commons/thumb/a/a9/%E7%A6%8F%E4%BA%95%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9D%89%E6%9C%AC%E9%81%94%E6%B2%BB.jpg/60px-%E7%A6%8F%E4%BA%95%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9D%89%E6%9C%AC%E9%81%94%E6%B2%BB.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/a/a9/%E7%A6%8F%E4%BA%95%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9D%89%E6%9C%AC%E9%81%94%E6%B2%BB.jpg/90px-%E7%A6%8F%E4%BA%95%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9D%89%E6%9C%AC%E9%81%94%E6%B2%BB.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/a/a9/%E7%A6%8F%E4%BA%95%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9D%89%E6%9C%AC%E9%81%94%E6%B2%BB.jpg/120px-%E7%A6%8F%E4%BA%95%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9D%89%E6%9C%AC%E9%81%94%E6%B2%BB.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Sugimoto_Tatsuji&amp;action=edit&amp;redlink=1" title="Sugimoto Tatsuji (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Sugimoto Tatsuji</a>\n</td>\n<td>23 th\u00e1ng 4 n\u0103m 2019\n</td>\n<td>22 th\u00e1ng 4 n\u0103m 2023\n</td>\n<td style="text-align:center">1\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Yamanashi" title="Yamanashi">Yamanashi</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E5%B1%B1%E6%A2%A8%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%95%B7%E5%B4%8E%E5%B9%B8%E5%A4%AA%E9%83%8E.jpg"><img class="mw-file-element" data-file-height="1500" data-file-width="1000" decoding="async" height="90" src="//upload.wikimedia.org/wikipedia/commons/thumb/3/39/%E5%B1%B1%E6%A2%A8%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%95%B7%E5%B4%8E%E5%B9%B8%E5%A4%AA%E9%83%8E.jpg/60px-%E5%B1%B1%E6%A2%A8%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%95%B7%E5%B4%8E%E5%B9%B8%E5%A4%AA%E9%83%8E.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/3/39/%E5%B1%B1%E6%A2%A8%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%95%B7%E5%B4%8E%E5%B9%B8%E5%A4%AA%E9%83%8E.jpg/90px-%E5%B1%B1%E6%A2%A8%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%95%B7%E5%B4%8E%E5%B9%B8%E5%A4%AA%E9%83%8E.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/3/39/%E5%B1%B1%E6%A2%A8%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%95%B7%E5%B4%8E%E5%B9%B8%E5%A4%AA%E9%83%8E.jpg/120px-%E5%B1%B1%E6%A2%A8%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%95%B7%E5%B4%8E%E5%B9%B8%E5%A4%AA%E9%83%8E.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Nagasaki_K%C5%8Dtar%C5%8D&amp;action=edit&amp;redlink=1" title="Nagasaki K\u014dtar\u014d (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Nagasaki K\u014dtar\u014d</a>\n</td>\n<td>17 th\u00e1ng 2 n\u0103m 2019\n</td>\n<td>16 th\u00e1ng 2 n\u0103m 2027\n</td>\n<td style="text-align:center">2\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Nagano" title="Nagano">Nagano</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Shuichi_Abe_20180520.jpg"><img class="mw-file-element" data-file-height="1200" data-file-width="900" decoding="async" height="70" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/92/Shuichi_Abe_20180520.jpg/52px-Shuichi_Abe_20180520.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/92/Shuichi_Abe_20180520.jpg/79px-Shuichi_Abe_20180520.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/92/Shuichi_Abe_20180520.jpg/105px-Shuichi_Abe_20180520.jpg 2x" width="52"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Abe_Shuichi&amp;action=edit&amp;redlink=1" title="Abe Shuichi (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Abe Shuichi</a>\n</td>\n<td>1 th\u00e1ng 9 n\u0103m 2010\n</td>\n<td>31 th\u00e1ng 8 n\u0103m 2022\n</td>\n<td style="text-align:center">4\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Gifu" title="Gifu">Gifu</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E5%B2%90%E9%98%9C%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%8F%A4%E7%94%B0%E8%82%87.jpg"><img class="mw-file-element" data-file-height="1500" data-file-width="1000" decoding="async" height="88" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/b3/%E5%B2%90%E9%98%9C%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%8F%A4%E7%94%B0%E8%82%87.jpg/58px-%E5%B2%90%E9%98%9C%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%8F%A4%E7%94%B0%E8%82%87.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/b3/%E5%B2%90%E9%98%9C%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%8F%A4%E7%94%B0%E8%82%87.jpg/88px-%E5%B2%90%E9%98%9C%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%8F%A4%E7%94%B0%E8%82%87.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/b3/%E5%B2%90%E9%98%9C%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%8F%A4%E7%94%B0%E8%82%87.jpg/117px-%E5%B2%90%E9%98%9C%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%8F%A4%E7%94%B0%E8%82%87.jpg 2x" width="58"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Furuta_Hajime&amp;action=edit&amp;redlink=1" title="Furuta Hajime (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Furuta Hajime</a>\n</td>\n<td>6 th\u00e1ng 2 n\u0103m 2005\n</td>\n<td>5 th\u00e1ng 2 n\u0103m 2025\n</td>\n<td style="text-align:center">5\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Shizuoka" title="Shizuoka">Shizuoka</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E9%9D%99%E5%B2%A1%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B7%9D%E5%8B%9D%E5%B9%B3%E5%A4%AA.jpg"><img class="mw-file-element" data-file-height="1500" data-file-width="1000" decoding="async" height="89" src="//upload.wikimedia.org/wikipedia/commons/thumb/5/5b/%E9%9D%99%E5%B2%A1%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B7%9D%E5%8B%9D%E5%B9%B3%E5%A4%AA.jpg/59px-%E9%9D%99%E5%B2%A1%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B7%9D%E5%8B%9D%E5%B9%B3%E5%A4%AA.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/5b/%E9%9D%99%E5%B2%A1%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B7%9D%E5%8B%9D%E5%B9%B3%E5%A4%AA.jpg/89px-%E9%9D%99%E5%B2%A1%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B7%9D%E5%8B%9D%E5%B9%B3%E5%A4%AA.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/5/5b/%E9%9D%99%E5%B2%A1%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B7%9D%E5%8B%9D%E5%B9%B3%E5%A4%AA.jpg/118px-%E9%9D%99%E5%B2%A1%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B7%9D%E5%8B%9D%E5%B9%B3%E5%A4%AA.jpg 2x" width="59"/></a></span>\n</td>\n<td><a href="/wiki/Kawakatsu_Heita" title="Kawakatsu Heita">Kawakatsu Heita</a>\n</td>\n<td>7 th\u00e1ng 7 n\u0103m 2009\n</td>\n<td>4 th\u00e1ng 7 n\u0103m 2025\n</td>\n<td style="text-align:center">4\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Aichi" title="Aichi">Aichi</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Hideaki_%C5%8Cmura_20180607.jpg"><img class="mw-file-element" data-file-height="3069" data-file-width="2302" decoding="async" height="90" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/62/Hideaki_%C5%8Cmura_20180607.jpg/67px-Hideaki_%C5%8Cmura_20180607.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/62/Hideaki_%C5%8Cmura_20180607.jpg/101px-Hideaki_%C5%8Cmura_20180607.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/62/Hideaki_%C5%8Cmura_20180607.jpg/135px-Hideaki_%C5%8Cmura_20180607.jpg 2x" width="67"/></a></span>\n</td>\n<td><a href="/wiki/%C5%8Cmura_Hideaki" title="\u014cmura Hideaki">\u014cmura Hideaki</a>\n</td>\n<td>15 th\u00e1ng 2 n\u0103m 2011\n</td>\n<td>14 th\u00e1ng 2 n\u0103m 2027\n</td>\n<td style="text-align:center">4\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Mie" title="Mie">Mie</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E4%B8%89%E9%87%8D%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%80%E8%A6%8B%E5%8B%9D%E4%B9%8B.jpg"><img class="mw-file-element" data-file-height="1322" data-file-width="1000" decoding="async" height="79" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/86/%E4%B8%89%E9%87%8D%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%80%E8%A6%8B%E5%8B%9D%E4%B9%8B.jpg/60px-%E4%B8%89%E9%87%8D%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%80%E8%A6%8B%E5%8B%9D%E4%B9%8B.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/86/%E4%B8%89%E9%87%8D%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%80%E8%A6%8B%E5%8B%9D%E4%B9%8B.jpg/90px-%E4%B8%89%E9%87%8D%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%80%E8%A6%8B%E5%8B%9D%E4%B9%8B.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/8/86/%E4%B8%89%E9%87%8D%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%80%E8%A6%8B%E5%8B%9D%E4%B9%8B.jpg/119px-%E4%B8%89%E9%87%8D%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%80%E8%A6%8B%E5%8B%9D%E4%B9%8B.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Ichimi_Katsuyuki&amp;action=edit&amp;redlink=1" title="Ichimi Katsuyuki (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Ichimi Katsuyuki</a>\n</td>\n<td>14 th\u00e1ng 9 n\u0103m 2021\n</td>\n<td>13 th\u00e1ng 9 n\u0103m 2025\n</td>\n<td style="text-align:center">1\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Shiga" title="Shiga">Shiga</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E6%BB%8B%E8%B3%80%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%89%E6%97%A5%E6%9C%88%E5%A4%A7%E9%80%A0.jpg"><img class="mw-file-element" data-file-height="1500" data-file-width="1000" decoding="async" height="88" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/0a/%E6%BB%8B%E8%B3%80%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%89%E6%97%A5%E6%9C%88%E5%A4%A7%E9%80%A0.jpg/58px-%E6%BB%8B%E8%B3%80%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%89%E6%97%A5%E6%9C%88%E5%A4%A7%E9%80%A0.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/0a/%E6%BB%8B%E8%B3%80%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%89%E6%97%A5%E6%9C%88%E5%A4%A7%E9%80%A0.jpg/88px-%E6%BB%8B%E8%B3%80%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%89%E6%97%A5%E6%9C%88%E5%A4%A7%E9%80%A0.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/0a/%E6%BB%8B%E8%B3%80%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%89%E6%97%A5%E6%9C%88%E5%A4%A7%E9%80%A0.jpg/117px-%E6%BB%8B%E8%B3%80%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%89%E6%97%A5%E6%9C%88%E5%A4%A7%E9%80%A0.jpg 2x" width="58"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Mikazuki_Taiz%C5%8D&amp;action=edit&amp;redlink=1" title="Mikazuki Taiz\u014d (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Mikazuki Taiz\u014d</a>\n</td>\n<td>20 th\u00e1ng 7 n\u0103m 2014\n</td>\n<td>19 th\u00e1ng 7 n\u0103m 2026\n</td>\n<td style="text-align:center">3\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Ky%C5%8Dto" title="Ky\u014dto">Ky\u014dto</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E4%BA%AC%E9%83%BD%E5%BA%9C_%E7%9F%A5%E4%BA%8B_%E8%A5%BF%E8%84%87%E9%9A%86%E4%BF%8A.jpg"><img class="mw-file-element" data-file-height="1500" data-file-width="1000" decoding="async" height="90" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/fb/%E4%BA%AC%E9%83%BD%E5%BA%9C_%E7%9F%A5%E4%BA%8B_%E8%A5%BF%E8%84%87%E9%9A%86%E4%BF%8A.jpg/60px-%E4%BA%AC%E9%83%BD%E5%BA%9C_%E7%9F%A5%E4%BA%8B_%E8%A5%BF%E8%84%87%E9%9A%86%E4%BF%8A.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/fb/%E4%BA%AC%E9%83%BD%E5%BA%9C_%E7%9F%A5%E4%BA%8B_%E8%A5%BF%E8%84%87%E9%9A%86%E4%BF%8A.jpg/90px-%E4%BA%AC%E9%83%BD%E5%BA%9C_%E7%9F%A5%E4%BA%8B_%E8%A5%BF%E8%84%87%E9%9A%86%E4%BF%8A.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/fb/%E4%BA%AC%E9%83%BD%E5%BA%9C_%E7%9F%A5%E4%BA%8B_%E8%A5%BF%E8%84%87%E9%9A%86%E4%BF%8A.jpg/120px-%E4%BA%AC%E9%83%BD%E5%BA%9C_%E7%9F%A5%E4%BA%8B_%E8%A5%BF%E8%84%87%E9%9A%86%E4%BF%8A.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Nishiwaki_Takatoshi&amp;action=edit&amp;redlink=1" title="Nishiwaki Takatoshi (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Nishiwaki Takatoshi</a>\n</td>\n<td>16 th\u00e1ng 4 n\u0103m 2018\n</td>\n<td>15 th\u00e1ng 4 n\u0103m 2026\n</td>\n<td style="text-align:center">2\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/%C5%8Csaka" title="\u014csaka">\u014csaka</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E5%A4%A7%E9%98%AA%E5%BA%9C_%E7%9F%A5%E4%BA%8B_%E5%90%89%E6%9D%91%E6%B4%8B%E6%96%87_(cropped).jpg"><img class="mw-file-element" data-file-height="1700" data-file-width="1275" decoding="async" height="80" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/f0/%E5%A4%A7%E9%98%AA%E5%BA%9C_%E7%9F%A5%E4%BA%8B_%E5%90%89%E6%9D%91%E6%B4%8B%E6%96%87_%28cropped%29.jpg/60px-%E5%A4%A7%E9%98%AA%E5%BA%9C_%E7%9F%A5%E4%BA%8B_%E5%90%89%E6%9D%91%E6%B4%8B%E6%96%87_%28cropped%29.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/f0/%E5%A4%A7%E9%98%AA%E5%BA%9C_%E7%9F%A5%E4%BA%8B_%E5%90%89%E6%9D%91%E6%B4%8B%E6%96%87_%28cropped%29.jpg/90px-%E5%A4%A7%E9%98%AA%E5%BA%9C_%E7%9F%A5%E4%BA%8B_%E5%90%89%E6%9D%91%E6%B4%8B%E6%96%87_%28cropped%29.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/f0/%E5%A4%A7%E9%98%AA%E5%BA%9C_%E7%9F%A5%E4%BA%8B_%E5%90%89%E6%9D%91%E6%B4%8B%E6%96%87_%28cropped%29.jpg/120px-%E5%A4%A7%E9%98%AA%E5%BA%9C_%E7%9F%A5%E4%BA%8B_%E5%90%89%E6%9D%91%E6%B4%8B%E6%96%87_%28cropped%29.jpg 2x" width="60"/></a></span>\n</td>\n<td><a href="/wiki/Yoshimura_Hirofumi" title="Yoshimura Hirofumi">Yoshimura Hirofumi</a>\n</td>\n<td>8 th\u00e1ng 4 n\u0103m 2019\n</td>\n<td>6 th\u00e1ng 4 n\u0103m 2023\n</td>\n<td style="text-align:center">2\n</td>\n<td>H\u1ed9i Duy t\u00e2n \u014csaka\n</td></tr>\n<tr>\n<th><a href="/wiki/Hy%C5%8Dgo" title="Hy\u014dgo">Hy\u014dgo</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E5%85%B5%E5%BA%AB%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%BD%8B%E8%97%A4%E5%85%83%E5%BD%A6.jpg"><img class="mw-file-element" data-file-height="1333" data-file-width="1000" decoding="async" height="79" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/4c/%E5%85%B5%E5%BA%AB%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%BD%8B%E8%97%A4%E5%85%83%E5%BD%A6.jpg/59px-%E5%85%B5%E5%BA%AB%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%BD%8B%E8%97%A4%E5%85%83%E5%BD%A6.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/4/4c/%E5%85%B5%E5%BA%AB%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%BD%8B%E8%97%A4%E5%85%83%E5%BD%A6.jpg/89px-%E5%85%B5%E5%BA%AB%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%BD%8B%E8%97%A4%E5%85%83%E5%BD%A6.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/4/4c/%E5%85%B5%E5%BA%AB%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%BD%8B%E8%97%A4%E5%85%83%E5%BD%A6.jpg/118px-%E5%85%B5%E5%BA%AB%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%BD%8B%E8%97%A4%E5%85%83%E5%BD%A6.jpg 2x" width="59"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Sait%C5%8D_Motohiko&amp;action=edit&amp;redlink=1" title="Sait\u014d Motohiko (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Sait\u014d Motohiko</a>\n</td>\n<td>1 th\u00e1ng 8 n\u0103m 2021\n</td>\n<td>31 th\u00e1ng 7 n\u0103m 2025\n</td>\n<td style="text-align:center">1\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Nara_(t%E1%BB%89nh)" title="Nara (t\u1ec9nh)">Nara</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E5%A5%88%E8%89%AF%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E8%8D%92%E4%BA%95%E6%AD%A3%E5%90%BE.jpg"><img class="mw-file-element" data-file-height="1422" data-file-width="967" decoding="async" height="86" src="//upload.wikimedia.org/wikipedia/commons/thumb/3/32/%E5%A5%88%E8%89%AF%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E8%8D%92%E4%BA%95%E6%AD%A3%E5%90%BE.jpg/58px-%E5%A5%88%E8%89%AF%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E8%8D%92%E4%BA%95%E6%AD%A3%E5%90%BE.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/3/32/%E5%A5%88%E8%89%AF%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E8%8D%92%E4%BA%95%E6%AD%A3%E5%90%BE.jpg/88px-%E5%A5%88%E8%89%AF%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E8%8D%92%E4%BA%95%E6%AD%A3%E5%90%BE.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/3/32/%E5%A5%88%E8%89%AF%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E8%8D%92%E4%BA%95%E6%AD%A3%E5%90%BE.jpg/117px-%E5%A5%88%E8%89%AF%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E8%8D%92%E4%BA%95%E6%AD%A3%E5%90%BE.jpg 2x" width="58"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Arai_Sh%C5%8Dgo&amp;action=edit&amp;redlink=1" title="Arai Sh\u014dgo (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Arai Sh\u014dgo</a>\n</td>\n<td>3 th\u00e1ng 5 n\u0103m 2007\n</td>\n<td>2 th\u00e1ng 5 n\u0103m 2023\n</td>\n<td style="text-align:center">4\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Wakayama" title="Wakayama">Wakayama</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Sh%C5%ABhei_Kishimoto_20120119.jpg"><img class="mw-file-element" data-file-height="827" data-file-width="591" decoding="async" height="82" src="//upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Sh%C5%ABhei_Kishimoto_20120119.jpg/58px-Sh%C5%ABhei_Kishimoto_20120119.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Sh%C5%ABhei_Kishimoto_20120119.jpg/88px-Sh%C5%ABhei_Kishimoto_20120119.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Sh%C5%ABhei_Kishimoto_20120119.jpg/117px-Sh%C5%ABhei_Kishimoto_20120119.jpg 2x" width="58"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Kishimoto_Sh%C5%ABhei&amp;action=edit&amp;redlink=1" title="Kishimoto Sh\u016bhei (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Kishimoto Sh\u016bhei</a>\n</td>\n<td>17 th\u00e1ng 12 n\u0103m 2022\n</td>\n<td>16 th\u00e1ng 12 n\u0103m 2026\n</td>\n<td style="text-align:center">1\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Tottori" title="Tottori">Tottori</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E9%B3%A5%E5%8F%96%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B9%B3%E4%BA%95%E4%BC%B8%E6%B2%BB.JPG"><img class="mw-file-element" data-file-height="3872" data-file-width="2756" decoding="async" height="82" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/28/%E9%B3%A5%E5%8F%96%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B9%B3%E4%BA%95%E4%BC%B8%E6%B2%BB.JPG/58px-%E9%B3%A5%E5%8F%96%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B9%B3%E4%BA%95%E4%BC%B8%E6%B2%BB.JPG" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/28/%E9%B3%A5%E5%8F%96%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B9%B3%E4%BA%95%E4%BC%B8%E6%B2%BB.JPG/87px-%E9%B3%A5%E5%8F%96%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B9%B3%E4%BA%95%E4%BC%B8%E6%B2%BB.JPG 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/28/%E9%B3%A5%E5%8F%96%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B9%B3%E4%BA%95%E4%BC%B8%E6%B2%BB.JPG/117px-%E9%B3%A5%E5%8F%96%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B9%B3%E4%BA%95%E4%BC%B8%E6%B2%BB.JPG 2x" width="58"/></a></span>\n</td>\n<td><a href="/wiki/Hirai_Shinji" title="Hirai Shinji">Hirai Shinji</a>\n</td>\n<td>13 th\u00e1ng 4 n\u0103m 2007\n</td>\n<td>12 th\u00e1ng 4 n\u0103m 2023\n</td>\n<td style="text-align:center">5\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Shimane" title="Shimane">Shimane</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E5%B3%B6%E6%A0%B9%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%B8%E5%B1%B1%E9%81%94%E4%B9%9F.jpg"><img class="mw-file-element" data-file-height="1500" data-file-width="1000" decoding="async" height="90" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/28/%E5%B3%B6%E6%A0%B9%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%B8%E5%B1%B1%E9%81%94%E4%B9%9F.jpg/60px-%E5%B3%B6%E6%A0%B9%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%B8%E5%B1%B1%E9%81%94%E4%B9%9F.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/28/%E5%B3%B6%E6%A0%B9%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%B8%E5%B1%B1%E9%81%94%E4%B9%9F.jpg/90px-%E5%B3%B6%E6%A0%B9%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%B8%E5%B1%B1%E9%81%94%E4%B9%9F.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/28/%E5%B3%B6%E6%A0%B9%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%B8%E5%B1%B1%E9%81%94%E4%B9%9F.jpg/120px-%E5%B3%B6%E6%A0%B9%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%B8%E5%B1%B1%E9%81%94%E4%B9%9F.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Maruyama_Tatsuya&amp;action=edit&amp;redlink=1" title="Maruyama Tatsuya (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Maruyama Tatsuya</a>\n</td>\n<td>30 th\u00e1ng 4 n\u0103m 2019\n</td>\n<td>29 th\u00e1ng 4 n\u0103m 2023\n</td>\n<td style="text-align:center">1\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Okayama" title="Okayama">Okayama</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Ry%C5%ABta_Ibaragi.jpg"><img class="mw-file-element" data-file-height="1333" data-file-width="1000" decoding="async" height="79" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/02/Ry%C5%ABta_Ibaragi.jpg/59px-Ry%C5%ABta_Ibaragi.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/02/Ry%C5%ABta_Ibaragi.jpg/89px-Ry%C5%ABta_Ibaragi.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/02/Ry%C5%ABta_Ibaragi.jpg/118px-Ry%C5%ABta_Ibaragi.jpg 2x" width="59"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Ibaragi_Ry%C5%ABta&amp;action=edit&amp;redlink=1" title="Ibaragi Ry\u016bta (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Ibaragi Ry\u016bta</a>\n</td>\n<td>12 th\u00e1ng 11 n\u0103m 2012\n</td>\n<td>11 th\u00e1ng 11 n\u0103m 2024\n</td>\n<td style="text-align:center">3\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Hiroshima" title="Hiroshima">Hiroshima</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E5%BA%83%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%B9%AF%EF%A8%91%E8%8B%B1%E5%BD%A6.jpg"><img class="mw-file-element" data-file-height="1500" data-file-width="1000" decoding="async" height="90" src="//upload.wikimedia.org/wikipedia/commons/thumb/5/5d/%E5%BA%83%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%B9%AF%EF%A8%91%E8%8B%B1%E5%BD%A6.jpg/60px-%E5%BA%83%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%B9%AF%EF%A8%91%E8%8B%B1%E5%BD%A6.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/5d/%E5%BA%83%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%B9%AF%EF%A8%91%E8%8B%B1%E5%BD%A6.jpg/90px-%E5%BA%83%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%B9%AF%EF%A8%91%E8%8B%B1%E5%BD%A6.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/5/5d/%E5%BA%83%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%B9%AF%EF%A8%91%E8%8B%B1%E5%BD%A6.jpg/120px-%E5%BA%83%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%B9%AF%EF%A8%91%E8%8B%B1%E5%BD%A6.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Yuzaki_Hidehiko&amp;action=edit&amp;redlink=1" title="Yuzaki Hidehiko (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Yuzaki Hidehiko</a>\n</td>\n<td>29 th\u00e1ng 11 n\u0103m 2009\n</td>\n<td>28 th\u00e1ng 11 n\u0103m 2025\n</td>\n<td style="text-align:center">4\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Yamaguchi" title="Yamaguchi">Yamaguchi</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E5%B1%B1%E5%8F%A3%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9D%91%E5%B2%A1%E5%97%A3%E6%94%BF.jpg"><img class="mw-file-element" data-file-height="1333" data-file-width="1000" decoding="async" height="80" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/08/%E5%B1%B1%E5%8F%A3%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9D%91%E5%B2%A1%E5%97%A3%E6%94%BF.jpg/60px-%E5%B1%B1%E5%8F%A3%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9D%91%E5%B2%A1%E5%97%A3%E6%94%BF.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/08/%E5%B1%B1%E5%8F%A3%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9D%91%E5%B2%A1%E5%97%A3%E6%94%BF.jpg/90px-%E5%B1%B1%E5%8F%A3%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9D%91%E5%B2%A1%E5%97%A3%E6%94%BF.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/08/%E5%B1%B1%E5%8F%A3%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9D%91%E5%B2%A1%E5%97%A3%E6%94%BF.jpg/120px-%E5%B1%B1%E5%8F%A3%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9D%91%E5%B2%A1%E5%97%A3%E6%94%BF.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Muraoka_Tsugumasa&amp;action=edit&amp;redlink=1" title="Muraoka Tsugumasa (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Muraoka Tsugumasa</a>\n</td>\n<td>25 th\u00e1ng 2 n\u0103m 2014\n</td>\n<td>22 th\u00e1ng 2 n\u0103m 2026\n</td>\n<td style="text-align:center">3\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Tokushima" title="Tokushima">Tokushima</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E5%BE%B3%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%A3%AF%E6%B3%89%E5%98%89%E9%96%80.jpg"><img class="mw-file-element" data-file-height="1500" data-file-width="1000" decoding="async" height="90" src="//upload.wikimedia.org/wikipedia/commons/thumb/e/eb/%E5%BE%B3%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%A3%AF%E6%B3%89%E5%98%89%E9%96%80.jpg/60px-%E5%BE%B3%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%A3%AF%E6%B3%89%E5%98%89%E9%96%80.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/e/eb/%E5%BE%B3%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%A3%AF%E6%B3%89%E5%98%89%E9%96%80.jpg/90px-%E5%BE%B3%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%A3%AF%E6%B3%89%E5%98%89%E9%96%80.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/e/eb/%E5%BE%B3%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%A3%AF%E6%B3%89%E5%98%89%E9%96%80.jpg/120px-%E5%BE%B3%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E9%A3%AF%E6%B3%89%E5%98%89%E9%96%80.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Iizumi_Kamon&amp;action=edit&amp;redlink=1" title="Iizumi Kamon (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Iizumi Kamon</a>\n</td>\n<td>18 th\u00e1ng 5 n\u0103m 2003\n</td>\n<td>17 th\u00e1ng 5 n\u0103m 2023\n</td>\n<td style="text-align:center">5\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Kagawa" title="Kagawa">Kagawa</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Toyohito_Ikeda_2018.jpg"><img class="mw-file-element" data-file-height="618" data-file-width="464" decoding="async" height="79" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/08/Toyohito_Ikeda_2018.jpg/59px-Toyohito_Ikeda_2018.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/08/Toyohito_Ikeda_2018.jpg/89px-Toyohito_Ikeda_2018.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/08/Toyohito_Ikeda_2018.jpg/119px-Toyohito_Ikeda_2018.jpg 2x" width="59"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Hamada_Keiz%C5%8D&amp;action=edit&amp;redlink=1" title="Hamada Keiz\u014d (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Hamada Keiz\u014d</a>\n</td>\n<td>5 th\u00e1ng 9 n\u0103m 2022\n</td>\n<td>4 th\u00e1ng 9 n\u0103m 2026\n</td>\n<td style="text-align:center">1\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Ehime" title="Ehime">Ehime</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E6%84%9B%E5%AA%9B%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%AD%E6%9D%91%E6%99%82%E5%BA%83.jpg"><img class="mw-file-element" data-file-height="1500" data-file-width="1000" decoding="async" height="90" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/dd/%E6%84%9B%E5%AA%9B%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%AD%E6%9D%91%E6%99%82%E5%BA%83.jpg/60px-%E6%84%9B%E5%AA%9B%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%AD%E6%9D%91%E6%99%82%E5%BA%83.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/dd/%E6%84%9B%E5%AA%9B%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%AD%E6%9D%91%E6%99%82%E5%BA%83.jpg/90px-%E6%84%9B%E5%AA%9B%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%AD%E6%9D%91%E6%99%82%E5%BA%83.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/dd/%E6%84%9B%E5%AA%9B%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%AD%E6%9D%91%E6%99%82%E5%BA%83.jpg/120px-%E6%84%9B%E5%AA%9B%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E4%B8%AD%E6%9D%91%E6%99%82%E5%BA%83.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Nakamura_Tokihiro&amp;action=edit&amp;redlink=1" title="Nakamura Tokihiro (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Nakamura Tokihiro</a>\n</td>\n<td>1 th\u00e1ng 12 n\u0103m 2010\n</td>\n<td>30 th\u00e1ng 11 n\u0103m 2026\n</td>\n<td style="text-align:center">4\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/K%C5%8Dchi" title="K\u014dchi">K\u014dchi</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E9%AB%98%E7%9F%A5%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%BF%B5%E7%94%B0%E7%9C%81%E5%8F%B8.jpg"><img class="mw-file-element" data-file-height="1500" data-file-width="1000" decoding="async" height="90" src="//upload.wikimedia.org/wikipedia/commons/thumb/7/7e/%E9%AB%98%E7%9F%A5%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%BF%B5%E7%94%B0%E7%9C%81%E5%8F%B8.jpg/60px-%E9%AB%98%E7%9F%A5%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%BF%B5%E7%94%B0%E7%9C%81%E5%8F%B8.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/7/7e/%E9%AB%98%E7%9F%A5%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%BF%B5%E7%94%B0%E7%9C%81%E5%8F%B8.jpg/90px-%E9%AB%98%E7%9F%A5%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%BF%B5%E7%94%B0%E7%9C%81%E5%8F%B8.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/7/7e/%E9%AB%98%E7%9F%A5%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%BF%B5%E7%94%B0%E7%9C%81%E5%8F%B8.jpg/120px-%E9%AB%98%E7%9F%A5%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%BF%B5%E7%94%B0%E7%9C%81%E5%8F%B8.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Hamada_Seiji&amp;action=edit&amp;redlink=1" title="Hamada Seiji (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Hamada Seiji</a>\n</td>\n<td>7 th\u00e1ng 12 n\u0103m 2019\n</td>\n<td>6 th\u00e1ng 12 n\u0103m 2023\n</td>\n<td style="text-align:center">1\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Fukuoka" title="Fukuoka">Fukuoka</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E7%A6%8F%E5%B2%A1%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9C%8D%E9%83%A8%E8%AA%A0%E5%A4%AA%E9%83%8E.jpg"><img class="mw-file-element" data-file-height="1203" data-file-width="1000" decoding="async" height="72" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/be/%E7%A6%8F%E5%B2%A1%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9C%8D%E9%83%A8%E8%AA%A0%E5%A4%AA%E9%83%8E.jpg/60px-%E7%A6%8F%E5%B2%A1%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9C%8D%E9%83%A8%E8%AA%A0%E5%A4%AA%E9%83%8E.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/be/%E7%A6%8F%E5%B2%A1%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9C%8D%E9%83%A8%E8%AA%A0%E5%A4%AA%E9%83%8E.jpg/90px-%E7%A6%8F%E5%B2%A1%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9C%8D%E9%83%A8%E8%AA%A0%E5%A4%AA%E9%83%8E.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/be/%E7%A6%8F%E5%B2%A1%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9C%8D%E9%83%A8%E8%AA%A0%E5%A4%AA%E9%83%8E.jpg/120px-%E7%A6%8F%E5%B2%A1%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%9C%8D%E9%83%A8%E8%AA%A0%E5%A4%AA%E9%83%8E.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Hattori_Seitar%C5%8D&amp;action=edit&amp;redlink=1" title="Hattori Seitar\u014d (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Hattori Seitar\u014d</a>\n</td>\n<td>14 th\u00e1ng 4 n\u0103m 2021\n</td>\n<td>10 th\u00e1ng 4 n\u0103m 2025\n</td>\n<td style="text-align:center">1\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Saga_(t%E1%BB%89nh)" title="Saga (t\u1ec9nh)">Saga</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E4%BD%90%E8%B3%80%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B1%B1%E5%8F%A3%E7%A5%A5%E7%BE%A9.jpg"><img class="mw-file-element" data-file-height="6019" data-file-width="4514" decoding="async" height="80" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/f7/%E4%BD%90%E8%B3%80%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B1%B1%E5%8F%A3%E7%A5%A5%E7%BE%A9.jpg/60px-%E4%BD%90%E8%B3%80%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B1%B1%E5%8F%A3%E7%A5%A5%E7%BE%A9.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/f7/%E4%BD%90%E8%B3%80%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B1%B1%E5%8F%A3%E7%A5%A5%E7%BE%A9.jpg/90px-%E4%BD%90%E8%B3%80%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B1%B1%E5%8F%A3%E7%A5%A5%E7%BE%A9.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/f7/%E4%BD%90%E8%B3%80%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B1%B1%E5%8F%A3%E7%A5%A5%E7%BE%A9.jpg/120px-%E4%BD%90%E8%B3%80%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%B1%B1%E5%8F%A3%E7%A5%A5%E7%BE%A9.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Yamaguchi_Yoshinori&amp;action=edit&amp;redlink=1" title="Yamaguchi Yoshinori (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Yamaguchi Yoshinori</a>\n</td>\n<td>14 th\u00e1ng 1 n\u0103m 2015\n</td>\n<td>10 th\u00e1ng 1 n\u0103m 2027\n</td>\n<td style="text-align:center">3\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Nagasaki" title="Nagasaki">Nagasaki</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Kengo_Oishi_20221226.jpg"><img class="mw-file-element" data-file-height="875" data-file-width="653" decoding="async" height="80" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Kengo_Oishi_20221226.jpg/60px-Kengo_Oishi_20221226.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Kengo_Oishi_20221226.jpg/89px-Kengo_Oishi_20221226.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Kengo_Oishi_20221226.jpg/119px-Kengo_Oishi_20221226.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=%C5%8Cishi_Kengo&amp;action=edit&amp;redlink=1" title="\u014cishi Kengo (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">\u014cishi Kengo</a>\n</td>\n<td>2 th\u00e1ng 3 n\u0103m 2022\n</td>\n<td>1 th\u00e1ng 3 n\u0103m 2026\n</td>\n<td style="text-align:center">1\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Kumamoto" title="Kumamoto">Kumamoto</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E7%86%8A%E6%9C%AC%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E8%92%B2%E5%B3%B6%E9%83%81%E5%A4%AB_(cropped).jpg"><img class="mw-file-element" data-file-height="1120" data-file-width="840" decoding="async" height="80" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/bb/%E7%86%8A%E6%9C%AC%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E8%92%B2%E5%B3%B6%E9%83%81%E5%A4%AB_%28cropped%29.jpg/60px-%E7%86%8A%E6%9C%AC%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E8%92%B2%E5%B3%B6%E9%83%81%E5%A4%AB_%28cropped%29.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/bb/%E7%86%8A%E6%9C%AC%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E8%92%B2%E5%B3%B6%E9%83%81%E5%A4%AB_%28cropped%29.jpg/90px-%E7%86%8A%E6%9C%AC%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E8%92%B2%E5%B3%B6%E9%83%81%E5%A4%AB_%28cropped%29.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/bb/%E7%86%8A%E6%9C%AC%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E8%92%B2%E5%B3%B6%E9%83%81%E5%A4%AB_%28cropped%29.jpg/120px-%E7%86%8A%E6%9C%AC%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E8%92%B2%E5%B3%B6%E9%83%81%E5%A4%AB_%28cropped%29.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Kabashima_Ikuo&amp;action=edit&amp;redlink=1" title="Kabashima Ikuo (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Kabashima Ikuo</a>\n</td>\n<td>16 th\u00e1ng 4 n\u0103m 2008\n</td>\n<td>15 th\u00e1ng 4 n\u0103m 2024\n</td>\n<td style="text-align:center">4\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/%C5%8Cita" title="\u014cita">\u014cita</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E5%A4%A7%E5%88%86%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%BA%83%E7%80%AC%E5%8B%9D%E8%B2%9E.jpg"><img class="mw-file-element" data-file-height="1500" data-file-width="1000" decoding="async" height="90" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/0e/%E5%A4%A7%E5%88%86%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%BA%83%E7%80%AC%E5%8B%9D%E8%B2%9E.jpg/60px-%E5%A4%A7%E5%88%86%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%BA%83%E7%80%AC%E5%8B%9D%E8%B2%9E.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/0e/%E5%A4%A7%E5%88%86%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%BA%83%E7%80%AC%E5%8B%9D%E8%B2%9E.jpg/90px-%E5%A4%A7%E5%88%86%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%BA%83%E7%80%AC%E5%8B%9D%E8%B2%9E.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/0e/%E5%A4%A7%E5%88%86%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%BA%83%E7%80%AC%E5%8B%9D%E8%B2%9E.jpg/120px-%E5%A4%A7%E5%88%86%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%BA%83%E7%80%AC%E5%8B%9D%E8%B2%9E.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=Hirose_Katsusada&amp;action=edit&amp;redlink=1" title="Hirose Katsusada (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Hirose Katsusada</a>\n</td>\n<td>28 th\u00e1ng 4 n\u0103m 2003\n</td>\n<td>27 th\u00e1ng 4 n\u0103m 2023\n</td>\n<td style="text-align:center">5\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Miyazaki" title="Miyazaki">Miyazaki</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E5%AE%AE%E5%B4%8E%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%B2%B3%E9%87%8E%E4%BF%8A%E5%97%A3.jpg"><img class="mw-file-element" data-file-height="1500" data-file-width="1000" decoding="async" height="90" src="//upload.wikimedia.org/wikipedia/commons/thumb/3/3a/%E5%AE%AE%E5%B4%8E%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%B2%B3%E9%87%8E%E4%BF%8A%E5%97%A3.jpg/60px-%E5%AE%AE%E5%B4%8E%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%B2%B3%E9%87%8E%E4%BF%8A%E5%97%A3.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/3/3a/%E5%AE%AE%E5%B4%8E%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%B2%B3%E9%87%8E%E4%BF%8A%E5%97%A3.jpg/90px-%E5%AE%AE%E5%B4%8E%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%B2%B3%E9%87%8E%E4%BF%8A%E5%97%A3.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/3/3a/%E5%AE%AE%E5%B4%8E%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%B2%B3%E9%87%8E%E4%BF%8A%E5%97%A3.jpg/120px-%E5%AE%AE%E5%B4%8E%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E6%B2%B3%E9%87%8E%E4%BF%8A%E5%97%A3.jpg 2x" width="60"/></a></span>\n</td>\n<td><a class="new" href="/w/index.php?title=K%C5%8Dno_Shunji&amp;action=edit&amp;redlink=1" title="K\u014dno Shunji (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">K\u014dno Shunji</a>\n</td>\n<td>21 th\u00e1ng 1 n\u0103m 2011\n</td>\n<td>20 th\u00e1ng 1 n\u0103m 2027\n</td>\n<td style="text-align:center">4\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Kagoshima" title="Kagoshima">Kagoshima</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:%E9%B9%BF%E5%85%90%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%A1%A9%E7%94%B0%E5%BA%B7%E4%B8%80.jpg"><img class="mw-file-element" data-file-height="3000" data-file-width="2000" decoding="async" height="90" src="//upload.wikimedia.org/wikipedia/commons/thumb/3/36/%E9%B9%BF%E5%85%90%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%A1%A9%E7%94%B0%E5%BA%B7%E4%B8%80.jpg/60px-%E9%B9%BF%E5%85%90%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%A1%A9%E7%94%B0%E5%BA%B7%E4%B8%80.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/3/36/%E9%B9%BF%E5%85%90%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%A1%A9%E7%94%B0%E5%BA%B7%E4%B8%80.jpg/90px-%E9%B9%BF%E5%85%90%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%A1%A9%E7%94%B0%E5%BA%B7%E4%B8%80.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/3/36/%E9%B9%BF%E5%85%90%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%A1%A9%E7%94%B0%E5%BA%B7%E4%B8%80.jpg/120px-%E9%B9%BF%E5%85%90%E5%B3%B6%E7%9C%8C_%E7%9F%A5%E4%BA%8B_%E5%A1%A9%E7%94%B0%E5%BA%B7%E4%B8%80.jpg 2x" width="60"/></a></span>\n</td>\n<td style="white-space:nowrap"><a href="/wiki/Shiota_K%C5%8Dichi" title="Shiota K\u014dichi">Shiota K\u014dichi</a>\n</td>\n<td>28 th\u00e1ng 7 n\u0103m 2020\n</td>\n<td>27 th\u00e1ng 7 n\u0103m 2024\n</td>\n<td style="text-align:center">1\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr>\n<tr>\n<th><a href="/wiki/Okinawa" title="Okinawa">Okinawa</a>\n</th>\n<td><span typeof="mw:File"><a class="mw-file-description" href="/wiki/T%E1%BA%ADp_tin:Denny_Tamaki_in_2019_(cropped).jpg"><img class="mw-file-element" data-file-height="1025" data-file-width="757" decoding="async" height="79" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Denny_Tamaki_in_2019_%28cropped%29.jpg/58px-Denny_Tamaki_in_2019_%28cropped%29.jpg" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Denny_Tamaki_in_2019_%28cropped%29.jpg/88px-Denny_Tamaki_in_2019_%28cropped%29.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Denny_Tamaki_in_2019_%28cropped%29.jpg/117px-Denny_Tamaki_in_2019_%28cropped%29.jpg 2x" width="58"/></a></span>\n</td>\n<td style="white-space:nowrap"><a href="/wiki/Tamaki_Den%C4%AB" title="Tamaki Den\u012b">Tamaki Den\u012b</a>\n<p>(Tamaki Denny)\n</p><p>(Tamaki Yashiro)\n</p>\n</td>\n<td>4 th\u00e1ng 10 n\u0103m 2018\n</td>\n<td>29 th\u00e1ng 9 n\u0103m 2026\n</td>\n<td style="text-align:center">2\n</td>\n<td>\u0110\u1ed9c l\u1eadp\n</td></tr></tbody></table>',
+    },
+    {
+      id: "Danh s\u00e1ch t\u00f2a nh\u00e0 cao nh\u1ea5t \u0110\u00f4ng Nam \u00c1_0",
+      table_json: [
+        [
+          "H\u1ea1ng",
+          "Th\u00e0nh ph\u1ed1",
+          "Qu\u1ed1c gia",
+          "\u226550m",
+          "\u2265150m",
+          "\u2265300m",
+          "T\u1ed5ng s\u1ed1t\u00f2a nh\u00e0",
+        ],
+        ["1", "Singapore", "Singapore", "9663", "121", "-", "9663"],
+        ["2", "Kuala Lumpur", "Malaysia", "2571", "149", "6", "2571"],
+        ["3", "Bangkok", "Th\u00e1i Lan", "2498", "183", "4", "2498"],
+        ["4", "H\u00e0 N\u1ed9i", "Vi\u1ec7t Nam", "1592", "43", "1", "1592"],
+        [
+          "5",
+          "Th\u00e0nh ph\u1ed1 H\u1ed3 Ch\u00ed Minh",
+          "Vi\u1ec7t Nam",
+          "1458",
+          "35",
+          "1",
+          "1458",
+        ],
+        ["6", "Jakarta", "Indonesia", "1389", "88", "2", "1389"],
+        ["7", "\u0110\u1ea3o Penang", "Malaysia", "980", "45", "-", "980"],
+        ["8", "Phn\u00f4m P\u00eanh", "Campuchia", "650", "26", "-", "650"],
+        ["9", "Johor Bahru", "Malaysia", "566", "80", "-", "566"],
+        ["10", "Petaling Jaya", "Malaysia", "530", "25", "-", "530"],
+        ["11", "Manila", "Philippines", "492", "78", "-", "492"],
+        ["12", "Makati", "Philippines", "432", "138", "-", "432"],
+        [
+          "13",
+          "Th\u00e0nh ph\u1ed1 Quezon",
+          "Philippines",
+          "390",
+          "71",
+          "-",
+          "390",
+        ],
+        ["14", "Taguig", "Philippines", "289", "80", "1", "289"],
+        ["15", "Yangon", "Myanmar", "253", "-", "-", "253"],
+        [
+          "16",
+          "Th\u00e0nh ph\u1ed1 Cebu",
+          "Philippines",
+          "252",
+          "19",
+          "-",
+          "252",
+        ],
+        ["17", "Pasig", "Philippines", "217", "71", "-", "217"],
+        ["18", "Para\u00f1aque", "Philippines", "206", "3", "-", "206"],
+        ["19", "Nha Trang", "Vi\u1ec7t Nam", "182", "9", "-", "182"],
+        ["20", "Putrajaya", "Malaysia", "177", "1", "-", "177"],
+        [
+          "21",
+          "\u0110\u00e0 N\u1eb5ng",
+          "Vi\u1ec7t Nam",
+          "176",
+          "9",
+          "-",
+          "176",
+        ],
+        ["22", "Mandaluyong", "Philippines", "174", "65", "-", "174"],
+        ["23", "Pasay", "Philippines", "168", "8", "-", "168"],
+        ["24", "Pattaya", "Th\u00e1i Lan", "162", "12", "-", "162"],
+        ["25", "Shah Alam", "Malaysia", "159", "12", "-", "159"],
+        ["26", "Surabaya", "Indonesia", "157", "19", "-", "157"],
+        ["27", "Kota Kinabalu", "Malaysia", "148", "6", "-", "148"],
+        ["28", "Bandung", "Indonesia", "144", "-", "-", "144"],
+        ["29", "Ampang Jaya", "Malaysia", "118", "6", "-", "118"],
+        ["30", "Kuching", "Malaysia", "107", "2", "-", "107"],
+        ["31", "Seri Kembangan", "Malaysia", "107", "2", "-", "107"],
+        ["32", "Muntinlupa", "Philippines", "104", "3", "-", "104"],
+        ["33", "Subang Jaya", "Malaysia", "102", "8", "-", "102"],
+      ],
+      table_html:
+        '<table class="wikitable sortable" style="text-align:center">\n<caption>\n</caption>\n<tbody><tr>\n<th>H\u1ea1ng\n</th>\n<th>Th\u00e0nh ph\u1ed1\n</th>\n<th>Qu\u1ed1c gia\n</th>\n<th>\u226550m\n</th>\n<th>\u2265150m\n</th>\n<th>\u2265300m\n</th>\n<th>T\u1ed5ng s\u1ed1<br/>t\u00f2a nh\u00e0\n</th></tr>\n<tr>\n<td>1\n</td>\n<td align="left"><a href="/wiki/Singapore" title="Singapore">Singapore</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="900" decoding="async" height="15" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/48/Flag_of_Singapore.svg/23px-Flag_of_Singapore.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/4/48/Flag_of_Singapore.svg/35px-Flag_of_Singapore.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/4/48/Flag_of_Singapore.svg/45px-Flag_of_Singapore.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Singapore" title="Singapore">Singapore</a>\n</td>\n<td>9663\n</td>\n<td>121\n</td>\n<td>-\n</td>\n<td>9663\n</td></tr>\n<tr>\n<td>2\n</td>\n<td align="left"><a href="/wiki/Kuala_Lumpur" title="Kuala Lumpur">Kuala Lumpur</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="1200" decoding="async" height="12" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/23px-Flag_of_Malaysia.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/35px-Flag_of_Malaysia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/46px-Flag_of_Malaysia.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Malaysia" title="Malaysia">Malaysia</a>\n</td>\n<td>2571\n</td>\n<td>149\n</td>\n<td>6\n</td>\n<td>2571\n</td></tr>\n<tr>\n<td>3\n</td>\n<td align="left"><a href="/wiki/B%C4%83ng_C%E1%BB%91c" title="B\u0103ng C\u1ed1c">Bangkok</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="900" decoding="async" height="15" src="//upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_Thailand.svg/23px-Flag_of_Thailand.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_Thailand.svg/35px-Flag_of_Thailand.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_Thailand.svg/45px-Flag_of_Thailand.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Th%C3%A1i_Lan" title="Th\u00e1i Lan">Th\u00e1i Lan</a>\n</td>\n<td>2498\n</td>\n<td>183\n</td>\n<td>4\n</td>\n<td>2498\n</td></tr>\n<tr>\n<td>4\n</td>\n<td align="left"><a href="/wiki/H%C3%A0_N%E1%BB%99i" title="H\u00e0 N\u1ed9i">H\u00e0 N\u1ed9i</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="900" decoding="async" height="15" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/23px-Flag_of_Vietnam.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/35px-Flag_of_Vietnam.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/45px-Flag_of_Vietnam.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Vi%E1%BB%87t_Nam" title="Vi\u1ec7t Nam">Vi\u1ec7t Nam</a>\n</td>\n<td>1592\n</td>\n<td>43\n</td>\n<td>1\n</td>\n<td>1592\n</td></tr>\n<tr>\n<td>5\n</td>\n<td align="left"><a href="/wiki/Th%C3%A0nh_ph%E1%BB%91_H%E1%BB%93_Ch%C3%AD_Minh" title="Th\u00e0nh ph\u1ed1 H\u1ed3 Ch\u00ed Minh">Th\u00e0nh ph\u1ed1 H\u1ed3 Ch\u00ed Minh</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="900" decoding="async" height="15" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/23px-Flag_of_Vietnam.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/35px-Flag_of_Vietnam.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/45px-Flag_of_Vietnam.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Vi%E1%BB%87t_Nam" title="Vi\u1ec7t Nam">Vi\u1ec7t Nam</a>\n</td>\n<td>1458\n</td>\n<td>35\n</td>\n<td>1\n</td>\n<td>1458\n</td></tr>\n<tr>\n<td>6\n</td>\n<td align="left"><a href="/wiki/Jakarta" title="Jakarta">Jakarta</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="900" decoding="async" height="15" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_Indonesia.svg/23px-Flag_of_Indonesia.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_Indonesia.svg/35px-Flag_of_Indonesia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_Indonesia.svg/45px-Flag_of_Indonesia.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Indonesia" title="Indonesia">Indonesia</a>\n</td>\n<td>1389\n</td>\n<td>88\n</td>\n<td>2\n</td>\n<td>1389\n</td></tr>\n<tr>\n<td>7\n</td>\n<td align="left"><a href="/wiki/%C4%90%E1%BA%A3o_Penang" title="\u0110\u1ea3o Penang">\u0110\u1ea3o Penang</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="1200" decoding="async" height="12" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/23px-Flag_of_Malaysia.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/35px-Flag_of_Malaysia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/46px-Flag_of_Malaysia.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Malaysia" title="Malaysia">Malaysia</a>\n</td>\n<td>980\n</td>\n<td>45\n</td>\n<td>-\n</td>\n<td>980\n</td></tr>\n<tr>\n<td>8\n</td>\n<td align="left"><a href="/wiki/Phn%C3%B4m_P%C3%AAnh" title="Phn\u00f4m P\u00eanh">Phn\u00f4m P\u00eanh</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="640" data-file-width="1000" decoding="async" height="15" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_Cambodia.svg/23px-Flag_of_Cambodia.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_Cambodia.svg/35px-Flag_of_Cambodia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_Cambodia.svg/46px-Flag_of_Cambodia.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Campuchia" title="Campuchia">Campuchia</a>\n</td>\n<td>650\n</td>\n<td>26\n</td>\n<td>-\n</td>\n<td>650\n</td></tr>\n<tr>\n<td>9\n</td>\n<td align="left"><a href="/wiki/Johor_Bahru" title="Johor Bahru">Johor Bahru</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="1200" decoding="async" height="12" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/23px-Flag_of_Malaysia.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/35px-Flag_of_Malaysia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/46px-Flag_of_Malaysia.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Malaysia" title="Malaysia">Malaysia</a>\n</td>\n<td>566\n</td>\n<td>80\n</td>\n<td>-\n</td>\n<td>566\n</td></tr>\n<tr>\n<td>10\n</td>\n<td align="left"><a href="/wiki/Petaling_Jaya" title="Petaling Jaya">Petaling Jaya</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="1200" decoding="async" height="12" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/23px-Flag_of_Malaysia.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/35px-Flag_of_Malaysia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/46px-Flag_of_Malaysia.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Malaysia" title="Malaysia">Malaysia</a>\n</td>\n<td>530\n</td>\n<td>25\n</td>\n<td>-\n</td>\n<td>530\n</td></tr>\n<tr>\n<td>11\n</td>\n<td align="left"><a href="/wiki/Manila" title="Manila">Manila</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="1200" decoding="async" height="12" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/23px-Flag_of_the_Philippines.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/35px-Flag_of_the_Philippines.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/46px-Flag_of_the_Philippines.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Philippines" title="Philippines">Philippines</a>\n</td>\n<td>492\n</td>\n<td>78\n</td>\n<td>-\n</td>\n<td>492\n</td></tr>\n<tr>\n<td>12\n</td>\n<td align="left"><a href="/wiki/Makati" title="Makati">Makati</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="1200" decoding="async" height="12" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/23px-Flag_of_the_Philippines.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/35px-Flag_of_the_Philippines.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/46px-Flag_of_the_Philippines.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Philippines" title="Philippines">Philippines</a>\n</td>\n<td>432\n</td>\n<td>138\n</td>\n<td>-\n</td>\n<td>432\n</td></tr>\n<tr>\n<td>13\n</td>\n<td align="left"><a href="/wiki/Th%C3%A0nh_ph%E1%BB%91_Quezon" title="Th\u00e0nh ph\u1ed1 Quezon">Th\u00e0nh ph\u1ed1 Quezon</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="1200" decoding="async" height="12" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/23px-Flag_of_the_Philippines.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/35px-Flag_of_the_Philippines.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/46px-Flag_of_the_Philippines.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Philippines" title="Philippines">Philippines</a>\n</td>\n<td>390\n</td>\n<td>71\n</td>\n<td>-\n</td>\n<td>390\n</td></tr>\n<tr>\n<td>14\n</td>\n<td align="left"><a href="/wiki/Taguig" title="Taguig">Taguig</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="1200" decoding="async" height="12" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/23px-Flag_of_the_Philippines.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/35px-Flag_of_the_Philippines.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/46px-Flag_of_the_Philippines.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Philippines" title="Philippines">Philippines</a>\n</td>\n<td>289\n</td>\n<td>80\n</td>\n<td>1\n</td>\n<td>289\n</td></tr>\n<tr>\n<td>15\n</td>\n<td align="left"><a href="/wiki/Yangon" title="Yangon">Yangon</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="800" data-file-width="1200" decoding="async" height="15" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Flag_of_Myanmar.svg/23px-Flag_of_Myanmar.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Flag_of_Myanmar.svg/35px-Flag_of_Myanmar.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Flag_of_Myanmar.svg/45px-Flag_of_Myanmar.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Myanmar" title="Myanmar">Myanmar</a>\n</td>\n<td>253\n</td>\n<td>-\n</td>\n<td>-\n</td>\n<td>253\n</td></tr>\n<tr>\n<td>16\n</td>\n<td align="left"><a href="/wiki/Cebu_(th%C3%A0nh_ph%E1%BB%91)" title="Cebu (th\u00e0nh ph\u1ed1)">Th\u00e0nh ph\u1ed1 Cebu</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="1200" decoding="async" height="12" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/23px-Flag_of_the_Philippines.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/35px-Flag_of_the_Philippines.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/46px-Flag_of_the_Philippines.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Philippines" title="Philippines">Philippines</a>\n</td>\n<td>252\n</td>\n<td>19\n</td>\n<td>-\n</td>\n<td>252\n</td></tr>\n<tr>\n<td>17\n</td>\n<td align="left"><a href="/wiki/Pasig" title="Pasig">Pasig</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="1200" decoding="async" height="12" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/23px-Flag_of_the_Philippines.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/35px-Flag_of_the_Philippines.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/46px-Flag_of_the_Philippines.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Philippines" title="Philippines">Philippines</a>\n</td>\n<td>217\n</td>\n<td>71\n</td>\n<td>-\n</td>\n<td>217\n</td></tr>\n<tr>\n<td>18\n</td>\n<td align="left"><a href="/wiki/Para%C3%B1aque" title="Para\u00f1aque">Para\u00f1aque</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="1200" decoding="async" height="12" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/23px-Flag_of_the_Philippines.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/35px-Flag_of_the_Philippines.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/46px-Flag_of_the_Philippines.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Philippines" title="Philippines">Philippines</a>\n</td>\n<td>206\n</td>\n<td>3\n</td>\n<td>-\n</td>\n<td>206\n</td></tr>\n<tr>\n<td>19\n</td>\n<td align="left"><a href="/wiki/Nha_Trang" title="Nha Trang">Nha Trang</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="900" decoding="async" height="15" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/23px-Flag_of_Vietnam.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/35px-Flag_of_Vietnam.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/45px-Flag_of_Vietnam.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Vi%E1%BB%87t_Nam" title="Vi\u1ec7t Nam">Vi\u1ec7t Nam</a>\n</td>\n<td>182\n</td>\n<td>9\n</td>\n<td>-\n</td>\n<td>182\n</td></tr>\n<tr>\n<td>20\n</td>\n<td align="left"><a href="/wiki/Putrajaya" title="Putrajaya">Putrajaya</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="1200" decoding="async" height="12" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/23px-Flag_of_Malaysia.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/35px-Flag_of_Malaysia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/46px-Flag_of_Malaysia.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Malaysia" title="Malaysia">Malaysia</a>\n</td>\n<td>177\n</td>\n<td>1\n</td>\n<td>-\n</td>\n<td>177\n</td></tr>\n<tr>\n<td>21\n</td>\n<td align="left"><a href="/wiki/%C4%90%C3%A0_N%E1%BA%B5ng" title="\u0110\u00e0 N\u1eb5ng">\u0110\u00e0 N\u1eb5ng</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="900" decoding="async" height="15" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/23px-Flag_of_Vietnam.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/35px-Flag_of_Vietnam.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/45px-Flag_of_Vietnam.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Vi%E1%BB%87t_Nam" title="Vi\u1ec7t Nam">Vi\u1ec7t Nam</a>\n</td>\n<td>176\n</td>\n<td>9\n</td>\n<td>-\n</td>\n<td>176\n</td></tr>\n<tr>\n<td>22\n</td>\n<td align="left"><a href="/wiki/Mandaluyong" title="Mandaluyong">Mandaluyong</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="1200" decoding="async" height="12" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/23px-Flag_of_the_Philippines.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/35px-Flag_of_the_Philippines.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/46px-Flag_of_the_Philippines.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Philippines" title="Philippines">Philippines</a>\n</td>\n<td>174\n</td>\n<td>65\n</td>\n<td>-\n</td>\n<td>174\n</td></tr>\n<tr>\n<td>23\n</td>\n<td align="left"><a href="/wiki/Pasay" title="Pasay">Pasay</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="1200" decoding="async" height="12" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/23px-Flag_of_the_Philippines.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/35px-Flag_of_the_Philippines.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/46px-Flag_of_the_Philippines.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Philippines" title="Philippines">Philippines</a>\n</td>\n<td>168\n</td>\n<td>8\n</td>\n<td>-\n</td>\n<td>168\n</td></tr>\n<tr>\n<td>24\n</td>\n<td align="left"><a href="/wiki/Pattaya" title="Pattaya">Pattaya</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="900" decoding="async" height="15" src="//upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_Thailand.svg/23px-Flag_of_Thailand.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_Thailand.svg/35px-Flag_of_Thailand.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_Thailand.svg/45px-Flag_of_Thailand.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Th%C3%A1i_Lan" title="Th\u00e1i Lan">Th\u00e1i Lan</a>\n</td>\n<td>162\n</td>\n<td>12\n</td>\n<td>-\n</td>\n<td>162\n</td></tr>\n<tr>\n<td>25\n</td>\n<td align="left"><a href="/wiki/Shah_Alam" title="Shah Alam">Shah Alam</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="1200" decoding="async" height="12" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/23px-Flag_of_Malaysia.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/35px-Flag_of_Malaysia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/46px-Flag_of_Malaysia.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Malaysia" title="Malaysia">Malaysia</a>\n</td>\n<td>159\n</td>\n<td>12\n</td>\n<td>-\n</td>\n<td>159\n</td></tr>\n<tr>\n<td>26\n</td>\n<td align="left"><a href="/wiki/Surabaya" title="Surabaya">Surabaya</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="900" decoding="async" height="15" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_Indonesia.svg/23px-Flag_of_Indonesia.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_Indonesia.svg/35px-Flag_of_Indonesia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_Indonesia.svg/45px-Flag_of_Indonesia.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Indonesia" title="Indonesia">Indonesia</a>\n</td>\n<td>157\n</td>\n<td>19\n</td>\n<td>-\n</td>\n<td>157\n</td></tr>\n<tr>\n<td>27\n</td>\n<td align="left"><a href="/wiki/Kota_Kinabalu" title="Kota Kinabalu">Kota Kinabalu</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="1200" decoding="async" height="12" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/23px-Flag_of_Malaysia.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/35px-Flag_of_Malaysia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/46px-Flag_of_Malaysia.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Malaysia" title="Malaysia">Malaysia</a>\n</td>\n<td>148\n</td>\n<td>6\n</td>\n<td>-\n</td>\n<td>148\n</td></tr>\n<tr>\n<td>28\n</td>\n<td align="left"><a href="/wiki/Bandung" title="Bandung">Bandung</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="900" decoding="async" height="15" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_Indonesia.svg/23px-Flag_of_Indonesia.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_Indonesia.svg/35px-Flag_of_Indonesia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_Indonesia.svg/45px-Flag_of_Indonesia.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Indonesia" title="Indonesia">Indonesia</a>\n</td>\n<td>144\n</td>\n<td>-\n</td>\n<td>-\n</td>\n<td>144\n</td></tr>\n<tr>\n<td>29\n</td>\n<td align="left"><a href="/wiki/Ampang_Jaya" title="Ampang Jaya">Ampang Jaya</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="1200" decoding="async" height="12" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/23px-Flag_of_Malaysia.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/35px-Flag_of_Malaysia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/46px-Flag_of_Malaysia.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Malaysia" title="Malaysia">Malaysia</a>\n</td>\n<td>118\n</td>\n<td>6\n</td>\n<td>-\n</td>\n<td>118\n</td></tr>\n<tr>\n<td>30\n</td>\n<td align="left"><a href="/wiki/Kuching" title="Kuching">Kuching</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="1200" decoding="async" height="12" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/23px-Flag_of_Malaysia.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/35px-Flag_of_Malaysia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/46px-Flag_of_Malaysia.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Malaysia" title="Malaysia">Malaysia</a>\n</td>\n<td>107\n</td>\n<td>2\n</td>\n<td>-\n</td>\n<td>107\n</td></tr>\n<tr>\n<td>31\n</td>\n<td align="left"><a class="new" href="/w/index.php?title=Seri_Kembangan&amp;action=edit&amp;redlink=1" title="Seri Kembangan (trang kh\u00f4ng t\u1ed3n t\u1ea1i)">Seri Kembangan</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="1200" decoding="async" height="12" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/23px-Flag_of_Malaysia.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/35px-Flag_of_Malaysia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/46px-Flag_of_Malaysia.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Malaysia" title="Malaysia">Malaysia</a>\n</td>\n<td>107\n</td>\n<td>2\n</td>\n<td>-\n</td>\n<td>107\n</td></tr>\n<tr>\n<td>32\n</td>\n<td align="left"><a href="/wiki/Muntinlupa" title="Muntinlupa">Muntinlupa</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="1200" decoding="async" height="12" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/23px-Flag_of_the_Philippines.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/35px-Flag_of_the_Philippines.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/46px-Flag_of_the_Philippines.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Philippines" title="Philippines">Philippines</a>\n</td>\n<td>104\n</td>\n<td>3\n</td>\n<td>-\n</td>\n<td>104\n</td></tr>\n<tr>\n<td>33\n</td>\n<td align="left"><a href="/wiki/Subang_Jaya" title="Subang Jaya">Subang Jaya</a>\n</td>\n<td align="left"><span class="flagicon"><span class="mw-image-border" typeof="mw:File"><span><img alt="" class="mw-file-element" data-file-height="600" data-file-width="1200" decoding="async" height="12" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/23px-Flag_of_Malaysia.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/35px-Flag_of_Malaysia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/66/Flag_of_Malaysia.svg/46px-Flag_of_Malaysia.svg.png 2x" width="23"/></span></span>\u00a0</span><a href="/wiki/Malaysia" title="Malaysia">Malaysia</a>\n</td>\n<td>102\n</td>\n<td>8\n</td>\n<td>-\n</td>\n<td>102\n</td></tr></tbody></table>',
+    },
+  ];
 
-  const restart = () => {
-    aInput.update_anno_file_data(null)
-    upload_success.value = false
-    general_store.update_step(0)
-  }
-
+  aInput.update_anno_file_data(jsonData);
+  upload_success.value = true;
+  router.push("/step_1");
+};
+const restart = () => {
+  aInput.update_anno_file_data(null);
+  upload_success.value = false;
+  general_store.update_step(0);
+};
 </script>
