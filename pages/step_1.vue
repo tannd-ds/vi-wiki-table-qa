@@ -32,7 +32,7 @@
         </BaseBox>
       </div>
       <div class="flex flex-col">
-        <TableDisplay />
+        <HTMLTable :table_data="aInput.getCurrentTableHTML" />
       </div>
     </div>
   </div>
