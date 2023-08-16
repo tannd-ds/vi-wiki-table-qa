@@ -43,10 +43,10 @@ const computed_html = computed(() => process_html(props.table_data));
 </script>
 
 <style module>
-#wikitable {
+table {
   width: 100%;
 }
-#wikitable * {
+table * {
   @apply text-xs lg:text-base;
   font-size: 0.875rem;
   line-height: 1.5rem;

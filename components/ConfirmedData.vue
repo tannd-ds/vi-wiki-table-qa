@@ -285,10 +285,7 @@
           </div>
         </div>
       </div>
-      <TableDisplay
-        class="lg:max-w-[55vw]"
-        :displayed_table_index="chosen_table"
-      />
+      <HTMLTable :table_data="aInput.getTableHTMLFromIndex(chosen_table)" />
     </div>
   </div>
 </template>
