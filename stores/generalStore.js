@@ -78,5 +78,8 @@ export const useGeneralStore = defineStore("general_store", {
       if (this.current_step == 0) return this.current_step;
       return this.current_step - 1;
     },
+    overlayIsShow() {
+      return this.overlay.list.length > 0;
+    },
   },
 });

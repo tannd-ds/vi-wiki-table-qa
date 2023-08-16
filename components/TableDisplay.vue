@@ -20,7 +20,7 @@ const props = defineProps({
 });
 
 const displayed_table = computed(() => {
-  if (!general_store.overlay.is_show) {
+  if (!general_store.overlayIsShow) {
     return aInput.getCurrentTableHTML;
   } else {
     return aInput.getTableHTMLFromIndex(props.displayed_table_index);
