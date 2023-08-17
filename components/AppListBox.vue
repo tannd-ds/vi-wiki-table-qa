@@ -2,6 +2,7 @@
   <Listbox as="div" v-model="selected">
     <div class="relative mt-2">
       <ListboxButton
+        id="listbox-btn"
         class="relative w-full cursor-pointer rounded-md bg-gray-100 py-1.5 pl-1 pr-10 text-left text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-midnight-200 dark:text-gray-200 sm:text-sm sm:leading-8"
       >
         <span class="flex items-center">
