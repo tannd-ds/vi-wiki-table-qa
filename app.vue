@@ -24,14 +24,24 @@ watch(isLargeScreen, () => {
 </script>
 
 <style>
-.page-enter-active,
-.page-leave-active {
-  transition: all 0.4s;
+.page-up-enter-active,
+.page-up-leave-active {
+  transition: all 0.3s ease-in-out;
 }
-.page-enter-from,
-.page-leave-to {
-  opacity: 0;
-  filter: blur(1rem);
+.page-up-enter-from,
+.page-up-leave-to {
+  position: absolute;
+  transform: translateY(-100%);
+}
+
+.page-down-enter-active,
+.page-down-leave-active {
+  transition: all 0.3s ease-in-out;
+}
+.page-down-enter-from,
+.page-down-leave-to {
+  position: absolute;
+  transform: translateY(100%);
 }
 
 .fade-enter-active {
@@ -44,6 +54,7 @@ watch(isLargeScreen, () => {
 
 .fade-enter-from,
 .fade-leave-to {
+  scale: 98%;
   opacity: 0;
 }
 </style>

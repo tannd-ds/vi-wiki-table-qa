@@ -41,6 +41,9 @@
 <script setup>
 definePageMeta({
   layout: "custom",
+  pageTransition: {
+    name: "page-down",
+  },
 });
 
 import { useAnnotationInputStore } from "~/stores/annotationInput";
