@@ -136,6 +136,9 @@ import { useAnnotationInputStore } from "~/stores/annotationInput";
 
 definePageMeta({
   layout: "custom",
+  pageTransition: {
+    name: "page-up",
+  },
 });
 
 const aInput = useAnnotationInputStore();

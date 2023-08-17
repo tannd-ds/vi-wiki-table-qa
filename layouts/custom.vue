@@ -1,10 +1,13 @@
 <template>
-  <div class="relative" :class="{ dark: general_store.use_darkmode }">
+  <div
+    class="relative lg:overflow-hidden"
+    :class="{ dark: general_store.use_darkmode }"
+  >
     <AppOverlay />
     <BaseToastList />
     <SideBar />
     <div
-      class="flex h-full min-h-screen w-full items-center justify-center bg-gray-100 dark:bg-gradient-to-bl dark:from-zinc-800 dark:to-midnight-400 lg:pl-28"
+      class="flex h-full min-h-screen w-full flex-col items-center justify-center bg-gray-100 dark:bg-gradient-to-bl dark:from-zinc-800 dark:to-midnight-400 lg:pl-28"
     >
       <slot></slot>
     </div>
