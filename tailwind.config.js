@@ -23,17 +23,18 @@ module.exports = {
       keyframes: {
         "fade-up": {
           "0%": {
-            opacity: 0,
-            transform: "translateY(5em)",
+            transform: "translateY(50px) scale(0.9)",
+          },
+          "50%": {
+            transform: "translateY(10px) scale(1)",
           },
           "100%": {
-            opacity: 1,
-            transform: "translateY(0%)",
+            transform: "translateY(0) scale(1)",
           },
         },
       },
       animation: {
-        "fade-up": "fade-up 0.5s ease-out",
+        "fade-up": "fade-up 0.2s cubic-bezier(0, 0, 0.2, 1) both",
       },
     },
   },

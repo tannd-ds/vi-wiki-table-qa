@@ -6,10 +6,8 @@
       @keydown.ctrl="console.log('Yos')"
     >
       <div ref="modal">
-        <Transition name="fade" mode="out-in">
-          <ConfirmedData v-if="currentOverlay == 'ConfirmedData'" />
-          <RenameAnnotator v-else-if="currentOverlay == 'RenameAnnotator'" />
-        </Transition>
+        <ConfirmedData v-if="currentOverlay == 'ConfirmedData'" />
+        <RenameAnnotator v-else-if="currentOverlay == 'RenameAnnotator'" />
       </div>
     </div>
   </Transition>

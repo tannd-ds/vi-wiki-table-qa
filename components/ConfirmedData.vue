@@ -1,8 +1,6 @@
 <template>
   <div class="overflow-hidden">
-    <div
-      class="flex h-[80vh] animate-fade-up flex-col gap-8 lg:flex-row lg:justify-center"
-    >
+    <div class="flex h-[80vh] flex-col gap-8 lg:flex-row lg:justify-center">
       <div
         class="flex h-fit max-h-[80vh] flex-col rounded-lg border border-gray-200 bg-white p-2 shadow dark:border-zinc-800 dark:bg-midnight-200 sm:p-8 lg:w-[35vw]"
       >
