@@ -15,12 +15,15 @@
       </ListboxButton>
 
       <transition
-        leave-active-class="transition ease-in duration-100"
-        leave-from-class="opacity-100"
-        leave-to-class="opacity-0"
+        enter-active-class="transition duration-300 ease-out"
+        enter-from-class="transform scale-95 opacity-0"
+        enter-to-class="transform scale-100 opacity-100"
+        leave-active-class="transition duration-300 ease-out"
+        leave-from-class="transform scale-100 opacity-100"
+        leave-to-class="transform scale-95 opacity-0"
       >
         <ListboxOptions
-          class="absolute z-10 max-h-56 w-full divide-y-[1px] divide-gray-100 overflow-auto rounded-md border bg-white py-1 text-base ring-black ring-opacity-5 focus:outline-none dark:divide-zinc-700 dark:border-zinc-700 dark:bg-midnight-200 sm:text-sm"
+          class="absolute z-10 max-h-56 w-full divide-y-[1px] divide-gray-100 overflow-auto rounded-md border bg-white py-1 text-base ring-black ring-opacity-5 focus:outline-none dark:divide-zinc-700 dark:border-zinc-700 dark:bg-midnight-100 sm:text-sm"
         >
           <ListboxOption
             as="template"
@@ -32,7 +35,7 @@
             <li
               :class="[
                 active
-                  ? 'bg-green-200 dark:bg-green-500'
+                  ? 'bg-green-200 dark:bg-midnight-200 dark:text-gray-200'
                   : 'text-gray-900 dark:text-gray-200',
                 'relative cursor-default select-none py-2 pl-3 pr-9',
               ]"
@@ -51,7 +54,7 @@
                 v-if="selected"
                 :class="[
                   active
-                    ? 'text-midnight-100  dark:text-white'
+                    ? 'text-midnight-100  dark:text-green-500'
                     : 'text-green-500',
                   'absolute inset-y-0 right-0 flex items-center pr-4',
                 ]"
