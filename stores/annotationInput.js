@@ -211,6 +211,7 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
       this.confirmedData = [];
       window.localStorage.removeItem("anno_file_data");
       window.localStorage.removeItem("confirmed_qa");
+      window.localStorage.removeItem("current_hints_set");
 
       this.anno_file_data = new_data;
       if (new_data == null) window.localStorage.removeItem("anno_file_data");
