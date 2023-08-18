@@ -9,7 +9,6 @@
 </template>
 
 <script setup>
-import { useGeneralStore } from "~/stores/generalStore";
 const toast_list = useGeneralStore().toast_list;
 </script>
 

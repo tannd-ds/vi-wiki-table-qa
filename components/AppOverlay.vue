@@ -14,7 +14,6 @@
 </template>
 
 <script setup>
-import { useGeneralStore } from "~/stores/generalStore";
 import { onClickOutside } from "@vueuse/core";
 const general_store = useGeneralStore();
 const modal = ref(null);

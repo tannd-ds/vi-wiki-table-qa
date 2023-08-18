@@ -9,9 +9,6 @@
 </template>
 
 <script setup>
-import { useAnnotationInputStore } from "~/stores/annotationInput";
-import { useGeneralStore } from "~/stores/generalStore";
-
 const general_store = useGeneralStore();
 const aInput = useAnnotationInputStore();
 

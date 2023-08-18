@@ -82,7 +82,6 @@
 </template>
 
 <script setup>
-import { useAnnotationInputStore } from "~/stores/annotationInput";
 const aInput = useAnnotationInputStore();
 
 const displayed_hints = computed(() => {

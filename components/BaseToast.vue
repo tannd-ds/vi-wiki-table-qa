@@ -54,7 +54,6 @@
 </template>
 
 <script setup>
-import { useGeneralStore } from "~/stores/generalStore";
 const props = defineProps({
   toast: Object,
 });

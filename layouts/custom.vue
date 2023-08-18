@@ -15,6 +15,5 @@
 </template>
 
 <script setup>
-import { useGeneralStore } from "~/stores/generalStore";
 const general_store = useGeneralStore();
 </script>

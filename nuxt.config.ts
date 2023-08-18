@@ -4,6 +4,9 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ["@pinia/nuxt", "@vueuse/nuxt", "nuxt-icon", "nuxt-headlessui"],
   css: ["~/assets/css/main.css"],
+  imports: {
+    dirs: ["stores"],
+  },
   postcss: {
     plugins: {
       tailwindcss: {},

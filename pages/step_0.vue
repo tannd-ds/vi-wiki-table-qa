@@ -131,9 +131,6 @@
 </template>
 
 <script setup>
-import { useGeneralStore } from "~/stores/generalStore";
-import { useAnnotationInputStore } from "~/stores/annotationInput";
-
 definePageMeta({
   layout: "custom",
   pageTransition: {
