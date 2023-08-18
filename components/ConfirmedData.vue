@@ -289,10 +289,7 @@
 </template>
 
 <script setup>
-import { useAnnotationInputStore } from "~/stores/annotationInput";
-import { useGeneralStore } from "~/stores/generalStore";
 const aInput = useAnnotationInputStore();
-const general_store = useGeneralStore();
 
 const chosen_table = computed(() => {
   return aInput.confirmedData[displayed_confirmed_index.value].table_id;

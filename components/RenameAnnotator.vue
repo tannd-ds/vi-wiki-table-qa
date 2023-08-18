@@ -37,10 +37,7 @@
 </template>
 
 <script setup>
-import { useAnnotationInputStore } from "~/stores/annotationInput";
-import { useGeneralStore } from "~/stores/generalStore";
 const aInput = useAnnotationInputStore();
-const general_store = useGeneralStore();
 
 const new_name = ref("");
 

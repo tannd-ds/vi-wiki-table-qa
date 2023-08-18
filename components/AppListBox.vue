@@ -74,7 +74,7 @@
 const props = defineProps({
   data: Object,
 });
-import { useAnnotationInputStore } from "~/stores/annotationInput";
+
 const aInput = useAnnotationInputStore();
 import {
   Listbox,

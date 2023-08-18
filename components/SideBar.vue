@@ -42,7 +42,6 @@
 </template>
 
 <script setup>
-import { useGeneralStore } from "~/stores/generalStore";
 const general_store = useGeneralStore();
 
 const navbar_is_show = ref(general_store.isLargeScreen);

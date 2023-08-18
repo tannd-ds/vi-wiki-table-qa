@@ -59,7 +59,6 @@
 </template>
 
 <script setup>
-import { useAnnotationInputStore } from "~/stores/annotationInput";
 const aInput = useAnnotationInputStore();
 
 const color_set = [
