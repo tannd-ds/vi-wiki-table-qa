@@ -2,11 +2,16 @@
   <ul class="flex list-none flex-col gap-2 overflow-auto px-4">
     <li v-for="(hint, hint_index) in displayed_hints" :key="hint">
       <div
-        class="relative flex items-center gap-2 rounded border px-4 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-midnight-200"
-        :class="{
-          'border border-green-500 pr-2 dark:border-green-600': hint.is_checked,
-          'border-gray-300 dark:border-zinc-700': !hint.is_checked,
-        }"
+        :class="[
+          addition_info[hint_index].checked_percent >= RED_THRESHHOLD
+            ? 'opacity-50'
+            : 'hover:bg-gray-100 dark:hover:bg-midnight-200',
+          {
+            'border-green-500 pr-2 dark:border-green-600': hint.is_checked,
+            'border-gray-300 dark:border-zinc-700': !hint.is_checked,
+          },
+          'relative flex items-center gap-2 rounded border px-4 transition-all duration-200 ',
+        ]"
       >
         <input
           :disabled="
