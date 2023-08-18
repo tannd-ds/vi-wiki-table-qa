@@ -8,6 +8,7 @@
       <div ref="modal">
         <ConfirmedData v-if="currentOverlay == 'ConfirmedData'" />
         <RenameAnnotator v-else-if="currentOverlay == 'RenameAnnotator'" />
+        <AllHints v-else-if="currentOverlay == 'AllHints'" />
       </div>
     </div>
   </Transition>
@@ -31,6 +32,7 @@ window.addEventListener("keydown", (e) => {
 const Components = {
   confirmed: "ConfirmedData",
   rename: "RenameAnnotator",
+  hints: "AllHints",
 };
 
 const currentOverlay = computed(() => {

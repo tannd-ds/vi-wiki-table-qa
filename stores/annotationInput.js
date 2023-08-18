@@ -32,10 +32,11 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
               hint_index: 0,
               is_checked: false,
               percent_on_display_next: 1.0,
+              checked_count: 0,
             },
           ],
         },
-        n_displayed_hints: 3,
+        n_displayed_hints: null,
       },
     };
   },
@@ -59,6 +60,7 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
         this.current_table_index = Number(current_table_index);
 
       // Create New Hints Set for each table
+      this.hints.n_displayed_hints = this.hints.all_hints.length;
       let current_hints_set = localStorage.getItem("current_hints_set");
       if (current_hints_set)
         this.hints["current_hints_set"] = JSON.parse(current_hints_set);
@@ -79,6 +81,7 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
               hint_index: hint_index,
               is_checked: false,
               percent_on_display_next: 0.4,
+              checked_count: 0,
             });
           }
           current_hints_set[table_index] = this.update_display_hints(
@@ -233,9 +236,10 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
     update_display_hints(current_hints_set, is_first_run = false) {
       if (!is_first_run) {
         for (let i = 0; i < this.hints.n_displayed_hints; i++) {
-          if (current_hints_set[i].is_checked)
+          if (current_hints_set[i].is_checked) {
             current_hints_set[i].percent_on_display_next /= 3;
-          else current_hints_set[i].percent_on_display_next /= 2;
+            current_hints_set[i].checked_count++;
+          } else current_hints_set[i].percent_on_display_next /= 2;
           current_hints_set[i].is_checked = false;
         }
         for (
