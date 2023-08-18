@@ -169,7 +169,7 @@ const read_dropped_file = (event) => {
     const contents = event.target.result; // Get the file contents
     try {
       const jsonData = JSON.parse(contents); // Parse the JSON data
-      aInput.update_anno_file_data(jsonData);
+      aInput.update_anno_file_data(jsonData, uploaded_file.name.slice(0, -5));
       return jsonData;
     } catch (error) {
       console.log(error.message);
@@ -190,7 +190,7 @@ const read_selected_file = (event) => {
     const contents = event.target.result; // Get the file contents
     try {
       const jsonData = JSON.parse(contents); // Parse the JSON data
-      aInput.update_anno_file_data(jsonData);
+      aInput.update_anno_file_data(jsonData, uploaded_file.name.slice(0, -5));
       return jsonData;
     } catch (error) {
       console.log(error.message);

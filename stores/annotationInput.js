@@ -8,6 +8,7 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
       answer: "",
       confirmedData: [],
       anno_file_data: null,
+      anno_file_name: "data",
       current_table_index: 0,
       anno_name: "Annotator 1",
       hints: {
@@ -47,6 +48,9 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
       let anno_file_data = localStorage.getItem("anno_file_data");
       if (!anno_file_data) return;
       this.anno_file_data = JSON.parse(anno_file_data);
+
+      let anno_file_name = localStorage.getItem("anno_file_name");
+      if (anno_file_name) this.anno_file_name = anno_file_name;
 
       let confirmed_qa = localStorage.getItem("confirmed_qa");
       if (confirmed_qa) this.confirmedData = JSON.parse(confirmed_qa);
@@ -154,18 +158,19 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
       const link = document.createElement("a");
       link.href = url;
 
-      link.download = "data.json";
+      link.download = `${this.anno_file_name}_done.json`;
       link.click();
 
       URL.revokeObjectURL(url);
       useGeneralStore().show_toast(
         "success",
-        "Successfully Download data.json",
+        `Successfully Download ${this.anno_file_name}_done.json`,
       );
     },
     async download_as_confirmed() {
       const dataType = ref("Text");
       const res = useFileSystemAccess({
+        suggestedName: `${this.anno_file_name}_done.json`,
         dataType,
         types: [
           {
@@ -181,7 +186,7 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
       await res.saveAs();
       useGeneralStore().show_toast(
         "success",
-        "Successfully Download data.json",
+        "Successfully Download Your Confirmed",
       );
     },
     removeConfirmed(confirmed) {
@@ -204,7 +209,7 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
         "Your QA is updated successfully",
       );
     },
-    update_anno_file_data(new_data) {
+    update_anno_file_data(new_data, file_name) {
       if (this.anno_file_data != null)
         if (
           !confirm("There is already data uploaded, Are you sure to continue?")
@@ -217,9 +222,12 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
       window.localStorage.removeItem("current_hints_set");
 
       this.anno_file_data = new_data;
+      this.anno_file_name = file_name;
       if (new_data == null) window.localStorage.removeItem("anno_file_data");
-      else
+      else {
         window.localStorage.setItem("anno_file_data", JSON.stringify(new_data));
+        window.localStorage.setItem("anno_file_name", file_name);
+      }
       this.loadConfirmedData();
     },
     setCurrentTableID(new_id) {
