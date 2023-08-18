@@ -23,9 +23,11 @@
         </p>
       </div>
       <div
-        class="rounded-2xl p-4 leading-8 dark:bg-midnight-100 dark:text-gray-300"
+        class="space-y-2 rounded-2xl p-4 leading-8 dark:bg-midnight-100 dark:text-gray-300"
       >
-        <ul class="flex list-none flex-col gap-2 px-4">
+        <ul
+          class="flex max-h-[30vh] list-none flex-col gap-2 overflow-auto px-4"
+        >
           <li v-for="(hint, hint_index) in displayed_hints" :key="hint">
             <div
               class="flex items-center gap-2 rounded border px-4 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-midnight-200"
@@ -76,6 +78,24 @@
             </div>
           </li>
         </ul>
+        <div class="flex justify-center">
+          <button @click="general_store.show_overlay('hints')">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="h-6 w-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   </BaseBox>
@@ -83,11 +103,12 @@
 
 <script setup>
 const aInput = useAnnotationInputStore();
+const general_store = useGeneralStore();
 
 const displayed_hints = computed(() => {
   return aInput.hints["current_hints_set"][aInput.current_table_index].slice(
     0,
-    aInput.hints["n_displayed_hints"],
+    3,
   );
 });
 
