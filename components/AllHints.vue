@@ -79,7 +79,7 @@
         >
           <input
             :disabled="
-              addition_info[hint_index].checked_percent > RED_THRESHHOLD
+              addition_info[hint_index].checked_percent >= RED_THRESHHOLD
             "
             :id="getCheckboxID(hint_index, aInput.current_table_index)"
             class="peer flex aspect-square h-4 appearance-none items-center justify-center rounded border text-green-600 outline-2 outline-offset-2 focus:outline-green-300 disabled:cursor-not-allowed dark:outline-none dark:focus:outline-green-500"
@@ -130,7 +130,10 @@
                     : 'text-red-500',
                 ]"
               >
-                {{ addition_info[hint_index].checked_percent }}%
+                {{
+                  Math.round(addition_info[hint_index].checked_percent * 100) /
+                  100
+                }}%
               </span>
             </div>
           </label>
@@ -144,8 +147,8 @@
 const aInput = useAnnotationInputStore();
 const general_store = useGeneralStore();
 
-const RED_THRESHHOLD = 75;
-const YELLOW_THRESHHOLD = 50;
+const RED_THRESHHOLD = 25;
+const YELLOW_THRESHHOLD = 15;
 
 const current_table_confirmed = computed(() => {
   return aInput.confirmedData.filter(

@@ -39,6 +39,9 @@
             >
               <input
                 :id="getCheckboxID(hint_index, aInput.current_table_index)"
+                :disabled="
+                  addition_info[hint_index].checked_percent >= RED_THRESHHOLD
+                "
                 class="peer flex aspect-square h-4 appearance-none items-center justify-center rounded border text-green-600 outline-2 outline-offset-2 focus:outline-green-300 dark:outline-none dark:focus:outline-green-500"
                 :class="{
                   'bg-green-300 dark:border-none dark:bg-green-500':
@@ -51,7 +54,7 @@
                 v-model="hint.is_checked"
               />
               <div
-                class="absolute flex h-4 w-4 items-center justify-center opacity-0 transition-all peer-checked:opacity-100"
+                class="absolute hidden h-4 w-4 items-center justify-center opacity-0 transition-all peer-checked:flex peer-checked:opacity-100"
                 @click="hint.is_checked = !hint.is_checked"
               >
                 <svg
@@ -105,11 +108,36 @@
 const aInput = useAnnotationInputStore();
 const general_store = useGeneralStore();
 
+const RED_THRESHHOLD = 25;
+const YELLOW_THRESHHOLD = 15;
+
+const current_table_confirmed = computed(() => {
+  return aInput.confirmedData.filter(
+    (confirmed) => confirmed.table_id == aInput.current_table_index,
+  );
+});
 const displayed_hints = computed(() => {
   return aInput.hints["current_hints_set"][aInput.current_table_index].slice(
     0,
     3,
   );
+});
+const addition_info = computed(() => {
+  let addition = [];
+  const hint_list = displayed_hints.value;
+  for (let i = 0; i < hint_list.length; i++) {
+    let percentage = 0;
+    if (aInput.confirmedData.length > 0) {
+      percentage =
+        (hint_list[i].checked_count / current_table_confirmed.value.length) *
+        100;
+    }
+    addition.push({
+      content: aInput.hints["all_hints"][hint_list[i].hint_index],
+      checked_percent: percentage,
+    });
+  }
+  return addition;
 });
 
 function getCheckboxID(hint_id, table_id) {
