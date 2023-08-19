@@ -191,6 +191,24 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
     },
     removeConfirmed(confirmed) {
       if (!confirm("Are you sure want to remove this?")) return;
+      // Update checked_count
+      // Loop through every hint in hint list of this table
+      for (
+        let i = 0;
+        i < this.hints.current_hints_set[confirmed.table_id].length;
+        i++
+      ) {
+        // check if this hint[i] is in confirmed's hint
+        let hint_i_index =
+          this.hints.current_hints_set[confirmed.table_id][i].hint_index;
+        let hint_i_content = this.hints.all_hints[hint_i_index];
+        let found_index = confirmed.hints.indexOf(hint_i_content);
+        if (found_index !== -1) {
+          this.hints.current_hints_set[confirmed.table_id][i].checked_count--;
+        }
+      }
+
+      //remove Confirmed
       this.confirmedData.splice(this.confirmedData.indexOf(confirmed), 1);
       window.localStorage.setItem(
         "confirmed_qa",
