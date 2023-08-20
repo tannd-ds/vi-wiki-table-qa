@@ -36,7 +36,7 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
             },
           ],
         },
-        n_displayed_hints: null,
+        n_displayed_hints: 3,
       },
     };
   },
@@ -60,7 +60,6 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
         this.current_table_index = Number(current_table_index);
 
       // Create New Hints Set for each table
-      this.hints.n_displayed_hints = this.hints.all_hints.length;
       let current_hints_set = localStorage.getItem("current_hints_set");
       if (current_hints_set)
         this.hints["current_hints_set"] = JSON.parse(current_hints_set);
@@ -106,10 +105,7 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
         return;
       }
       let checked_hints = this.getCheckedHintsContent(
-        this.hints["current_hints_set"][this.current_table_index].slice(
-          0,
-          this.hints["n_displayed_hints"],
-        ),
+        this.hints["current_hints_set"][this.current_table_index],
       );
       if (checked_hints.length < 1) {
         useGeneralStore().show_toast(
@@ -252,39 +248,38 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
       this.current_table_index = new_id;
     },
     update_display_hints(current_hints_set, is_first_run = false) {
-      if (!is_first_run) {
-        for (let i = 0; i < this.hints.n_displayed_hints; i++) {
-          if (current_hints_set[i].is_checked) {
-            current_hints_set[i].percent_on_display_next /= 3;
-            current_hints_set[i].checked_count++;
-          } else current_hints_set[i].percent_on_display_next /= 2;
-          current_hints_set[i].is_checked = false;
-        }
-        for (
-          let i = this.hints.n_displayed_hints;
-          i < current_hints_set.length;
-          i++
-        )
-          current_hints_set[i].percent_on_display_next = Math.min(
-            current_hints_set[i].percent_on_display_next + 0.1,
-            1.0,
-          );
-        current_hints_set.push(...current_hints_set.slice(0, 3));
-        current_hints_set.splice(0, 3);
+      // Update checked_count before updating the hints table
+      for (let i = 0; i < current_hints_set.length; i++) {
+        if (current_hints_set[i].is_checked)
+          current_hints_set[i].checked_count++;
+        current_hints_set[i].is_checked = false;
       }
-      let chosen_hints = [];
-      let hint_index = 0;
-      while (chosen_hints.length < this.hints.n_displayed_hints) {
-        let threshhold = current_hints_set[hint_index].percent_on_display_next;
-
-        let random_number = Math.random();
-        if (random_number < threshhold) {
-          chosen_hints.push(current_hints_set[hint_index]);
-          current_hints_set.splice(hint_index, 1);
-        }
-        hint_index = (hint_index + 1) % current_hints_set.length;
+      /*
+        ALPHA: The importance degree of checked_count
+        h    : The sum of all hint's checked_count
+      */
+      const ALPHA = 0.8;
+      const EPSILON = 0.0001;
+      const h = Object.values(current_hints_set).reduce(
+        (sum, current_hint) => sum + current_hint.checked_count,
+        0,
+      );
+      for (let i = 0; i < current_hints_set.length; i++) {
+        current_hints_set[i].percent_on_display_next =
+          ALPHA *
+            (-1 /
+              (1 +
+                Math.exp(
+                  -20 * (current_hints_set[i].checked_count / (h + EPSILON)) +
+                    4,
+                )) +
+              1) +
+          (1 - ALPHA) * Math.random();
       }
-      return [...chosen_hints, ...current_hints_set];
+      current_hints_set.sort(
+        (a, b) => b.percent_on_display_next - a.percent_on_display_next,
+      );
+      return [...current_hints_set];
     },
     getCheckedHintsContent(hints) {
       let checked_hints = [];
