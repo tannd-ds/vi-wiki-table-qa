@@ -104,7 +104,7 @@
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="h-6 w-6 text-gray-400 group-hover:text-white"
+              class="h-6 w-6 text-gray-400 group-hover:text-gray-700 dark:group-hover:text-white"
             >
               <path
                 stroke-linecap="round"
@@ -113,7 +113,7 @@
               />
             </svg>
             <div
-              class="absolute -top-1/3 left-[calc(100%+5px)] scale-x-0 truncate rounded text-sm transition-all group-hover:scale-x-100 group-hover:p-2 dark:bg-zinc-800"
+              class="absolute -top-1/3 left-[calc(100%+5px)] scale-x-0 truncate rounded bg-gray-100 text-sm transition-all group-hover:scale-x-100 group-hover:p-2 dark:bg-zinc-800"
             >
               <span class="font-mono text-green-500">Ctrl + Click</span> on 1
               Table to show it only.
@@ -283,7 +283,10 @@
           </div>
         </div>
       </div>
-      <HTMLTable :table_data="aInput.getTableHTMLFromIndex(chosen_table)" />
+      <HTMLTable
+        v-if="chosen_table != null"
+        :table_data="aInput.getTableHTMLFromIndex(chosen_table)"
+      />
     </div>
   </div>
 </template>
@@ -291,10 +294,11 @@
 <script setup>
 const aInput = useAnnotationInputStore();
 
+const displayed_confirmed_index = ref(0);
 const chosen_table = computed(() => {
+  if (aInput.confirmedData.length == 0) return null;
   return aInput.confirmedData[displayed_confirmed_index.value].table_id;
 });
-const displayed_confirmed_index = ref(0);
 function set_chosen_table(confirmed_index) {
   if (confirmed_index >= aInput.confirmedData.length) return;
   displayed_confirmed_index.value = confirmed_index;
