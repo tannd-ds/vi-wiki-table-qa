@@ -6,9 +6,7 @@
       @keydown.ctrl="console.log('Yos')"
     >
       <div ref="modal">
-        <ConfirmedData v-if="currentOverlay == 'ConfirmedData'" />
-        <RenameAnnotator v-else-if="currentOverlay == 'RenameAnnotator'" />
-        <AllHints v-else-if="currentOverlay == 'AllHints'" />
+        <component :is="currentOverlay"></component>
       </div>
     </div>
   </Transition>
