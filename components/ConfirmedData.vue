@@ -296,8 +296,8 @@ const aInput = useAnnotationInputStore();
 
 const displayed_confirmed_index = ref(0);
 const chosen_table = computed(() => {
-  if (aInput.confirmedData.length == 0) return null;
-  return aInput.confirmedData[displayed_confirmed_index.value].table_id;
+  if (filter_confirmed.value.length == 0) return null;
+  return filter_confirmed.value[displayed_confirmed_index.value].table_id;
 });
 function set_chosen_table(confirmed_index) {
   if (confirmed_index >= aInput.confirmedData.length) return;
