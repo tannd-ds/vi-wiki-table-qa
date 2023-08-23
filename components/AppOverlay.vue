@@ -45,6 +45,7 @@ const Components = {
   confirmed: "ConfirmedData",
   rename: "RenameAnnotator",
   hints: "AllHints",
+  leaderboard: "Leaderboard",
 };
 
 const currentOverlay = computed(() => {
