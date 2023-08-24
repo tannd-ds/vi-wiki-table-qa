@@ -25,7 +25,22 @@
       <template #uploaded>{{ validation.anno_file.name }} uploaded</template>
     </AppDropzone>
 
-    <Popover class="absolute bottom-2 right-2 flex items-end">
+    <Popover class="absolute left-2 top-2 flex items-start">
+      <PopoverButton
+        tabindex="-1"
+        class="bottom-0 right-0 cursor-pointer rounded p-2 outline-none hover:bg-gray-200 focus:outline-none dark:text-gray-400 dark:hover:bg-zinc-700"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 256 256"
+          class="h-8 w-8 rotate-90"
+        >
+          <path
+            fill="currentColor"
+            d="M128 20a108 108 0 1 0 108 108A108.12 108.12 0 0 0 128 20Zm0 192a84 84 0 1 1 84-84a84.09 84.09 0 0 1-84 84Zm48.49-76.49a12 12 0 0 1-17 17L128 121l-31.51 31.49a12 12 0 0 1-17-17l40-40a12 12 0 0 1 17 0Z"
+          />
+        </svg>
+      </PopoverButton>
       <transition
         enter-active-class="transition duration-200 ease-out"
         enter-from-class="translate-y-1 opacity-0"
@@ -35,7 +50,7 @@
         leave-to-class="translate-y-1 opacity-0"
       >
         <PopoverPanel
-          class="bottom-0 left-0 transform px-4 outline-none focus:outline-none sm:px-0"
+          class="z-[10] translate-x-2 transform px-4 outline-none focus:outline-none sm:px-0"
         >
           <div
             class="relative flex flex-col divide-y-[1px] divide-gray-200 overflow-hidden rounded-lg border-2 border-gray-500 bg-white text-sm transition-all dark:divide-zinc-700 dark:bg-zinc-800"
@@ -83,22 +98,6 @@
           </div>
         </PopoverPanel>
       </transition>
-      <PopoverButton
-        tabindex="-1"
-        class="bottom-0 right-0 cursor-pointer rounded p-2 outline-none hover:bg-gray-200 focus:outline-none dark:text-gray-200 dark:hover:bg-zinc-700"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="32"
-          height="32"
-          viewBox="0 0 256 256"
-        >
-          <path
-            fill="currentColor"
-            d="M128 20a108 108 0 1 0 108 108A108.12 108.12 0 0 0 128 20Zm0 192a84 84 0 1 1 84-84a84.09 84.09 0 0 1-84 84Zm48.49-76.49a12 12 0 0 1-17 17L128 121l-31.51 31.49a12 12 0 0 1-17-17l40-40a12 12 0 0 1 17 0Z"
-          />
-        </svg>
-      </PopoverButton>
     </Popover>
     <div
       v-if="validation.is_valid_anno_file & validation.is_valid_confirmed_file"
