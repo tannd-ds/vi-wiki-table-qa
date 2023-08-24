@@ -104,7 +104,7 @@
       v-if="validation.is_valid_anno_file & validation.is_valid_confirmed_file"
       class="flex h-full items-start justify-between gap-8"
     >
-      <BaseBox class="w-[42rem] flex-col">
+      <BaseBox class="w-[42rem] flex-col gap-4">
         <div
           v-if="!validation.is_same_file"
           class="relative grid gap-2 rounded-lg border-2 border-yellow-500 bg-white p-7 text-sm transition-all dark:bg-midnight-100"

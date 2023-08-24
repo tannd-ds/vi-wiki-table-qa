@@ -45,7 +45,7 @@ export const useValidationStore = defineStore("validation", {
         0,
         this.anno_file.name.indexOf(".json"),
       );
-      const confirmed_name = this.anno_file.name.slice(
+      const confirmed_name = this.confirmed_file.name.slice(
         0,
         this.confirmed_file.name.indexOf("_done.json"),
       );
