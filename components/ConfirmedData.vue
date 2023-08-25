@@ -263,7 +263,10 @@
             </TransitionGroup>
           </ul>
           <div class="flex flex-col gap-8" v-if="tabs[1].is_show">
-            <PieChart />
+            <PieChart
+              :data="aInput.confirmedData"
+              :groups="aInput.anno_file_data"
+            />
             <div class="flex w-full justify-around px-4 dark:text-gray-200">
               <div>
                 <div class="text-4xl">

@@ -10,7 +10,7 @@
         >
           <span class="dark:text-gray-200">Total of</span>
           <span class="text-6xl font-bold dark:text-gray-200">
-            {{ aInput.confirmedData.length }}
+            {{ data.length }}
           </span>
           <span class="dark:text-gray-200">Pairs</span>
         </div>
@@ -26,11 +26,7 @@
         >
           <span class="text-xs">Table {{ table_index }}</span>
           <span class="text-sm font-bold">
-            {{
-              Math.round(
-                (counted[table_index] / aInput.confirmedData.length) * 1000,
-              ) / 10
-            }}
+            {{ Math.round((counted[table_index] / data.length) * 1000) / 10 }}
             %
           </span>
         </span>
@@ -59,7 +55,16 @@
 </template>
 
 <script setup>
-const aInput = useAnnotationInputStore();
+const props = defineProps({
+  data: {
+    type: Object,
+    required: true,
+  },
+  groups: {
+    type: Object,
+    required: true,
+  },
+});
 
 const color_set = [
   "#DDFFBB",
@@ -72,10 +77,9 @@ const color_set = [
 const counted = ref({});
 const rotation_rate = ref({});
 
-for (let i = 0; i < aInput.anno_file_data.length; i++) counted.value[i] = 0;
-for (let confirmed of aInput.confirmedData)
-  counted.value[confirmed.table_id] += 1;
-for (let i = 0; i < aInput.anno_file_data.length; i++)
+for (let i = 0; i < props.groups.length; i++) counted.value[i] = 0;
+for (let confirmed of props.data) counted.value[confirmed.table_id] += 1;
+for (let i = 0; i < props.groups.length; i++)
   // remove counted.value[i] if its value is 0
   if (counted.value[i] == 0) delete counted.value[i];
 
@@ -85,7 +89,7 @@ const pie_drawing = computed(() => {
   for (let table_id in counted.value) {
     if (counted.value[table_id] == 0) continue;
     // turn counted into degree
-    let degree = (counted.value[table_id] / aInput.confirmedData.length) * 360;
+    let degree = (counted.value[table_id] / props.data.length) * 360;
     rotation_rate.value[table_id] = current_begin_degree + degree;
     pie_conic_gradient_value +=
       color_set[table_id] +
@@ -109,8 +113,7 @@ const pie_annot_translate = computed(() => {
   let radius = 8.1;
   for (let table_id in counted.value) {
     // turn counted into radian
-    let radian =
-      (counted.value[table_id] / aInput.confirmedData.length) * 2 * Math.PI;
+    let radian = (counted.value[table_id] / props.data.length) * 2 * Math.PI;
     // Calculate X and Y trasformation using mathemetics
     let x_translate =
       String(Math.sin(current_begin_radian + radian / 2) * radius) + "rem";
