@@ -1,7 +1,10 @@
 <template>
   <ul class="flex list-none flex-col gap-2 overflow-auto px-4">
     <li v-for="(hint, hint_index) in displayed_hints" :key="hint">
+      <!-- NOTE: The v-if below just to make sure the app still works properly
+      After removing a Hint from Hint List. Remove this if not needed. -->
       <div
+        v-if="hint.hint_index < aInput.hints.all_hints.length"
         :class="[
           addition_info[hint_index].checked_percent >= RED_THRESHHOLD
             ? 'opacity-50'
