@@ -18,6 +18,7 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
           'Câu hỏi phải bao gồm từ "Và" hoặc các từ đồng nghĩa',
           'Câu hỏi phải bao gồm từ "Hoặc" hoặc các từ đồng nghĩa',
           'Câu hỏi phải bao gồm từ "Không" hoặc các từ đồng nghĩa',
+          'Câu hỏi phải bao gồm từ "Nào" hoặc các từ đồng nghĩa',
           'Câu hỏi phải bao gồm từ "Thuộc" hoặc các từ đồng nghĩa',
           'Câu hỏi phải bao gồm từ "Ở đâu" hoặc các từ đồng nghĩa',
           'Câu hỏi phải bao gồm từ "Khi nào" hoặc các từ đồng nghĩa',
