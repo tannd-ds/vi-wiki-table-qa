@@ -6,7 +6,8 @@
       <div
         v-if="hint.hint_index < aInput.hints.all_hints.length"
         :class="[
-          addition_info[hint_index].checked_percent >= RED_THRESHHOLD
+          addition_info[hint_index].checked_percent >= RED_THRESHHOLD ||
+          hint.hint_index == 5
             ? 'opacity-50'
             : 'hover:bg-gray-100 dark:hover:bg-midnight-200',
           {
@@ -18,7 +19,8 @@
       >
         <input
           :disabled="
-            addition_info[hint_index].checked_percent >= RED_THRESHHOLD
+            addition_info[hint_index].checked_percent >= RED_THRESHHOLD ||
+            hint.hint_index == 5
           "
           :id="getCheckboxID(hint_index, aInput.current_table_index)"
           class="peer flex aspect-square h-4 appearance-none items-center justify-center rounded text-green-600 outline-2 outline-offset-2 focus:outline-green-300 disabled:cursor-not-allowed dark:outline-none dark:focus:outline-green-500"
