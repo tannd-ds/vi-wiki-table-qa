@@ -539,7 +539,19 @@ function set_chosen_table(confirmed_index) {
 function toggle_show_table(table_index) {
   confirmed_table_is_show.value[table_index] =
     !confirmed_table_is_show.value[table_index];
+
+  // Check the number of displayed tables
+  let n_displayed = 0;
+  for (let i = 0; i < confirmed_table_is_show.value.length; i++) {
+    n_displayed += confirmed_table_is_show.value[i];
+  }
+
+  // If there is no displayed table, revert toggle.
+  if (n_displayed == 0)
+    confirmed_table_is_show.value[table_index] =
+      !confirmed_table_is_show.value[table_index];
 }
+
 function toggle_show_table_only(table_index) {
   for (let i = 0; i < confirmed_table_is_show.value.length; i++)
     confirmed_table_is_show.value[i] = false;
