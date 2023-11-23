@@ -25,6 +25,8 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
           'Câu hỏi phải bao gồm từ "Cái gì" hoặc các từ đồng nghĩa',
           'Câu hỏi phải bao gồm từ "Ai" hoặc các từ đồng nghĩa',
           'Câu hỏi phải bao gồm từ "Tại sao" hoặc các từ đồng nghĩa',
+          'Câu hỏi phải bao gồm từ "Thế Nào" hoặc các từ đồng nghĩa',
+          "Câu hỏi phải sử dụng phép liệt kê",
         ],
         current_hints_set: {
           table_index_01: [
