@@ -85,6 +85,8 @@ import {
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 
 const selected = ref(props.data[0]);
+console.log('Force set currentTableIndex to 0 on reload...');
+aInput.setCurrentTableID(selected.value.id);
 watch(selected, () => {
   aInput.setCurrentTableID(selected.value.id);
 });
