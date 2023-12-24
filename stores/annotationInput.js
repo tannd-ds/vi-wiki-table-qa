@@ -107,13 +107,13 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
       let checked_hints = this.getCheckedHintsContent(
         this.hints["current_hints_set"][this.current_table_index],
       );
-      if (checked_hints.length < 1) {
-        useGeneralStore().show_toast(
-          "error",
-          "Please choose AT LEAST ONE Hint!",
-        );
-        return;
-      }
+    //   if (checked_hints.length < 1) {
+    //     useGeneralStore().show_toast(
+    //       "error",
+    //       "Please choose AT LEAST ONE Hint!",
+    //     );
+    //     return;
+    //   }
       let dataPoint = {
         question: this.question,
         answer: this.answer,
