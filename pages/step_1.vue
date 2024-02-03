@@ -9,28 +9,40 @@
       <div class="w-full max-w-lg">
         <Hint ref="ref_hints" />
         <BaseBox class="flex-col">
-          <form class="w-full">
-            <AppListBox :data="table_labels" class="mb-6" ref="ref_tables" />
-            <InputField
-              type="text"
-              id="question"
-              v-model:model-value="aInput.question"
-              placeholder="Give me a Question!"
-              label_name="Question"
-              ref="ref_question"
-            />
-            <InputField
-              type="text"
-              id="answer"
-              v-model:model-value="aInput.answer"
-              placeholder="Answer, please"
-              label_name="Answer"
-              ref="ref_answer"
-            />
-            <div class="flex items-center justify-center lg:justify-between">
-              <BaseButton @click="aInput.confirmQA">Confirm</BaseButton>
-            </div>
-          </form>
+          <UForm :validate="validate" :state="aInput" class="space-y-4" @submit="onSubmit">
+            <UFormGroup name="table">
+              <AppListBox :data="table_labels" class="mb-6" ref="ref_tables" />
+            </UFormGroup>
+            <UFormGroup name="question">
+              <UInput 
+                variant="outline" 
+                icon="i-heroicons-question-mark-circle"
+                size="lg"
+                :padded="true"
+                placeholder="Question..." 
+                v-model="aInput.question"
+                :error="!aInput.question && 'You must enter a question!'"
+                :ui="{color: { white: { outline: 'bg-gray-100 dark:bg-midnight-200 ring-0 forcus:ring-2 dark:ring-0 dark:focus:ring-2'}}}"
+              />
+            </UFormGroup>
+
+            <UFormGroup name="answer">
+              <UInput 
+                variant="outline"
+                icon="i-heroicons-chat-bubble-left"
+                size="lg"
+                :padded="true"
+                placeholder="Answer..." 
+                v-model="aInput.answer"
+                :error="!aInput.answer && 'You must enter a answer!'"
+                :ui="{color: { white: { outline: 'bg-gray-100 dark:bg-midnight-200 ring-0 forcus:ring-2 dark:ring-0 dark:focus:ring-2'}}}"
+              />
+            </UFormGroup>
+
+            <UButton type="submit">
+              Submit
+            </UButton>
+          </UForm>
         </BaseBox>
       </div>
       <div class="flex flex-col">
@@ -41,8 +53,6 @@
 </template>
 
 <script setup>
-import { nextTick } from "vue";
-import { useEventListener } from "@vueuse/core";
 
 definePageMeta({
   layout: "custom",
@@ -54,79 +64,23 @@ definePageMeta({
 const aInput = useAnnotationInputStore();
 const general_store = useGeneralStore();
 
-const ref_question = ref(null);
-const ref_answer = ref(null);
-const ref_tables = ref(null);
-const ref_hints = ref(null);
-// Real ref is inside these refs
-const ref_question_input = computed(() =>
-  ref_question.value.$el.querySelector("#question"),
-);
-const ref_answer_input = computed(() =>
-  ref_answer.value.$el.querySelector("#answer"),
-);
-const ref_tables_input = computed(() =>
-  ref_tables.value.$el.nextSibling.querySelector("#listbox-btn"),
-);
-const ref_hint_1 = computed(() =>
-  ref_hints.value.$el.querySelector(
-    `#h0_t${String(aInput.current_table_index)}`,
-  ),
-);
-const ref_hint_2 = computed(() =>
-  ref_hints.value.$el.querySelector(
-    `#h1_t${String(aInput.current_table_index)}`,
-  ),
-);
-const ref_hint_3 = computed(() =>
-  ref_hints.value.$el.querySelector(
-    `#h2_t${String(aInput.current_table_index)}`,
-  ),
-);
-
-const { shift, a, q, Escape, t, Digit1, Digit2, Digit3 } = useMagicKeys();
-const activeElement = useActiveElement();
-const usingInput = computed(
-  () =>
-    (activeElement.value?.tagName === "INPUT") |
-    (activeElement.value?.tagName === "TEXTAREA"),
-);
-
 const route = useRoute();
 const router = useRouter();
 watchEffect(() => {
   const redirect_to = general_store.check_step(route.name);
   if (redirect_to != route.name) router.push(redirect_to);
-
-  if (usingInput.value && Escape.value) {
-    activeElement.value.blur();
-  }
-
-  if (!usingInput.value) {
-    if (shift.value && a.value) {
-      setTimeout(() => {
-        ref_answer_input.value.focus();
-      }, 20);
-    }
-    if (shift.value && q.value) {
-      setTimeout(() => {
-        ref_question_input.value.focus();
-      }, 20);
-    }
-    if (shift.value && t.value) {
-      ref_tables_input.value.click();
-    }
-    if (shift.value && Digit1.value) {
-      ref_hint_1.value.click();
-    }
-    if (shift.value && Digit2.value) {
-      ref_hint_2.value.click();
-    }
-    if (shift.value && Digit3.value) {
-      ref_hint_3.value.click();
-    }
-  }
 });
+
+const validate = (state) => {
+  const errors = []
+  if (!aInput.question) errors.push({ path: 'question', message: 'Required' })
+  if (!aInput.answer)   errors.push({ path: 'answer', message: 'Required' })
+  return errors
+}
+
+async function onSubmit (event) {
+  aInput.confirmQA();
+}
 
 const table_labels = computed(() => {
   const table_labels = [];
@@ -135,4 +89,6 @@ const table_labels = computed(() => {
   }
   return table_labels;
 });
+
+const modal_opened = ref(false);
 </script>

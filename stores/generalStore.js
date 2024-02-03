@@ -25,21 +25,16 @@ export const useGeneralStore = defineStore("general_store", {
     };
   },
   actions: {
-    show_toast(type = "sucess", content) {
+    show_toast(type = "success", content) {
+      let color = "green";
+      if (type == "error")
+        color = "red";
       let newToast = {
-        type: type,
-        content: content,
+        color: color,
+        title: content,
       };
 
-      if (this.toast_list.length <= 0) newToast["id"] = "0";
-      else {
-        // Prevent Annotator from spamming the toast
-        let previous_toast = this.toast_list[this.toast_list.length - 1];
-        if (previous_toast["content"] == newToast["content"]) return;
-
-        newToast["id"] = String(Number(previous_toast["id"]) + 1);
-      }
-      this.toast_list.push(newToast);
+      useToast().add(newToast);
     },
     show_overlay(overlay_name) {
       // Check if overlay_name is already on display

@@ -19,7 +19,7 @@
         <input
           :disabled="addition_info[hint_index].checked_percent >= RED_THRESHOLD"
           :id="getCheckboxID(hint_index, aInput.current_table_index)"
-          class="peer flex aspect-square h-4 appearance-none items-center justify-center rounded text-green-600 outline-2 outline-offset-2 focus:outline-green-300 disabled:cursor-not-allowed dark:outline-none dark:focus:outline-green-500"
+          class="peer flex w-4 h-4 appearance-none items-center justify-center rounded text-green-600 outline-2 outline-offset-2 focus:outline-green-300 disabled:cursor-not-allowed dark:outline-none dark:focus:outline-green-500"
           :class="{
             'bg-green-300 dark:border-none dark:bg-green-500': hint.is_checked,
             'border-gray-300 bg-gray-100 dark:border-zinc-700 dark:bg-zinc-700':
