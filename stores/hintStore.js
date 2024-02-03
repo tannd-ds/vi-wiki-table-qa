@@ -32,26 +32,25 @@ export const useHintStore = defineStore("hint", {
         }
     },
     actions: {
-        init_hint_set: function (n_tables, hint_set_key = "hint_set") {
+        init_hint_set(n_tables, hint_set_key = "hint_set") {
             let local_hints_set = localStorage.getItem(hint_set_key);
             if (local_hints_set)
                 this.hint_set = JSON.parse(local_hints_set);
             else {
-                local_hints_set = {};
+                this.hint_set = {};
                 for (let table_index = 0; table_index < n_tables; table_index++) {
-                    local_hints_set[table_index] = [];
+                    this.hint_set[table_index] = [];
                     for (let hint_index = 0; hint_index < this.all_hints.length; hint_index++) {
                         let hint_content = this.all_hints[hint_index];
-                        local_hints_set[table_index].push({
+                        this.hint_set[table_index].push({
                             content: hint_content,
                             is_checked: false,
                             percent_on_display_next: 0.4,
                             checked_count: 0,
                         });
                     }
-                    local_hints_set[table_index] = this.update_display_hints(local_hints_set[table_index], true);
+                    this.hint_set[table_index] = this.update_display_hints(table_index, true, false);
                 }
-                this.hint_set = local_hints_set;
                 window.localStorage.setItem(hint_set_key, JSON.stringify(this.hint_set));
             }
         },
