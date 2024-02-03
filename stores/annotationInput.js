@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { useGeneralStore } from "~/stores/generalStore";
+import { useHintStore} from "~/stores//hintStore";
 
 export const useAnnotationInputStore = defineStore("annotation_input", {
   state: () => {
@@ -11,136 +12,83 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
       anno_file_name: "data",
       current_table_index: 0,
       anno_name: "Annotator 1",
-      hints: {
-        all_hints: [
-          'Câu hỏi phải bao gồm từ "Bao nhiêu" hoặc các từ đồng nghĩa',
-          'Câu hỏi phải bao gồm từ "Thứ" hoặc các từ đồng nghĩa',
-          'Câu hỏi phải bao gồm từ "Và" hoặc các từ đồng nghĩa',
-          'Câu hỏi phải bao gồm từ "Hoặc" hoặc các từ đồng nghĩa',
-          'Câu hỏi phải bao gồm từ "Không" hoặc các từ đồng nghĩa',
-          'Câu hỏi phải bao gồm từ "Nào" hoặc các từ đồng nghĩa',
-          'Câu hỏi phải bao gồm từ "Thuộc" hoặc các từ đồng nghĩa',
-          'Câu hỏi phải bao gồm từ "Ở đâu" hoặc các từ đồng nghĩa',
-          'Câu hỏi phải bao gồm từ "Khi nào" hoặc các từ đồng nghĩa',
-          'Câu hỏi phải bao gồm từ "Cái gì" hoặc các từ đồng nghĩa',
-          'Câu hỏi phải bao gồm từ "Ai" hoặc các từ đồng nghĩa',
-          'Câu hỏi phải bao gồm từ "Tại sao" hoặc các từ đồng nghĩa',
-        ],
-        current_hints_set: {
-          table_index_01: [
-            {
-              hint_index: 0,
-              is_checked: false,
-              percent_on_display_next: 1.0,
-              checked_count: 0,
-            },
-          ],
-        },
-        n_displayed_hints: 3,
-      },
+      hints: useHintStore(),
     };
   },
   actions: {
     async loadConfirmedData() {
-      let anno_name = localStorage.getItem("anno_name");
-      if (anno_name) this.anno_name = anno_name;
+      let anno_name            = localStorage.getItem("anno_name"),
+          local_anno_file_data = localStorage.getItem("anno_file_data"),
+          local_anno_file_name = localStorage.getItem("anno_file_name"),
+          local_confirmed_qa   = localStorage.getItem("confirmed_qa"),
+          current_table_index  = localStorage.getItem("current_table_index");
 
-      let anno_file_data = localStorage.getItem("anno_file_data");
-      if (!anno_file_data) return;
-      this.anno_file_data = JSON.parse(anno_file_data);
+      if (anno_name)
+        this.anno_name = anno_name;
 
-      let anno_file_name = localStorage.getItem("anno_file_name");
-      if (anno_file_name) this.anno_file_name = anno_file_name;
+      if (!local_anno_file_data) return;
+      this.anno_file_data = JSON.parse(local_anno_file_data);
 
-      let confirmed_qa = localStorage.getItem("confirmed_qa");
-      if (confirmed_qa) this.confirmedData = JSON.parse(confirmed_qa);
+      if (local_anno_file_name)
+        this.anno_file_name = local_anno_file_name;
 
-      let current_table_index = localStorage.getItem("current_table_index");
+      if (local_confirmed_qa)
+        this.confirmedData = JSON.parse(local_confirmed_qa);
+
       if (current_table_index)
         this.current_table_index = Number(current_table_index);
 
       // Create New Hints Set for each table
-      let current_hints_set = localStorage.getItem("current_hints_set");
-      if (current_hints_set)
-        this.hints["current_hints_set"] = JSON.parse(current_hints_set);
-      else {
-        current_hints_set = {};
-        for (
-          let table_index = 0;
-          table_index < this.anno_file_data.length;
-          table_index++
-        ) {
-          current_hints_set[table_index] = [];
-          for (
-            let hint_index = 0;
-            hint_index < this.hints["all_hints"].length;
-            hint_index++
-          ) {
-            current_hints_set[table_index].push({
-              hint_index: hint_index,
-              is_checked: false,
-              percent_on_display_next: 0.4,
-              checked_count: 0,
-            });
-          }
-          current_hints_set[table_index] = this.update_display_hints(
-            current_hints_set[table_index],
-            true,
-          );
-        }
-        this.hints["current_hints_set"] = current_hints_set;
-        window.localStorage.setItem(
-          "current_hints_set",
-          JSON.stringify(this.hints["current_hints_set"]),
-        );
-      }
+      this.hints.init_hint_set(this.getNumOfTables);
     },
-    confirmData() {
+
+    checkValidQA() {
       if (!this.question) {
         useGeneralStore().show_toast("error", "Please Enter a Question!");
-        return;
+        return false;
       }
       if (!this.answer) {
         useGeneralStore().show_toast("error", "Please Enter an Answer!");
-        return;
+        return false;
       }
-      let checked_hints = this.getCheckedHintsContent(
-        this.hints["current_hints_set"][this.current_table_index],
-      );
+      let checked_hints = this.hints.get_checked_hints(this.current_table_index);
       if (checked_hints.length < 1) {
         useGeneralStore().show_toast(
-          "error",
-          "Please choose AT LEAST ONE Hint!",
+        "error",
+        "Please choose AT LEAST ONE Hint!",
         );
-        return;
+        return false;
       }
+      return true;
+    },
+
+    confirmQA() {
+      if (!this.checkValidQA()) return;
+
+      let checked_hints = this.hints.get_checked_hints(this.current_table_index);
       let dataPoint = {
         question: this.question,
         answer: this.answer,
         table_id: this.current_table_index,
         hints: checked_hints,
       };
+
+      // Save to current confirmed data and local storage
       this.confirmedData.push(dataPoint);
       window.localStorage.setItem(
         "confirmed_qa",
         JSON.stringify(this.confirmedData),
       );
       useGeneralStore().show_toast("success", "Save Your Data Successfully.");
+
       // Reset Input QA Values
       this.question = "";
       this.answer = "";
       // Update New Hints set
-      this.hints["current_hints_set"][this.current_table_index] =
-        this.update_display_hints(
-          this.hints["current_hints_set"][this.current_table_index],
-        );
-      window.localStorage.setItem(
-        "current_hints_set",
-        JSON.stringify(this.hints["current_hints_set"]),
-      );
+      this.hints.update_display_hints(this.current_table_index);
     },
     download_confirmed() {
-      if (this.confirmedData.length == 0) {
+      if (this.confirmedData.length === 0) {
         useGeneralStore().show_toast(
           "error",
           "There is no confirmed data to be downloaded",
@@ -163,6 +111,7 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
         `Successfully Download ${this.anno_file_name}_done.json`,
       );
     },
+
     async download_as_confirmed() {
       const dataType = ref("Text");
       const res = useFileSystemAccess({
@@ -185,32 +134,29 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
         "Successfully Download Your Confirmed",
       );
     },
+
     removeConfirmed(confirmed) {
       if (!confirm("Are you sure want to remove this?")) return;
       // Update checked_count
       // Loop through every hint in hint list of this table
-      for (
-        let i = 0;
-        i < this.hints.current_hints_set[confirmed.table_id].length;
-        i++
-      ) {
+      for (let i = 0; i < this.hints.hint_set[confirmed.table_id].length; i++) {
         // check if this hint[i] is in confirmed's hint
         let hint_i_index =
-          this.hints.current_hints_set[confirmed.table_id][i].hint_index;
+          this.hints.hint_set[confirmed.table_id][i].hint_index;
         let hint_i_content = this.hints.all_hints[hint_i_index];
         let found_index = confirmed.hints.indexOf(hint_i_content);
         if (found_index !== -1) {
-          this.hints.current_hints_set[confirmed.table_id][i].checked_count--;
+          this.hints.hint_set[confirmed.table_id][i].checked_count--;
         }
       }
 
-      //remove Confirmed
+      // Remove Confirmed
       this.confirmedData.splice(this.confirmedData.indexOf(confirmed), 1);
       window.localStorage.setItem(
         "confirmed_qa",
         JSON.stringify(this.confirmedData),
       );
-      if (this.confirmedData.length == 0)
+      if (this.confirmedData.length === 0)
         useGeneralStore().overlay.is_show = false;
     },
     update_confirmed(new_confirmed) {
@@ -225,9 +171,7 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
     },
     update_anno_file_data(new_data, file_name) {
       if (this.anno_file_data != null)
-        if (
-          !confirm("There is already data uploaded, Are you sure to continue?")
-        )
+        if (!confirm("There is already data uploaded, Are you sure to continue?"))
           return;
       // Reset Confirmed Data
       this.confirmedData = [];
@@ -247,49 +191,7 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
     setCurrentTableID(new_id) {
       this.current_table_index = new_id;
     },
-    update_display_hints(current_hints_set, is_first_run = false) {
-      // Update checked_count before updating the hints table
-      for (let i = 0; i < current_hints_set.length; i++) {
-        if (current_hints_set[i].is_checked)
-          current_hints_set[i].checked_count++;
-        current_hints_set[i].is_checked = false;
-      }
-      /*
-        ALPHA: The importance degree of checked_count
-        h    : The sum of all hint's checked_count
-      */
-      const ALPHA = 0.8;
-      const EPSILON = 0.0001;
-      const h = Object.values(current_hints_set).reduce(
-        (sum, current_hint) => sum + current_hint.checked_count,
-        0,
-      );
-      for (let i = 0; i < current_hints_set.length; i++) {
-        current_hints_set[i].percent_on_display_next =
-          ALPHA *
-            (-1 /
-              (1 +
-                Math.exp(
-                  -20 * (current_hints_set[i].checked_count / (h + EPSILON)) +
-                    4,
-                )) +
-              1) +
-          (1 - ALPHA) * Math.random();
-      }
-      current_hints_set.sort(
-        (a, b) => b.percent_on_display_next - a.percent_on_display_next,
-      );
-      return [...current_hints_set];
-    },
-    getCheckedHintsContent(hints) {
-      let checked_hints = [];
-      for (let i = 0; i < hints.length; i++) {
-        if (hints[i].is_checked)
-          checked_hints.push(this.hints.all_hints[hints[i]["hint_index"]]);
-      }
-      return checked_hints;
-    },
-    save_anno_name(new_name) {
+    SaveAnnoName(new_name) {
       // TODO: Check Name validity
 
       this.anno_name = new_name;
@@ -302,6 +204,9 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
     },
   },
   getters: {
+    getNumOfTables() {
+      return this.anno_file_data.length;
+    },
     getConfirmedData() {
       return this.confirmedData["qa"];
     },

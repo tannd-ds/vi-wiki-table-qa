@@ -28,7 +28,7 @@
               ref="ref_answer"
             />
             <div class="flex items-center justify-center lg:justify-between">
-              <BaseButton @click="aInput.confirmData">Confirm</BaseButton>
+              <BaseButton @click="aInput.confirmQA">Confirm</BaseButton>
             </div>
           </form>
         </BaseBox>
@@ -41,6 +41,9 @@
 </template>
 
 <script setup>
+import { nextTick } from "vue";
+import { useEventListener } from "@vueuse/core";
+
 definePageMeta({
   layout: "custom",
   pageTransition: {
@@ -127,7 +130,7 @@ watchEffect(() => {
 
 const table_labels = computed(() => {
   const table_labels = [];
-  for (let i = 0; i < aInput.anno_file_data.length; i++) {
+  for (let i = 0; i < aInput.getNumOfTables; i++) {
     table_labels.push({ id: i, name: "Table " + String(i) });
   }
   return table_labels;

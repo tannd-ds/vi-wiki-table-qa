@@ -2503,12 +2503,12 @@ const load_demo_file = () => {
     },
   ];
 
-  aInput.update_anno_file_data(jsonData);
+  aInput.update_anno_file_data(jsonData, "demo_demo");
   upload_success.value = true;
   router.push("/step_1");
 };
 const restart = () => {
-  aInput.update_anno_file_data(null);
+  aInput.update_anno_file_data(null, "");
   upload_success.value = false;
   general_store.update_step(0);
 };

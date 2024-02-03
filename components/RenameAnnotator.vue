@@ -30,7 +30,7 @@
         class="w-full"
       />
       <div class="flex items-center justify-between">
-        <BaseButton @click="aInput.save_anno_name(new_name)"> Save </BaseButton>
+        <BaseButton @click="aInput.SaveAnnoName(new_name)"> Save </BaseButton>
       </div>
     </form>
   </BaseBox>
@@ -42,6 +42,6 @@ const aInput = useAnnotationInputStore();
 const new_name = ref("");
 
 const save_name = () => {
-  aInput.save_anno_name(new_name.value);
+  aInput.SaveAnnoName(new_name.value);
 };
 </script>

@@ -4,10 +4,9 @@
       <!-- NOTE: The v-if below just to make sure the app still works properly
       After removing a Hint from Hint List. Remove this if not needed. -->
       <div
-        v-if="hint.hint_index < aInput.hints.all_hints.length"
+        v-if="hint_index < hints.all_hints.length"
         :class="[
-          addition_info[hint_index].checked_percent >= RED_THRESHHOLD ||
-          hint.hint_index == 5
+          addition_info[hint_index].checked_percent >= RED_THRESHOLD
             ? 'opacity-50'
             : 'hover:bg-gray-100 dark:hover:bg-midnight-200',
           {
@@ -18,10 +17,7 @@
         ]"
       >
         <input
-          :disabled="
-            addition_info[hint_index].checked_percent >= RED_THRESHHOLD ||
-            hint.hint_index == 5
-          "
+          :disabled="addition_info[hint_index].checked_percent >= RED_THRESHOLD"
           :id="getCheckboxID(hint_index, aInput.current_table_index)"
           class="peer flex aspect-square h-4 appearance-none items-center justify-center rounded text-green-600 outline-2 outline-offset-2 focus:outline-green-300 disabled:cursor-not-allowed dark:outline-none dark:focus:outline-green-500"
           :class="{
@@ -56,16 +52,14 @@
           :for="getCheckboxID(hint_index, aInput.current_table_index)"
           class="ml-2 w-full space-y-2 py-4 text-sm font-medium text-midnight-100 peer-disabled:cursor-not-allowed dark:text-gray-200"
         >
-          <div>
-            {{ addition_info[hint_index].content }}
-          </div>
+          <div>{{ hint.content }}</div>
           <div v-if="verbose" class="text-md font-normal">
             Used:
             <span
               :class="[
-                addition_info[hint_index].checked_percent < YELLOW_THRESHHOLD
+                addition_info[hint_index].checked_percent < YELLOW_THRESHOLD
                   ? 'text-green-500'
-                  : addition_info[hint_index].checked_percent < RED_THRESHHOLD
+                  : addition_info[hint_index].checked_percent < RED_THRESHOLD
                   ? 'text-yellow-500'
                   : 'text-red-500',
               ]"
@@ -83,7 +77,10 @@
 </template>
 
 <script setup>
+import {useHintStore} from "../stores/hintStore";
+
 const aInput = useAnnotationInputStore();
+const hints = useHintStore()
 
 const props = defineProps({
   n_displayed: {
@@ -96,8 +93,8 @@ const props = defineProps({
   },
 });
 
-const RED_THRESHHOLD = 25;
-const YELLOW_THRESHHOLD = 15;
+const RED_THRESHOLD = 25;
+const YELLOW_THRESHOLD = 15;
 
 const current_table_confirmed = computed(() => {
   return aInput.confirmedData.filter(
@@ -105,10 +102,8 @@ const current_table_confirmed = computed(() => {
   );
 });
 const displayed_hints = computed(() => {
-  return aInput.hints["current_hints_set"][aInput.current_table_index].slice(
-    0,
-    props.n_displayed,
-  );
+  console.log(hints["hint_set"])
+  return hints.hint_set[aInput.current_table_index].slice(0, props.n_displayed);
 });
 const addition_info = computed(() => {
   let addition = [];
@@ -121,7 +116,7 @@ const addition_info = computed(() => {
         100;
     }
     addition.push({
-      content: aInput.hints["all_hints"][hint_list[i].hint_index],
+      content: hints.all_hints[hint_list[i].hint_index],
       checked_percent: percentage,
     });
   }
