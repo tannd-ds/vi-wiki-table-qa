@@ -14,7 +14,7 @@
 const general_store = useGeneralStore();
 const aInput = useAnnotationInputStore();
 
-aInput.loadConfirmedData();
+aInput.load_confirmed_qas();
 const isLargeScreen = useMediaQuery("(min-width: 1024px)");
 general_store.isLargeScreen = isLargeScreen.value;
 watch(isLargeScreen, () => {

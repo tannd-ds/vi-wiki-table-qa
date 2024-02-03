@@ -95,29 +95,9 @@
             @click.exact="toggle_show_table(show_table_index)"
             @click.ctrl.exact="toggle_show_table_only(show_table_index)"
           >
-            Table {{ show_table_index }}
-          </li>
-          <li class="group relative">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="h-6 w-6 text-gray-400 group-hover:text-gray-700 dark:group-hover:text-white"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-              />
-            </svg>
-            <div
-              class="absolute -top-1/3 left-[calc(100%+5px)] scale-x-0 truncate rounded bg-gray-100 text-sm transition-all group-hover:scale-x-100 group-hover:p-2 dark:bg-zinc-800"
-            >
-              <span class="font-mono text-green-500">Ctrl + Click</span> on 1
-              Table to show it only.
-            </div>
+            <UTooltip :text="`Table ${show_table_index}. Ctrl + Click to show this Table only`" :popper="{ arrow: false }">
+              {{ show_table_index }}
+            </UTooltip>
           </li>
         </ul>
         <div class="h-full overflow-auto">

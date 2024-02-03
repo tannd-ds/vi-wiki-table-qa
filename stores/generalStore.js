@@ -10,6 +10,16 @@ export const useGeneralStore = defineStore("general_store", {
         ? Number(window.localStorage.getItem("current_step"))
         : 0,
       n_steps: 2,
+      step_info: [
+        {
+          id: 0,
+          description: 'Upload Assigned File'
+        },
+        {
+          id: 1,
+          description: 'Write your QAs!'
+        }
+      ],
       overlay: {
         is_show: false,
         type: "edit",

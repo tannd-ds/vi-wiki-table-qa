@@ -32,7 +32,7 @@
       }"
     >
       <SideBarStepIndicator
-        :n_steps="general_store.n_steps"
+        :step_info="general_store.step_info"
         :current_step="general_store.current_step"
       />
 

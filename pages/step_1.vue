@@ -79,7 +79,7 @@ const validate = (state) => {
 }
 
 async function onSubmit (event) {
-  aInput.confirmQA();
+  aInput.confirm_qa();
 }
 
 const table_labels = computed(() => {

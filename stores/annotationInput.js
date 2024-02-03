@@ -16,7 +16,7 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
     };
   },
   actions: {
-    async loadConfirmedData() {
+    async load_confirmed_qas() {
       let anno_name            = localStorage.getItem("anno_name"),
           local_anno_file_data = localStorage.getItem("anno_file_data"),
           local_anno_file_name = localStorage.getItem("anno_file_name"),
@@ -42,7 +42,7 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
       this.hints.init_hint_set(this.getNumOfTables);
     },
 
-    checkValidQA() {
+    check_valid_qa() {
       if (!this.question) {
         useGeneralStore().show_toast("error", "Please Enter a Question!");
         return false;
@@ -62,8 +62,8 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
       return true;
     },
 
-    confirmQA() {
-      if (!this.checkValidQA()) return;
+    confirm_qa() {
+      if (!this.check_valid_qa()) return;
 
       let checked_hints = this.hints.get_checked_hints(this.current_table_index);
       let dataPoint = {
@@ -87,6 +87,7 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
       // Update New Hints set
       this.hints.update_display_hints(this.current_table_index);
     },
+
     download_confirmed() {
       if (this.confirmedData.length === 0) {
         useGeneralStore().show_toast(
@@ -186,7 +187,7 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
         window.localStorage.setItem("anno_file_data", JSON.stringify(new_data));
         window.localStorage.setItem("anno_file_name", file_name);
       }
-      this.loadConfirmedData();
+      this.load_confirmed_qas();
     },
     setCurrentTableID(new_id) {
       this.current_table_index = new_id;
