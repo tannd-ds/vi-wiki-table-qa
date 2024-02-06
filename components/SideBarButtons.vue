@@ -1,39 +1,35 @@
 <template>
   <BaseBox
-    class="group ml-4 w-[5em] flex-col gap-8 px-[1em] transition-all duration-300 hover:w-[18em] hover:max-w-none"
+    class="group ml-4 w-[5em] flex-col gap-8 px-[1em] transition-all duration-300"
   >
     <!-- Show Confirmed -->
     <div class="relative flex gap-2">
-      <button
-        :disabled="aInput.confirmedData.length <= 0"
-        class="relative rounded-lg bg-green-200 p-2 text-green-500 dark:bg-green-400 dark:bg-opacity-80 dark:text-green-200 dark:hover:bg-opacity-70"
-        @click="general_store.show_overlay('confirmed')"
+      <UChip
+          :show="aInput.confirmedData.length > 0"
+          :text="aInput.confirmedData.length"
+          size="3xl"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="h-7 w-7"
+        <button
+          :disabled="aInput.confirmedData.length <= 0"
+          class="relative rounded-lg bg-green-200 p-2 text-green-500 dark:bg-green-400 dark:bg-opacity-80 dark:text-green-200 dark:hover:bg-opacity-70"
+          @click="general_store.show_overlay('confirmed')"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3"
-          />
-        </svg>
-        <div
-          class="absolute -right-2 -top-1 inline-flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-green-500 text-xs font-bold text-gray-200 dark:border-gray-900"
-        >
-          {{ aInput.confirmedData.length }}
-        </div>
-      </button>
-      <div
-        class="z-30 hidden truncate rounded px-4 py-2 text-sm font-medium text-midnight-100 transition-all duration-300 group-hover:block dark:text-gray-200"
-      >
-        <div>Show Comfirmed QA Pairs</div>
-      </div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-7 w-7"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3"
+            />
+          </svg>
+        </button>
+      </UChip>
     </div>
 
     <!-- User -->
@@ -56,37 +52,6 @@
           />
         </svg>
       </button>
-      <div
-        class="z-30 hidden truncate rounded px-4 py-2 text-sm font-medium text-midnight-100 transition-all duration-300 group-hover:block dark:text-gray-200"
-      >
-        <div class="flex items-center gap-2">
-          <div class="text-sm font-medium dark:text-gray-200">
-            <span class="text-sm text-gray-500 dark:text-gray-400">
-              Welcome,
-            </span>
-            <span>{{ aInput.anno_name }}!</span>
-          </div>
-          <button @click="general_store.show_overlay('rename')">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="h-4 w-4"
-            >
-              <path
-                fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 20h4L18.5 9.5a1.5 1.5 0 0 0-4-4L4 16v4m9.5-13.5l4 4"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
     </div>
 
     <!-- Color Mode -->
@@ -110,13 +75,6 @@
           />
         </svg>
       </button>
-      <div
-        class="z-30 hidden truncate rounded px-4 py-2 text-sm font-medium text-midnight-100 transition-all duration-300 group-hover:block dark:text-gray-200"
-      >
-        <div class="font-medium text-midnight-100 dark:text-gray-200">
-          <div>Toggle Color Mode</div>
-        </div>
-      </div>
     </div>
   </BaseBox>
 </template>

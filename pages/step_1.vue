@@ -89,6 +89,4 @@ const table_labels = computed(() => {
   }
   return table_labels;
 });
-
-const modal_opened = ref(false);
 </script>

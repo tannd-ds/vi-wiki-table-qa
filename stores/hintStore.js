@@ -5,18 +5,15 @@ export const useHintStore = defineStore("hint", {
     state: () => {
         return {
             all_hints: [
-                'Câu hỏi phải bao gồm từ "Bao nhiêu" hoặc các từ đồng nghĩa',
-                'Câu hỏi phải bao gồm từ "Thứ" hoặc các từ đồng nghĩa',
-                'Câu hỏi phải bao gồm từ "Và" hoặc các từ đồng nghĩa',
-                'Câu hỏi phải bao gồm từ "Hoặc" hoặc các từ đồng nghĩa',
-                'Câu hỏi phải bao gồm từ "Không" hoặc các từ đồng nghĩa',
-                'Câu hỏi phải bao gồm từ "Nào" hoặc các từ đồng nghĩa',
-                'Câu hỏi phải bao gồm từ "Thuộc" hoặc các từ đồng nghĩa',
-                'Câu hỏi phải bao gồm từ "Ở đâu" hoặc các từ đồng nghĩa',
-                'Câu hỏi phải bao gồm từ "Khi nào" hoặc các từ đồng nghĩa',
-                'Câu hỏi phải bao gồm từ "Cái gì" hoặc các từ đồng nghĩa',
-                'Câu hỏi phải bao gồm từ "Ai" hoặc các từ đồng nghĩa',
-                'Câu hỏi phải bao gồm từ "Tại sao" hoặc các từ đồng nghĩa',
+                'Cái gì, cái nào, công ty nào,... hoặc những từ đồng nghĩa (What)',
+                'Làm thế nào, như thế nào, bằng cách nào,... hoặc những từ đồng nghĩa (How)',
+                'Ở đâu, trong thành phố nào, ở nước nào,... hoặc những từ đồng nghĩa (Where)',
+                'Ai, người nào,... hoặc những từ đồng nghĩa (Who)',
+                'Vì sao, tại sao,... hoặc những từ đồng nghĩa (Why)',
+                'Khi nào, thời gian nào, ... hoặc những từ đồng nghĩa (When)',
+                'Sử dụng hỏi kết hợp giữa các ô, các hàng, các cột',
+                'Sử dụng yêu cầu liệt kê, sắp xếp',
+                'Sử dụng tính toán',
             ],
             hint_set: {
                 table_index_01: [

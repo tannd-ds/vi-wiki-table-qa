@@ -20,8 +20,7 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
       let anno_name            = localStorage.getItem("anno_name"),
           local_anno_file_data = localStorage.getItem("anno_file_data"),
           local_anno_file_name = localStorage.getItem("anno_file_name"),
-          local_confirmed_qa   = localStorage.getItem("confirmed_qa"),
-          current_table_index  = localStorage.getItem("current_table_index");
+          local_confirmed_qa   = localStorage.getItem("confirmed_qa");
 
       if (anno_name)
         this.anno_name = anno_name;
@@ -34,9 +33,6 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
 
       if (local_confirmed_qa)
         this.confirmedData = JSON.parse(local_confirmed_qa);
-
-      if (current_table_index)
-        this.current_table_index = Number(current_table_index);
 
       // Create New Hints Set for each table
       this.hints.init_hint_set(this.getNumOfTables);
@@ -178,7 +174,12 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
       this.confirmedData = [];
       window.localStorage.removeItem("anno_file_data");
       window.localStorage.removeItem("confirmed_qa");
-      window.localStorage.removeItem("current_hints_set");
+      window.localStorage.removeItem("hint_set");
+
+      if (!new_data[0].table_html) {
+        useGeneralStore().show_toast('error', 'You uploaded a wrong file!');
+        return;
+      }
 
       this.anno_file_data = new_data;
       this.anno_file_name = file_name;
