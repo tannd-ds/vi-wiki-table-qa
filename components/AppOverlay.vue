@@ -5,7 +5,7 @@
       class="absolute left-0 top-0 z-20 flex h-full min-h-screen w-screen bg-midnight-300/90 items-baseline justify-center lg:items-center"
     >
       <div ref="modal">
-        <ConfirmedData v-if="currentOverlay === 'ConfirmedData'" />
+        <AppConfirmedData v-if="currentOverlay === 'ConfirmedData'" />
         <RenameAnnotator v-else-if="currentOverlay === 'RenameAnnotator'" />
         <AllHints v-else-if="currentOverlay === 'AllHints'" />
       </div>
