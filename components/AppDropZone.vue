@@ -40,9 +40,11 @@ const upload_success = ref(false);
 const state = computed(() => {
   return props.initState || upload_success.value;
 });
+
 function toggle_dropzone() {
   dropzone_active.value = !dropzone_active.value;
 }
+
 const read_file = (uploaded_file, sourceType) => {
   toggle_dropzone();
   const reader = new FileReader();
@@ -60,10 +62,12 @@ const read_file = (uploaded_file, sourceType) => {
   reader.readAsText(uploaded_file);
   upload_success.value = true;
 };
+
 const read_dropped_file = (event) => {
   const uploaded_file = event.dataTransfer.files[0];
   read_file(uploaded_file, "dropped");
 };
+
 const read_selected_file = (event) => {
   const uploaded_file = event.target.files[0];
   read_file(uploaded_file, "selected");

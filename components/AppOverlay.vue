@@ -5,9 +5,9 @@
       class="absolute left-0 top-0 z-20 flex h-full min-h-screen w-screen bg-midnight-300/90 items-baseline justify-center lg:items-center"
     >
       <div ref="modal">
-        <ConfirmedData v-if="currentOverlay == 'ConfirmedData'" />
-        <RenameAnnotator v-else-if="currentOverlay == 'RenameAnnotator'" />
-        <AllHints v-else-if="currentOverlay == 'AllHints'" />
+        <ConfirmedData v-if="currentOverlay === 'ConfirmedData'" />
+        <RenameAnnotator v-else-if="currentOverlay === 'RenameAnnotator'" />
+        <AllHints v-else-if="currentOverlay === 'AllHints'" />
       </div>
     </div>
   </Transition>
@@ -23,7 +23,7 @@ onClickOutside(modal, () => {
 });
 
 window.addEventListener("keydown", (e) => {
-  if (e.key == "Escape") {
+  if (e.key === "Escape") {
     general_store.close_overlay();
   }
 });
