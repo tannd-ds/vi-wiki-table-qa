@@ -23,20 +23,19 @@
       </svg>
     </button>
 
+
     <!-- SideBar -->
     <div
-      class="fixed z-0 transition-all"
+      class="fixed left-2 z-0 transition-all"
       :class="{
         '-translate-x-full': !(navbar_is_show | general_store.isLargeScreen),
         'translate-x-0': navbar_is_show | general_store.isLargeScreen,
       }"
     >
-      <SideBarStepIndicator
-        :step_info="general_store.step_info"
-        :current_step="general_store.current_step"
-      />
-
-      <SideBarButtons />
+      <div class="flex flex-col items-center">
+        <SideBarDropdown />
+        <SideBarButtons />
+      </div>
     </div>
   </div>
 </template>
