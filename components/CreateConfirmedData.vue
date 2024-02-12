@@ -1,6 +1,8 @@
 <script setup>
 const aInput = useAnnotationInputStore();
 
+const base_confirmed_state = ref(0);
+
 const confirmed_table_is_show = ref([]);
 for (let i = 0; i < aInput.anno_file_data.length; i++) {
   confirmed_table_is_show.value.push(true);
@@ -10,6 +12,17 @@ const filter_data = computed(() => {
       (confirmed) => confirmed_table_is_show.value[confirmed.table_id],
   );
 });
+
+function get_actual_data_index(index) {
+  let real_index = 0;
+  for (let i = 0; i < aInput.confirmedData.length; i++) {
+    if (filter_data.value[index] === aInput.confirmedData[i]) {
+      return i;
+    }
+  }
+  useGeneralStore().show_toast('error', 'Cannot find the real index of the data.');
+  return -1;
+}
 
 function toggle_show_table(table_index) {
   confirmed_table_is_show.value[table_index] =
@@ -26,6 +39,9 @@ function toggle_show_table_only(table_index) {
   <BaseConfirmedData
     :qa_list="filter_data"
     :table_list="aInput.anno_file_data"
+    @save:qa_list="() => aInput.update_confirmed(null)"
+    @download:qa_list="() => aInput.download_confirmed()"
+    @update:state="(new_state) => base_confirmed_state = new_state"
   >
     <template #filter>
       <ul class="my-3 flex gap-2 dark:text-gray-200">
@@ -48,20 +64,49 @@ function toggle_show_table_only(table_index) {
         <li
           v-for="(show_table, show_table_index) in confirmed_table_is_show"
           :key="show_table_index"
-          class="flex h-full min-h-[2em] min-w-[2em] cursor-pointer items-center justify-center rounded border border-gray-200 px-2 text-xs dark:border-zinc-700"
-          :class="[
-            confirmed_table_is_show[show_table_index]
-              ? 'bg-green-300 hover:bg-green-200 dark:bg-green-600 dark:text-midnight-100 dark:hover:bg-green-500'
-              : 'hover:bg-gray-100 dark:text-zinc-500 dark:hover:bg-zinc-700',
-          ]"
-          @click.exact="toggle_show_table(show_table_index)"
-          @click.ctrl.exact="toggle_show_table_only(show_table_index)"
         >
-          <UTooltip :text="`Table ${show_table_index}. Ctrl + Click to show this Table only`" :popper="{ arrow: false }">
-            {{ show_table_index }}
+          <UTooltip
+              :popper="{ arrow: false, placement: 'bottom-start' }"
+          >
+            <template #text>
+              <span class="font-mono">
+                <span class="text-green-500">Table {{ show_table_index }}. </span>
+                <UKbd>Ctrl</UKbd> + <UKbd>Click</UKbd> to show this Table only.
+              </span>
+            </template>
+            <div
+              class="flex h-full min-h-[2em] min-w-[2em] cursor-pointer items-center justify-center rounded border border-gray-200 px-2 text-xs dark:border-zinc-700"
+              :class="[
+                confirmed_table_is_show[show_table_index]
+                  ? 'bg-green-300 hover:bg-green-200 dark:bg-green-600 dark:text-midnight-100 dark:hover:bg-green-500'
+                  : 'hover:bg-gray-100 dark:text-zinc-500 dark:hover:bg-zinc-700',
+              ]"
+              @click.exact="toggle_show_table(show_table_index)"
+              @click.ctrl.exact="toggle_show_table_only(show_table_index)"
+            >
+              {{ show_table_index }}
+            </div>
           </UTooltip>
         </li>
       </ul>
+    </template>
+
+    <template #edit_functions>
+      <div class="flex flex-col gap-2">
+        <UButton
+            icon="i-heroicons-check"
+            size="2xs"
+            @click="() => aInput.update_confirmed(null)"
+            class="flex items-center gap-1" />
+
+        <UButton
+            icon="i-heroicons-trash"
+            size="2xs"
+            color="red"
+            @click="() => aInput.removeConfirmedByIndex(get_actual_data_index(base_confirmed_state.current_qa_index))"
+            class="flex items-center gap-1" />
+
+      </div>
     </template>
 
   </BaseConfirmedData>

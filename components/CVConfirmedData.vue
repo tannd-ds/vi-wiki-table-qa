@@ -18,6 +18,9 @@ const filter_data = computed(() => {
   <BaseConfirmedData
     :qa_list="filter_data"
     :table_list="cv_store.all_data['cv_anno_file'].data"
+    :prevent_update_question="true"
+    @save:qa_list="() => cv_store.update_answer_file()"
+    @download:qa_list="() => cv_store.download_answer_file()"
   >
     <template #filter>
       <div class="ml-2 flex gap-2 items-center">
@@ -36,6 +39,16 @@ const filter_data = computed(() => {
               'text-zinc-400': !show_no_answer_only
             }"
         >Show Undone Question Only</span>
+      </div>
+    </template>
+
+    <template #edit_functions>
+      <div class="flex gap-2">
+        <UButton
+            icon="i-heroicons-check"
+            size="2xs"
+            @click="() => cv_store.update_answer_file()"
+            class="flex items-center gap-1" />
       </div>
     </template>
 

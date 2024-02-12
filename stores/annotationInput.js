@@ -138,8 +138,7 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
       // Loop through every hint in hint list of this table
       for (let i = 0; i < this.hints.hint_set[confirmed.table_id].length; i++) {
         // check if this hint[i] is in confirmed's hint
-        let hint_i_index =
-          this.hints.hint_set[confirmed.table_id][i].hint_index;
+        let hint_i_index = this.hints.hint_set[confirmed.table_id][i].hint_index;
         let hint_i_content = this.hints.all_hints[hint_i_index];
         let found_index = confirmed.hints.indexOf(hint_i_content);
         if (found_index !== -1) {
@@ -156,15 +155,23 @@ export const useAnnotationInputStore = defineStore("annotation_input", {
       if (this.confirmedData.length === 0)
         useGeneralStore().overlay.is_show = false;
     },
-    update_confirmed(new_confirmed) {
+
+    removeConfirmedByIndex(index) {
+      if (!confirm("Are you sure want to remove this?")) return;
+
+      // Remove Confirmed
+      this.confirmedData.splice(index, 1);
       window.localStorage.setItem(
         "confirmed_qa",
         JSON.stringify(this.confirmedData),
       );
-      useGeneralStore().show_toast(
-        "success",
-        "Your QA is updated successfully",
-      );
+      if (this.confirmedData.length === 0)
+        useGeneralStore().overlay.is_show = false;
+    },
+
+    update_confirmed(new_confirmed) {
+      window.localStorage.setItem("confirmed_qa", JSON.stringify(this.confirmedData));
+      useGeneralStore().show_toast("success", "Your QA is updated successfully");
     },
     update_anno_file_data(new_data, file_name) {
       if (this.anno_file_data != null)
