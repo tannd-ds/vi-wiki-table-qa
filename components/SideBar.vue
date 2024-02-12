@@ -28,8 +28,8 @@
     <div
       class="fixed left-2 z-0 transition-all"
       :class="{
-        '-translate-x-full': !(navbar_is_show | general_store.isLargeScreen),
-        'translate-x-0': navbar_is_show | general_store.isLargeScreen,
+        '-translate-x-full': !(navbar_is_show || general_store.isLargeScreen),
+        'translate-x-0': navbar_is_show || general_store.isLargeScreen,
       }"
     >
       <div class="flex flex-col items-center">

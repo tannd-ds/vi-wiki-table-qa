@@ -28,12 +28,13 @@
     <!-- Show Confirmed -->
     <div class="relative flex gap-2">
       <UChip
-          :show="aInput.confirmedData.length > 0"
-          :text="aInput.confirmedData.length"
+          :show="n_data > 0"
+          :text="confirmed_chip_text"
           size="3xl"
+          class="font-mono"
       >
         <button
-          :disabled="aInput.confirmedData.length <= 0"
+          :disabled="n_data === 0"
           class="relative rounded-lg bg-green-200 p-2 text-green-500 dark:bg-green-400 dark:bg-opacity-80 dark:text-green-200 dark:hover:bg-opacity-70"
           @click="general_store.show_overlay('confirmed')"
         >
@@ -104,5 +105,38 @@
 
 <script setup>
 const aInput = useAnnotationInputStore();
+const cv_store = useCrossValidationStore();
 const general_store = useGeneralStore();
+
+const router = useRouter();
+const route = useRoute();
+
+const n_data = computed(() => {
+  if (route.name === 'cross_validation') {
+    return cv_store.get_n_question;
+  }
+  return aInput.confirmedData.length;
+});
+
+const confirmed_chip_text = computed(() => {
+  if (route.name === 'cross_validation') {
+    return `${cv_store.get_n_question - cv_store.get_n_question_remain}/${cv_store.get_n_question}`;
+  }
+  return `${aInput.confirmedData.length}`;
+});
+
+defineShortcuts({
+  meta_h: {
+    usingInput: true,
+    handler: () => {
+      router.push('/')
+    }
+  },
+  meta_o: {
+    usingInput: true,
+    handler: () => {
+      general_store.show_overlay('confirmed')
+    }
+  }
+})
 </script>
