@@ -131,8 +131,9 @@ export const useCrossValidationStore = defineStore("cross_validation", {
     get_table_html_from_index(index) {
       return this.all_data['cv_anno_file'].file.data[index]["table_html"];
     },
-
     init_answer_file() {
+      this.update_table_id_in_cross_file();
+
       this.all_data['cv_answer_file'] = {...this.all_data['cv_cross_file']};
       let new_name = this.all_data['cv_anno_file'].file.name;
       new_name = new_name.slice(0, new_name.length - 5) + '_cross.json';
@@ -219,6 +220,33 @@ export const useCrossValidationStore = defineStore("cross_validation", {
       if (key !== 'cv_answer_file')
         this.init_answer_file();
     },
+
+    update_table_id_in_cross_file() {
+      let cross_file = this.all_data['cv_cross_file'].file.data;
+      let anno_file = this.all_data['cv_anno_file'].file.data;
+
+      if (!cross_file[0])
+        return;
+
+      if (!cross_file[0].id)
+        return;
+
+      for (let i in cross_file) {
+        let true_id = cross_file[i].id;
+        for (let j in anno_file) {
+          console.log(i, j, true_id, anno_file[j].id);
+          if (anno_file[j].id === true_id) {
+            cross_file[i].table_id = Number(j);
+          }
+        }
+      }
+
+      this.all_data['cv_cross_file'].file.data = cross_file;
+      window.localStorage.setItem(
+          'cv_cross_file',
+          JSON.stringify(this.all_data['cv_cross_file'].file)
+      );
+    }
 
   },
   getters: {
