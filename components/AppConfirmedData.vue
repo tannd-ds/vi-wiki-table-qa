@@ -4,6 +4,6 @@ const route = useRoute();
 
 <template>
   <CVConfirmedData v-if="route.name === 'cross_validation'" />
-  <CreateConfirmedData v-else-if="route.name === 'step_0'" />
+  <CreateConfirmedData v-else-if="route.name === 'step_0' || route.name === 'step_1'" />
   <div v-else> Nothing </div>
 </template>
