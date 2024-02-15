@@ -14,6 +14,7 @@ export const useHintStore = defineStore("hint", {
                 'Sử dụng hỏi kết hợp giữa các ô, các hàng, các cột',
                 'Sử dụng yêu cầu liệt kê, sắp xếp',
                 'Sử dụng tính toán',
+                'Câu hỏi Yes/No',
             ],
             hint_set: {
                 table_index_01: [
