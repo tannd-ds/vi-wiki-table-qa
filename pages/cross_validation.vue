@@ -23,13 +23,13 @@
               icon="i-heroicons-arrow-down-tray"
             >Download File</UButton>
           </div>
-          <div class="mt-2"> Question Remain: {{ cv_store.get_n_question_remain }}/{{ cv_store.get_n_question }} </div>
+          <div class="mt-2 dark:text-white"> Question Remain: {{ cv_store.get_n_question_remain }}/{{ cv_store.get_n_question }} </div>
           <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
             <UFormGroup name="question_list">
               <CVAppListBox :data="question_list" class="mb-6"/>
             </UFormGroup>
             <UFormGroup name="question">
-              <div>{{ cv_store.get_current_display_question }}</div>
+              <div class="dark:text-white">{{ cv_store.get_current_display_question }}</div>
             </UFormGroup>
 
 
