@@ -33,7 +33,6 @@
       }"
     >
       <div class="flex flex-col items-center">
-        <SideBarDropdown />
         <SideBarButtons />
       </div>
     </div>
