@@ -167,7 +167,9 @@ onBeforeMount(() => {
           </TabPanel>
 
           <TabPanel>
-            Nothing Here...
+            <slot name="statistics">
+              Nothing Here...
+            </slot>
           </TabPanel>
 
         </TabPanels>

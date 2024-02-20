@@ -44,11 +44,13 @@ const filter_data = computed(() => {
 
     <template #edit_functions>
       <div class="flex gap-2">
-        <UButton
-            icon="i-heroicons-check"
-            size="2xs"
-            @click="() => cv_store.update_answer_file()"
-            class="flex items-center gap-1" />
+        <UTooltip text="Save">
+          <UButton
+              icon="i-heroicons-check"
+              size="2xs"
+              @click="() => cv_store.update_answer_file()"
+              class="flex items-center gap-1" />
+        </UTooltip>
       </div>
     </template>
 

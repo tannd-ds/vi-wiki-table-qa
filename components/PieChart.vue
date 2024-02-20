@@ -34,25 +34,6 @@
             %
           </span>
         </span>
-
-        <!-- Rounded end -->
-        <span
-          v-for="(table, table_index) in counted"
-          :key="table"
-          class="absolute flex h-[100%] w-[10%] flex-col items-center justify-start"
-          :style="{ rotate: `${rotation_rate[table_index]}deg` }"
-        >
-          <div
-            class="absolute flex aspect-square w-full justify-end rounded-full"
-            :style="{
-              backgroundColor: color_set[table_index],
-            }"
-          >
-            <div
-              class="absolute -top-[7.6px] box-content aspect-[1/2] h-full rounded-r-full border-y-8 border-r-8 border-white dark:border-midnight-200"
-            />
-          </div>
-        </span>
       </div>
     </div>
   </div>

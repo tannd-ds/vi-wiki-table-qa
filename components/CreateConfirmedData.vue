@@ -93,19 +93,43 @@ function toggle_show_table_only(table_index) {
 
     <template #edit_functions>
       <div class="flex flex-col gap-2">
-        <UButton
-            icon="i-heroicons-check"
-            size="2xs"
-            @click="() => aInput.update_confirmed(null)"
-            class="flex items-center gap-1" />
+        <UTooltip text="Save" :popper="{ placement: 'right'}">
+          <UButton
+              icon="i-heroicons-check"
+              size="2xs"
+              @click="() => aInput.update_confirmed(null)"
+              class="flex items-center gap-1" />
+        </UTooltip>
 
-        <UButton
-            icon="i-heroicons-trash"
-            size="2xs"
-            color="red"
-            @click="() => aInput.removeConfirmedByIndex(get_actual_data_index(base_confirmed_state.current_qa_index))"
-            class="flex items-center gap-1" />
+        <UTooltip text="Remove This QAs" :popper="{ placement: 'right'}">
+          <UButton
+              icon="i-heroicons-trash"
+              size="2xs"
+              color="red"
+              @click="() => aInput.removeConfirmedByIndex(get_actual_data_index(base_confirmed_state.current_qa_index))"
+              class="flex items-center gap-1" />
+        </UTooltip>
 
+      </div>
+    </template>
+
+    <template #statistics>
+      <PieChart />
+      <div class="flex w-full justify-around px-4 dark:text-gray-200">
+        <div>
+          <div class="text-4xl">
+            <span v-if="aInput.anno_file_data.length < 10">0</span>
+            <span>{{ aInput.anno_file_data.length }}</span>
+          </div>
+          <div class="text-gray-500">Tables</div>
+        </div>
+        <div>
+          <div class="text-4xl">
+            <span v-if="aInput.confirmedData.length < 10">0</span>
+            <span>{{ aInput.confirmedData.length }}</span>
+          </div>
+          <div class="text-gray-500">Pairs</div>
+        </div>
       </div>
     </template>
 
